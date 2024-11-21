@@ -1,37 +1,41 @@
 {
-  "name": "auto-image-remote-uploader",
-  "version": "0.2.0",
+  "name": "custom-image-auto-uploader",
+  "version": "0.2.1",
   "type": "module",
-  "description": "Added Obsidian remote image upload and save function, which can upload note images to your home NAS and synchronize to cloud storage (aliyun oss, aws S3, google ECS)",
+  "description": "You can upload and save images from your notes to your remote server, home NAS, or sync them to your cloud storage (Alibaba Cloud OSS, Amazon S3, Cloudflare R2).",
   "main": "main.js",
   "scripts": {
     "dev": "rollup --config rollup.config.js -w",
-    "build": "rollup --config rollup.config.js"
+    "build": "pnpm run typecheck && rollup --config rollup.config.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json --composite false",
+    "test": "vitest run"
   },
   "keywords": [
-    "image",
-    "upload",
-    "remote",
-    "nas",
-    "cloud storage"
+    "obsidian.md",
+    "picgo"
   ],
-  "author": "haierspi",
+  "author": "renmu",
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^24.1.0",
-    "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.2",
-    "@rollup/plugin-typescript": "^11.1.0",
-    "@types/electron": "^1.6.10",
-    "@types/node": "^14.14.2",
-    "obsidian": "^1.2.8",
-    "rollup": "^3.21.6",
-    "tslib": "^2.5.0",
-    "typescript": "^5.0.4"
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-typescript": "^12.1.1",
+    "@types/electron": "^1.6.12",
+    "@types/node": "20.17.6",
+    "@types/path-browserify": "^1.0.3",
+    "electron": "^33.2.0",
+    "jsdom": "^25.0.1",
+    "obsidian": "^1.7.2",
+    "path-browserify": "^1.0.1",
+    "rollup": "^4.27.3",
+    "tslib": "^2.8.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
-    "es-mime-types": "^0.1.4",
     "fix-path": "^4.0.0",
     "image-type": "^5.2.0"
-  }
+  },
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
 }

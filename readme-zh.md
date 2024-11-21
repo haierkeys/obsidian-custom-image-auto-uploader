@@ -1,47 +1,63 @@
-[English Document](README.md)
 
-# Auto Image Remote Uploader For Obsidian
+[中文文档](readme-zh.md) / [English Document](README.md)
 
-为 Obsidian 增加图片远端上传保存功能,主要特性:
+# Custom Image Auto Uploader For Obsidian / 自定义图片自动上传插件
 
-- 拖拽图片上传
+您可以将笔记中的图片上传保存到您的远端服务器、家庭 NAS 或者同步保存在您的云存储上（阿里云 OSS、亚马逊 S3、Cloudflare R2）。
+
+- 拖拽上传图片
 - 粘贴图片上传
-- 右键图片上传
-- 批量下载网络图片到本地
-- 批量上传笔记中的所有本地图像文件
-- 笔记的图片上传到远端服务器上,例如您的web服务器或者你家庭的NAS上
-- 可以选择同时同步到云存储上, 例如:阿里云OSS / AWS S3 / Google ECS
+- 右键点击上传图片
+- 批量下载网页图片到本地
+- 批量上传笔记中所有本地图片文件
+- 批量将笔记中所有本地图片文件上传到远端服务器，例如您的 Web 服务器或家庭 NAS。
+- 您还可以选择同时同步到云存储，例如阿里云 OSS、亚马逊 S3、Cloudflare R2。
+
 ## 价格
 
-本插件是免费提供给大家的，但如果您想表示感谢或帮助支持继续开发，请随时通过以下任一方式为我提供一点帮助：
+本插件免费提供给大家使用，但如果您想表示感谢或支持继续开发，请随时通过以下任一方式为我提供一点帮助：
 
 - [![Paypal](https://img.shields.io/badge/paypal-HaierSpi-yellow?style=social&logo=paypal)](https://paypal.me/haierspi)
 
 - [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="BuyMeACoffee" width="100">](https://www.buymeacoffee.com/haierspi)
-<img src="https://raw.githubusercontent.com/haierspi/obsidian-auto-image-remote-uploader/main/bmc_qr.png" style="width:120px;height:auto;">
+<img src="https://raw.githubusercontent.com/haierkeys/obsidian-custom-image-auto-uploader/main/bmc_qr.png" style="width:120px;height:auto;">
 
+- afdian: https://afdian.net/a/haierspi
 
-- 爱发电 https://afdian.net/a/haierspi
-
-# 开始使用
+# 快速开始
 
 1. 安装插件
-2. 打开插件配置项，将 **图片上传API** 设置为您的图片上传API`http://127.0.0.1:8000/api/upload`,并设置**授权令牌**
-3. 启动 **golang-image-upload-service** 服务
-4. 接下来打开看能否上传成功
+2. 打开插件配置项，将 **image-upload-api** 设置为您的图片上传 API `http://127.0.0.1:8000/api/upload`，并设置 **authorization-token**。
+3. 启动 **obsidian-image-api-gateway** 服务。
+4. 打开 **obsidian-image-api-gateway** 服务并检查是否上传成功。
 
-## 图片上传API服务端
+## 图片上传 API 服务器
 
-本插件需要配合**golang-image-upload-service** https://github.com/haierspi/golang-image-upload-service 才能正常使用
+此插件需要 **obsidian-image-api-gateway** 才能正常工作。请参考 [obsidian-image-api-gateway](https://github.com/haierkeys/obsidian-image-api-gateway)。
 
-# 使用帮助
+## 帮助
 
-## 剪切板上传
+## 剪贴板上传
 
-支持黏贴剪切板的图片的时候直接上传，目前支持复制系统内图像直接上传。
-支持通过设置 `frontmatter` 来控制单个文件的上传，默认值为 `true`，控制关闭请将该值设置为 `false`
+支持直接上传从剪贴板粘贴的图片，目前支持从系统复制图片并直接上传。
+通过设置 `frontmatter` 来控制单个文件上传，默认值为 `true`，若要关闭控制，请将值设置为 `false`。
 
-支持 ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".svg", ".tiff"
+支持的图片格式：".png"、".jpg"、".jpeg"、".bmp"、".gif"、".svg"、".tiff"。
+
+```yaml
+---
+image-auto-upload: true
+---
+```
+## 帮助
+
+### 剪贴板上传
+
+支持从剪贴板粘贴图片时直接上传，目前支持从系统复制图片直接上传。
+
+支持通过设置`frontmatter`来控制单个文件上传，默认值为`true`，如需关闭控制，请将值设置为`false`。
+
+支持“.png”、“.jpg”、“.jpeg”、“.bmp”、“.gif”、“.svg”、“.tiff”。
 
 ```yaml
 ---
@@ -49,26 +65,27 @@ image-auto-upload: true
 ---
 ```
 
-## 批量上传一个文件中的所有图像文件
+### 批量上传文件中所有图片文件
 
-输入 `ctrl+P` 呼出面板，输入 `upload all images`，点击回车，就会自动开始上传。
+输入`ctrl+P`调出面板，输入`upload all images`，回车后自动开始上传。
 
-路径解析优先级，会依次按照优先级查找：
+路径解析优先级，会按优先级顺序查找路径：
 
 1. 绝对路径，指基于库的绝对路径
-2. 相对路径，以./或../开头
-3. 尽可能简短的形式
+2. 相对路径，以./或./或.开头
+3. 尽量短
 
-## 批量下载网络图片到本地
+### 批量下载网页图片到本地
 
-输入 `ctrl+P` 呼出面板，输入 `download all images`，点击回车，就会自动开始下载。
+输入`ctrl+P`调出面板，输入`download all images`并回车，下载会自动开始。
 
-## 支持右键菜单上传图片
+### 支持右键菜单上传图片
 
-目前已支持标准 md 以及 wiki 格式。支持相对路径以及绝对路径，需要进行正确设置，不然会引发奇怪的问题。
+支持标准md和wiki格式。支持相对路径和绝对路径，需要正确设置，否则会出现奇怪的问题。
 
-## 支持拖拽上传
-支持图片的各种拖拽
+### 拖拽上传
+
+支持图片的拖拽。
 
 ## 感谢
 
