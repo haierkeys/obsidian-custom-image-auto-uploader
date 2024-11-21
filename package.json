@@ -21,7 +21,6 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-typescript": "^12.1.1",
-    "@types/electron": "^1.6.12",
     "@types/node": "20.17.6",
     "@types/path-browserify": "^1.0.3",
     "electron": "^33.2.0",
@@ -34,6 +33,7 @@
     "vitest": "^2.1.5"
   },
   "dependencies": {
+    "es-mime-types": "^0.1.4",
     "fix-path": "^4.0.0",
     "image-type": "^5.2.0"
   },

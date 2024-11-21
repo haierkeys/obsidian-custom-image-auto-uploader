@@ -12,6 +12,7 @@ import {
   addIcon,
   requestUrl,
   MarkdownFileInfo,
+  App,
 } from "obsidian";
 
 import { resolve, relative, join, parse, posix, basename, dirname } from "path";
@@ -167,11 +168,11 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
     return (
       (newFileLocation == "folder"
         ? getFolderFromPath(
-            app,
+            this.app,
             (this.app.vault as any).getConfig("newFileFolderPath")
           )
         : newFileLocation == "current" && activeFile
-        ? getFolderFromPath(app, activeFile.path)
+        ? getFolderFromPath(this.app, activeFile.path)
         : this.app.vault.getRoot()) ?? this.app.vault.getRoot()
     );
   }

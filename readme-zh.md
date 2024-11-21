@@ -87,6 +87,21 @@ image-auto-upload: true
 
 支持图片的拖拽。
 
+
+# 开发
+
+## 安装
+
+`pnpm install`
+
+## 运行
+
+`pnpm run dev`
+
+## 编译
+
+`pnpm run build`
+
 ## 感谢
 
 https://github.com/renmu123/obsidian-image-auto-upload-plugin
