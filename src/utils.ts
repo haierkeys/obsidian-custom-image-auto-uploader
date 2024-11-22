@@ -67,7 +67,7 @@ export function isCopyImageFile() {
   const os = getOS();
 
   if (os === "Windows") {
-    var rawFilePath = clipboard.read("FileNameW");
+    let rawFilePath = clipboard.read("FileNameW");
     filePath = rawFilePath.replace(new RegExp(String.fromCharCode(0), "g"), "");
   } else if (os === "MacOS") {
     filePath = clipboard.read("public.file-url").replace("file://", "");

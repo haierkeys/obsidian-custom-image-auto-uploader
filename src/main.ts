@@ -179,10 +179,15 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
 
   // 获取当前文件所属的附件文件夹
   getFileAssetPath() {
-    const basePath = (
-      this.app.vault.adapter as FileSystemAdapter
-    ).getBasePath();
+
+    let basePath =
+      this.app.vault.adapter instanceof FileSystemAdapter
+        ? this.app.vault.adapter.getBasePath()
+        : "";
+
     return join(basePath, this.getDefaultNoteFileFolder().path);
+
+
   }
 
   async downloadAllImageFiles() {
@@ -227,9 +232,11 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
         const activeFolder = normalizePath(
           this.app.workspace.getActiveFile().parent.path
         );
-        const abstractActiveFolder = (
-          this.app.vault.adapter as FileSystemAdapter
-        ).getFullPath(activeFolder);
+
+        let abstractActiveFolder =
+          this.app.vault.adapter instanceof FileSystemAdapter
+            ? this.app.vault.adapter.getFullPath(activeFolder)
+            : "";
 
         imageArray.push({
           source: file.source,
@@ -329,9 +336,11 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
   fileMenuUpload(file: TFile) {
     let content = this.helper.getValue();
 
-    const basePath = (
-      this.app.vault.adapter as FileSystemAdapter
-    ).getBasePath();
+    let basePath =
+      this.app.vault.adapter instanceof FileSystemAdapter
+        ? this.app.vault.adapter.getBasePath()
+        : "";
+
     let imageList: Image[] = [];
     const fileArray = this.helper.getAllFiles();
 
@@ -438,9 +447,12 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
 
     let content = this.helper.getValue();
 
-    const basePath = (
-      this.app.vault.adapter as FileSystemAdapter
-    ).getBasePath();
+    let basePath =
+      this.app.vault.adapter instanceof FileSystemAdapter
+        ? this.app.vault.adapter.getBasePath()
+        : "";
+
+
     const activeFile = this.app.workspace.getActiveFile();
     const fileMap = arrayToObject(this.app.vault.getFiles(), "name");
 
