@@ -182,11 +182,9 @@ export async function imageDown(
     };
   }
 
-  const buffer = Buffer.from(response.arrayBuffer);
-
   try {
     const path = `${name}.${type.ext}`;
-    await plugin.app.vault.createBinary(path, buffer);
+    await plugin.app.vault.createBinary(path, response.arrayBuffer);
 
     return {
       err: false,
