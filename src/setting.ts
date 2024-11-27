@@ -104,7 +104,24 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
-    new Setting(set).setName("API 设置").setHeading();
+
+
+    new Setting(set).setName("下载设置").setHeading();
+
+    new Setting(set)
+      .setName("下载域名排除")
+      .setDesc("在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符")
+      .addTextArea((text) =>
+        text
+          .setPlaceholder("Enter your secret")
+          .setValue(this.plugin.settings.excludeDomains)
+          .onChange(async (value) => {
+            this.plugin.settings.excludeDomains = value;
+            await this.plugin.saveSettings();
+          })
+      );
+    new Setting(set).setName("上传设置").setHeading();
+
 
     new Setting(set)
       .setName("API 地址")
@@ -140,21 +157,6 @@ export class SettingTab extends PluginSettingTab {
           "<a href='https://github.com/haierkeys/image-api-gateway' target='_blank'>https://github.com/haierkeys/image-api-gateway</a>";
       });
 
-    new Setting(set).setName("下载设置").setHeading();
-
-    new Setting(set)
-      .setName("下载域名排除")
-      .setDesc("在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符")
-      .addTextArea((text) =>
-        text
-          .setPlaceholder("Enter your secret")
-          .setValue(this.plugin.settings.excludeDomains)
-          .onChange(async (value) => {
-            this.plugin.settings.excludeDomains = value;
-            await this.plugin.saveSettings();
-          })
-      );
-    new Setting(set).setName("上传设置").setHeading();
     new Setting(set)
       .setName("是否上传后删除原图片")
       .setDesc("是否上传后删除原图片")
