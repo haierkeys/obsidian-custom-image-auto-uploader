@@ -48,8 +48,14 @@ export function getFileSaveRandomName(nameSet: Set<unknown>): string {
   return name;
 }
 
+export function getDirname(path: string): string {
+  let folderList = path.split("/");
+  folderList.pop();
+  return folderList.join("/");
+}
+
 export async function checkCreateFolder(path: string, vault: Vault) {
-  if (!vault.getFolderByPath(path)) {
+  if (path != "" && !vault.getFolderByPath(path)) {
     vault.createFolder(path);
   }
 }
@@ -184,7 +190,12 @@ export async function imageDown(
 
   try {
     const path = `${name}.${type.ext}`;
-    await plugin.app.vault.createBinary(path, response.arrayBuffer);
+
+    let userPath = await getAttachmentFolder(path, plugin);
+
+    checkCreateFolder(getDirname(userPath), this.app.vault);
+
+    await plugin.app.vault.createBinary(userPath, response.arrayBuffer);
 
     return {
       err: false,
@@ -200,11 +211,31 @@ export async function imageDown(
   }
 }
 
+export async function getAttachmentFolder(
+  file: string,
+  plugin: CustomImageAutoUploader
+) {
+  let folder = await this.app.fileManager.getAvailablePathForAttachment("");
+  let folderList = folder.split("/");
+  return folderList[0] ? folderList[0] + "/" + file : file;
+}
+
 export async function imageUpload(
-  file: TFile,
-  api: string,
-  token: string
+  path: string,
+  plugin: CustomImageAutoUploader
 ): Promise<ImageUploadResult> {
+  //获取用户设置的附件目录
+  let userPath = await getAttachmentFolder(path, plugin);
+
+  let file = this.app.vault.getFileByPath(userPath);
+
+  if (!file) {
+    return {
+      err: true,
+      msg: "Upload image does not exist",
+    };
+  }
+
   let body = await file.vault.readBinary(file);
 
   let requestData = new FormData();
@@ -212,10 +243,12 @@ export async function imageUpload(
 
   let response;
   try {
-    response = await fetch(api, {
+    response = await fetch(plugin.settings.api, {
       method: "POST",
       headers:
-        token == "" ? new Headers() : new Headers({ Authorization: token }),
+        plugin.settings.apiToken == ""
+          ? new Headers()
+          : new Headers({ Authorization: plugin.settings.apiToken }),
       body: requestData,
     });
   } catch (error) {
@@ -242,6 +275,10 @@ export async function imageUpload(
       apiError: result.details.join(""),
     };
   } else {
+    if (plugin.settings.isDeleteSource && file instanceof TFile) {
+      plugin.app.vault.delete(file, true);
+    }
+
     return {
       err: false,
       msg: result.message,

@@ -99,7 +99,7 @@ export default class CustomImageAutoUploader extends Plugin {
   };
 
   downImage = async (isWorkspace = false) => {
-    checkCreateFolder(this.settings.saveDir, this.app.vault);
+    //   let dir = await this.app.fileManager.getAvailablePathForAttachment("todo.png");
 
     let fileContent = "";
     let activeFile = this.app.workspace.getActiveFile();
@@ -210,34 +210,21 @@ export default class CustomImageAutoUploader extends Plugin {
 
       let file = match[2] ? match[2] : match[4];
       let imageAlt = match[3] ? match[3] : match[1] ? match[1] : file;
-      let uploadFile = this.app.vault.getFileByPath(file);
 
-      if (!uploadFile) {
-        new Notice("Upload image does not exist");
-      } else {
-        let result = await imageUpload(
-          uploadFile,
-          this.settings.api,
-          this.settings.apiToken
+      let result = await imageUpload(file, this);
+
+      if (result.err) {
+        new Notice(result.msg);
+      } else if (result.imageUrl) {
+        isModify = true;
+        uploadSussCount++;
+        fileContent = replaceInText(
+          fileContent,
+          match[0],
+          imageAlt,
+          result.imageUrl
         );
-
-        if (result.err) {
-          new Notice(result.msg);
-        } else if (result.imageUrl) {
-          isModify = true;
-          uploadSussCount++;
-          fileContent = replaceInText(
-            fileContent,
-            match[0],
-            imageAlt,
-            result.imageUrl
-          );
-          autoAddExcludeDomain(result.imageUrl, this);
-        }
-
-        if (this.settings.isDeleteSource && uploadFile instanceof TFile) {
-          this.app.vault.delete(uploadFile, true);
-        }
+        autoAddExcludeDomain(result.imageUrl, this);
       }
     }
 
