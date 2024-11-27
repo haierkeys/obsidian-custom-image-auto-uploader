@@ -51,6 +51,8 @@ export class SettingTab extends PluginSettingTab {
 
     set.empty();
 
+    new Setting(set).setName("通用设置").setHeading();
+
     new Setting(set)
       .setName("是否自动上传")
       .setDesc("如果关闭,您只能手动上传图片")
@@ -75,8 +77,7 @@ export class SettingTab extends PluginSettingTab {
             this.display();
             await this.plugin.saveSettings();
           })
-    );
-
+      );
 
     new Setting(set)
       .setName("上传间隔时间")
@@ -89,7 +90,6 @@ export class SettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
-
 
     new Setting(set)
       .setName("关闭提示")
@@ -104,14 +104,14 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
-    new Setting(set).setName("图片API设置").setHeading();
+    new Setting(set).setName("API 设置").setHeading();
 
     new Setting(set)
-      .setName("API")
+      .setName("API 地址")
       .setDesc("Image Api Gateway 地址")
       .addText((text) =>
         text
-          .setPlaceholder("输入您的image-api-gateway地址")
+          .setPlaceholder("输入您的 Image Api Gateway 地址")
           .setValue(this.plugin.settings.api)
           .onChange(async (value) => {
             this.plugin.settings.api = value;
@@ -120,7 +120,7 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(set)
-      .setName("访问令牌")
+      .setName("API 访问令牌")
       .setDesc("用于访问API的令牌")
       .addText((text) =>
         text
@@ -133,7 +133,7 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(set)
-      .setName("API服务搭建")
+      .setName("API 服务搭建")
       .setDesc("项目地址")
       .addButton((bt) => {
         bt.buttonEl.outerHTML =
@@ -154,7 +154,7 @@ export class SettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
-
+    new Setting(set).setName("上传设置").setHeading();
     new Setting(set)
       .setName("是否上传后删除原图片")
       .setDesc("是否上传后删除原图片")
