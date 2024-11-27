@@ -1,6 +1,4 @@
 import {
-  App,
-  Editor,
   Menu,
   MenuItem,
   TFile,
@@ -13,9 +11,7 @@ import {
   imageDown,
   imageUpload,
   getFileSaveRandomName,
-  checkCreateFolder,
   statusCheck,
-  dump,
   replaceInText,
   hasExcludeDomain,
   autoAddExcludeDomain,
@@ -99,8 +95,7 @@ export default class CustomImageAutoUploader extends Plugin {
   };
 
   downImage = async (isWorkspace = false) => {
-    //   let dir = await this.app.fileManager.getAvailablePathForAttachment("todo.png");
-
+    let cursor = this.app.workspace.activeEditor?.editor?.getCursor();
     let fileContent = "";
     let activeFile = this.app.workspace.getActiveFile();
 
@@ -160,6 +155,9 @@ export default class CustomImageAutoUploader extends Plugin {
     if (isModify) {
       if (isWorkspace) {
         this.app.workspace.activeEditor?.editor?.setValue(fileContent);
+        if (cursor) {
+          this.app.workspace.activeEditor?.editor?.setCursor(cursor);
+        }
       } else if (activeFile instanceof TFile) {
         this.app.vault.modify(activeFile, fileContent);
       }
@@ -181,6 +179,7 @@ export default class CustomImageAutoUploader extends Plugin {
   };
 
   uploadImage = async (isWorkspace = false) => {
+    let cursor = this.app.workspace.activeEditor?.editor?.getCursor();
     let fileContent = "";
     let activeFile = this.app.workspace.getActiveFile();
 
@@ -231,6 +230,9 @@ export default class CustomImageAutoUploader extends Plugin {
     if (isModify) {
       if (isWorkspace) {
         this.app.workspace.activeEditor?.editor?.setValue(fileContent);
+        if (cursor) {
+          this.app.workspace.activeEditor?.editor?.setCursor(cursor);
+        }
       } else if (activeFile instanceof TFile) {
         this.app.vault.modify(activeFile, fileContent);
       }

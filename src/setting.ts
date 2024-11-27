@@ -24,7 +24,14 @@ export interface PluginSettings {
   [propName: string]: any;
 }
 
-// ![这是图片](https://markdown.com.cn/assets/img/philly-magic-garden.9c0b4415.jpg)
+
+/**
+ *
+
+![这是图片](https://markdown.com.cn/assets/img/philly-magic-garden.9c0b4415.jpg)
+
+ */
+
 
 export const DEFAULT_SETTINGS: PluginSettings = {
   isAutoUpload: true,
