@@ -6,6 +6,8 @@ export interface PluginSettings {
   //是否自动上传
   isAutoUpload: boolean;
   isAutoDown: boolean;
+  isNotice: boolean;
+  afterUploadTimeout: number;
   //API地址
   api: string;
   //API Token
@@ -18,7 +20,7 @@ export interface PluginSettings {
   saveDir: string;
   //本地图片上传后是否删除
   isDeleteSource: boolean;
-  deleteSourceTimeout: string;
+
   [propName: string]: any;
 }
 
@@ -27,12 +29,13 @@ export interface PluginSettings {
 export const DEFAULT_SETTINGS: PluginSettings = {
   isAutoUpload: true,
   isAutoDown: true,
+  isNotice: true,
+  afterUploadTimeout: 1000,
   api: "http://127.0.0.1:36677/upload",
   apiToken: "",
   excludeDomains: "",
   saveDir: "",
   isDeleteSource: true,
-  deleteSourceTimeout: "1000",
 };
 
 export class SettingTab extends PluginSettingTab {
@@ -69,6 +72,33 @@ export class SettingTab extends PluginSettingTab {
           .setValue(this.plugin.settings.isAutoDown)
           .onChange(async (value) => {
             this.plugin.settings.isAutoDown = value;
+            this.display();
+            await this.plugin.saveSettings();
+          })
+    );
+
+
+    new Setting(set)
+      .setName("上传间隔时间")
+      .setDesc("上传间隔时间,单位为毫秒,默认设置1s")
+      .addText((text) =>
+        text
+          .setValue(this.plugin.settings.afterUploadTimeout.toString())
+          .onChange(async (value) => {
+            this.plugin.settings.afterUploadTimeout = Number(value);
+            await this.plugin.saveSettings();
+          })
+      );
+
+
+    new Setting(set)
+      .setName("关闭提示")
+      .setDesc("关闭右上角结果提示")
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.isNotice)
+          .onChange(async (value) => {
+            this.plugin.settings.isNotice = value;
             this.display();
             await this.plugin.saveSettings();
           })
@@ -134,19 +164,6 @@ export class SettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             this.plugin.settings.isDeleteSource = value;
             this.display();
-            await this.plugin.saveSettings();
-          })
-      );
-
-    new Setting(set)
-      .setName("删除原图片延迟")
-      .setDesc("删除原图片延迟时间,单位为毫秒")
-      .addText((text) =>
-        text
-          .setPlaceholder("Enter your secret")
-          .setValue(this.plugin.settings.deleteSourceTimeout)
-          .onChange(async (value) => {
-            this.plugin.settings.deleteSourceTimeout = value;
             await this.plugin.saveSettings();
           })
       );

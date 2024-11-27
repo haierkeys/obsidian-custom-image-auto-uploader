@@ -21,7 +21,8 @@ import {
   autoAddExcludeDomain,
 } from "./utils";
 
-const mdImageRegex = /!\[([^\]]*)\]\((.*?)\s*("(?:.*[^"])")?\s*\)/g;
+const mdImageRegex =
+  /!\[([^\]]*)\]\((.*?)\s*("(?:.*[^"])")?\s*\)|!\[\[([^\]]*)\]\]/g;
 
 export default class CustomImageAutoUploader extends Plugin {
   settings: PluginSettings;
@@ -162,16 +163,18 @@ export default class CustomImageAutoUploader extends Plugin {
       } else if (activeFile instanceof TFile) {
         this.app.vault.modify(activeFile, fileContent);
       }
-      new Notice(
-        `Down Result:\nsucceed: ${downSussCount} \nfailed: ${
-          downCount - downSussCount
-        }`
-      );
+      if (this.settings.isNotice) {
+        new Notice(
+          `Down Result:\nsucceed: ${downSussCount} \nfailed: ${
+            downCount - downSussCount
+          }`
+        );
+      }
     }
 
     if (this.settings.isAutoUpload) {
       // 需要等待500 毫秒
-      sleep(1000).then(() => {
+      sleep(this.settings.afterUploadTimeout).then(() => {
         this.uploadImage(isWorkspace);
       });
     }
@@ -199,14 +202,14 @@ export default class CustomImageAutoUploader extends Plugin {
       fileContent.matchAll(mdImageRegex);
 
     for (const match of matches) {
-      if (/^http/.test(match[2])) {
+      if (/^http/.test(match[2]) || /^http/.test(match[4])) {
         continue;
       }
 
       uploadCount++;
 
-      let file = match[2];
-      let imageAlt = match[3] ? match[3] : match[1] ? match[1] : "";
+      let file = match[2] ? match[2] : match[4];
+      let imageAlt = match[3] ? match[3] : match[1] ? match[1] : file;
       let uploadFile = this.app.vault.getFileByPath(file);
 
       if (!uploadFile) {
@@ -229,7 +232,6 @@ export default class CustomImageAutoUploader extends Plugin {
             imageAlt,
             result.imageUrl
           );
-          console.log(result.imageUrl);
           autoAddExcludeDomain(result.imageUrl, this);
         }
 
@@ -246,11 +248,13 @@ export default class CustomImageAutoUploader extends Plugin {
         this.app.vault.modify(activeFile, fileContent);
       }
 
-      new Notice(
-        `Upload Result:\nsucceed: ${uploadSussCount} \nfailed: ${
-          uploadCount - uploadSussCount
-        }`
-      );
+      if (this.settings.isNotice) {
+        new Notice(
+          `Upload Result:\nsucceed: ${uploadSussCount} \nfailed: ${
+            uploadCount - uploadSussCount
+          }`
+        );
+      }
     }
   };
   onunload() {}
