@@ -1,22 +1,45 @@
-import { requestUrl, Vault } from "obsidian";
+import {
+  requestUrl,
+  RequestUrlParam,
+  RequestUrlResponse,
+  TFile,
+  Vault,
+} from "obsidian";
 
 import { fileTypeFromBuffer, FileTypeResult } from "file-type";
 import CustomImageAutoUploader from "./main";
 
 export interface ImageDownResult {
   err: boolean;
+  msg: string;
   path?: string;
-  alt?: string;
   type?: FileTypeResult;
 }
 
-export function getUrlFileName(url: string) {
+export interface ImageUploadResult {
+  err: boolean;
+  msg: string;
+  imageUrl?: string;
+  apiError?: string;
+}
+
+/**
+ * 返回URL中文文件名
+ * @param url
+ * @returns string
+ */
+export function getUrlFileName(url: string): string {
   let pathname = new URL(url).pathname;
   let fileName = pathname.substring(pathname.lastIndexOf("/") + 1);
   return decodeURI(fileName).replaceAll(/[\\\\/:*?\"<>|]/g, "-");
 }
 
-export function getFileSaveName(nameSet: Set<unknown>) {
+/**
+ * 返回随机保存文件名
+ * @param nameSet
+ * @returns string
+ */
+export function getFileSaveRandomName(nameSet: Set<unknown>): string {
   let name = (Math.random() + 1).toString(36).substr(2, 5);
   if (nameSet.has(name)) {
     name = `${name}-${(Math.random() + 1).toString(36).substr(2, 5)}`;
@@ -36,39 +59,82 @@ export function dump(...vars: any) {
 }
 
 /**
- * @param content The full text body to search
- * @param toReplace Search string, this is what will be replaced
- * @param url The HTTP url to the image source
- * @param path The local filepath to the new image
+ * 替换文本中的图片链接
+ * @param content 文本内容
+ * @param search 查找内容
+ * @param desc 图片地址
+ * @param path 图片本地路径 或者 网址路径
+ * @param url 图片描述
+ * @returns string
  */
 export function replaceInText(
   content: string,
-  toReplace: string,
-  url: string,
+  search: string,
+  desc: string,
   path: string,
-  alt?: string
-) {
+  url?: string
+): string {
   let newLink = "";
 
-  dump(alt);
-  if (alt) {
-    newLink = `![${alt} (${url})](${path})`;
+  if (url) {
+    newLink = `![${desc} (${url})](${path})`;
   } else {
-    newLink = `![(${url})](${path})`;
+    newLink = `![${desc}](${path})`;
   }
 
-  return content.split(toReplace).join(newLink);
+  return content.split(search).join(newLink);
 }
 
-export function statusCheck(plugin: CustomImageAutoUploader) {
+export function statusCheck(plugin: CustomImageAutoUploader): void {
   let title = "";
 
   title = plugin.settings.isAutoUpload ? "自动上传 🟢" : "自动上传 ⚪";
   title += plugin.settings.isAutoDown ? " 自动下载 🟢" : " 自动下载 ⚪";
-
-
-    //  plugin.statusBar.setText("自动上传 yes 自动下载 yes");
   plugin.statusBar.setText(title);
+}
+
+export function hasExcludeDomain(src: string, excludeDomains: string): boolean {
+  if (excludeDomains.trim() === "") {
+    return false;
+  }
+
+  let url = new URL(src);
+  let has = false;
+
+  const domain = url.hostname;
+
+  const excludeDomainList = excludeDomains
+    .split("\n")
+    .filter((item) => item !== "");
+
+  excludeDomainList.forEach(function (item) {
+    item = item.replace(/\./g, "\\."); //将.替换为\.，因为.在正则表达式中有特殊含义
+    item = item.replace("*", ".*");
+
+    var patt = new RegExp("^" + item, "i"); //正则表达式
+    var res = patt.exec(domain); //执行匹配，并获取到匹配结果
+
+    if (res != null) {
+      has = true;
+      return;
+    }
+  });
+  return has;
+}
+
+export function autoAddExcludeDomain(
+  src: string,
+  plugin: CustomImageAutoUploader
+): void {
+  let url = new URL(src);
+  const domain = url.hostname;
+  let has = hasExcludeDomain(src, plugin.settings.excludeDomains);
+
+  if (!has) {
+    plugin.settings.excludeDomains += `\n${domain}`;
+    plugin.settings.excludeDomains = plugin.settings.excludeDomains.trim();
+  }
+  plugin.saveSettings();
 }
 
 export async function imageDown(
@@ -81,6 +147,7 @@ export async function imageDown(
   if (response.status !== 200) {
     return {
       err: false,
+      msg: "Network Error",
     };
   }
 
@@ -111,6 +178,7 @@ export async function imageDown(
   if (!imageExtensions.has(type.ext) && type) {
     return {
       err: true,
+      msg: "image type not allowed",
     };
   }
 
@@ -118,16 +186,68 @@ export async function imageDown(
 
   try {
     const path = `${name}.${type.ext}`;
-    plugin.app.vault.createBinary(path, buffer);
+    await plugin.app.vault.createBinary(path, buffer);
 
     return {
       err: false,
+      msg: "ok",
       path: path,
       type,
     };
   } catch (err) {
     return {
       err: true,
+      msg: "image create error:" + err.message,
+    };
+  }
+}
+
+export async function imageUpload(
+  file: TFile,
+  api: string,
+  token: string
+): Promise<ImageUploadResult> {
+  let body = await file.vault.readBinary(file);
+
+  let requestData = new FormData();
+  requestData.append("imagefile", new Blob([body]), file.name);
+
+  let response;
+  try {
+    response = await fetch(api, {
+      method: "POST",
+      headers:
+        token == "" ? new Headers() : new Headers({ Authorization: token }),
+      body: requestData,
+    });
+  } catch (error) {
+    return {
+      err: true,
+      msg: "Network Error",
+    };
+  }
+
+  if (response && !response.ok) {
+    let result = await response.text();
+    return {
+      err: true,
+      msg: "Network Error",
+    };
+  }
+
+  let result = await response.json();
+
+  if (result && !result.status) {
+    return {
+      err: true,
+      msg: "API Error:" + result.message,
+      apiError: result.details.join(""),
+    };
+  } else {
+    return {
+      err: false,
+      msg: result.message,
+      imageUrl: result.data.imageUrl,
     };
   }
 }

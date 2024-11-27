@@ -11,24 +11,28 @@ export interface PluginSettings {
   //API Token
   apiToken: string;
   //处理排除的域名清单
-  handlExcludeDomains: string;
+  excludeDomains: string;
   //// 是否处理剪贴板图片
   // isHandleClipboard: boolean;
   //插件保存目录
   saveDir: string;
   //本地图片上传后是否删除
   isDeleteSource: boolean;
+  deleteSourceTimeout: string;
   [propName: string]: any;
 }
+
+// ![这是图片](https://markdown.com.cn/assets/img/philly-magic-garden.9c0b4415.jpg)
 
 export const DEFAULT_SETTINGS: PluginSettings = {
   isAutoUpload: true,
   isAutoDown: true,
   api: "http://127.0.0.1:36677/upload",
   apiToken: "",
-  handlExcludeDomains: "",
+  excludeDomains: "",
   saveDir: "",
-  isDeleteSource: false,
+  isDeleteSource: true,
+  deleteSourceTimeout: "1000",
 };
 
 export class SettingTab extends PluginSettingTab {
@@ -70,12 +74,14 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
+    new Setting(set).setName("图片API设置").setHeading();
+
     new Setting(set)
       .setName("API")
-      .setDesc("API地址")
+      .setDesc("Image Api Gateway 地址")
       .addText((text) =>
         text
-          .setPlaceholder("Enter your secret")
+          .setPlaceholder("输入您的image-api-gateway地址")
           .setValue(this.plugin.settings.api)
           .onChange(async (value) => {
             this.plugin.settings.api = value;
@@ -84,46 +90,63 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(set)
-      .setName("API_TOKEN")
-      .setDesc("API_TOKEN")
+      .setName("访问令牌")
+      .setDesc("用于访问API的令牌")
       .addText((text) =>
         text
-          .setPlaceholder("Enter your secret")
+          .setPlaceholder("Enter your API Token")
           .setValue(this.plugin.settings.apiToken)
           .onChange(async (value) => {
-            this.plugin.settings.api = value;
+            this.plugin.settings.apiToken = value;
             await this.plugin.saveSettings();
           })
       );
 
     new Setting(set)
-      .setName("域名排除")
-      .setDesc(
-        `
+      .setName("API服务搭建")
+      .setDesc("项目地址")
+      .addButton((bt) => {
+        bt.buttonEl.outerHTML =
+          "<a href='https://github.com/haierkeys/image-api-gateway' target='_blank'>https://github.com/haierkeys/image-api-gateway</a>";
+      });
 
-        排除名单内的域名不会被处理,包括下载/上传
+    new Setting(set).setName("下载设置").setHeading();
 
-        `
-      )
+    new Setting(set)
+      .setName("下载域名排除")
+      .setDesc("在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符")
       .addTextArea((text) =>
         text
           .setPlaceholder("Enter your secret")
-          .setValue(this.plugin.settings.handlExcludeDomains)
+          .setValue(this.plugin.settings.excludeDomains)
           .onChange(async (value) => {
-            this.plugin.settings.handlExcludeDomains = value;
+            this.plugin.settings.excludeDomains = value;
             await this.plugin.saveSettings();
           })
       );
 
     new Setting(set)
-      .setName("是否删除源文件")
-      .setDesc("是否删除源文件")
+      .setName("是否上传后删除原图片")
+      .setDesc("是否上传后删除原图片")
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.isDeleteSource)
           .onChange(async (value) => {
             this.plugin.settings.isDeleteSource = value;
             this.display();
+            await this.plugin.saveSettings();
+          })
+      );
+
+    new Setting(set)
+      .setName("删除原图片延迟")
+      .setDesc("删除原图片延迟时间,单位为毫秒")
+      .addText((text) =>
+        text
+          .setPlaceholder("Enter your secret")
+          .setValue(this.plugin.settings.deleteSourceTimeout)
+          .onChange(async (value) => {
+            this.plugin.settings.deleteSourceTimeout = value;
             await this.plugin.saveSettings();
           })
       );
@@ -136,7 +159,7 @@ export class SettingTab extends PluginSettingTab {
       )
       .addButton((bt) => {
         bt.buttonEl.outerHTML =
-          "<a href='https://ko-fi.com/F1F195IQ5' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>";
+          "<a href='https://ko-fi.com/haierkeys' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>";
       });
 
     const debugDiv = set.createDiv();
