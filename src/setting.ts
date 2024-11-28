@@ -1,6 +1,6 @@
 import { App, PluginSettingTab, Notice, Setting, Platform } from "obsidian";
-
 import CustomImageAutoUploader from "./main";
+import { $ } from "./lang";
 
 export interface PluginSettings {
   //是否自动上传
@@ -58,11 +58,11 @@ export class SettingTab extends PluginSettingTab {
 
     set.empty();
 
-    new Setting(set).setName("通用设置").setHeading();
+    new Setting(set).setName($("通用设置")).setHeading();
 
     new Setting(set)
-      .setName("是否自动上传")
-      .setDesc("如果关闭,您只能手动上传图片")
+      .setName($("是否自动上传"))
+      .setDesc($("如果关闭,您只能手动上传图片"))
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.isAutoUpload)
@@ -74,8 +74,8 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(set)
-      .setName("是否自动下载")
-      .setDesc("如果关闭,您只能手动下载图片")
+      .setName($("是否自动下载"))
+      .setDesc($("如果关闭,您只能手动下载图片"))
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.isAutoDown)
@@ -87,8 +87,8 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(set)
-      .setName("上传间隔时间")
-      .setDesc("上传间隔时间,单位为毫秒,默认设置1s")
+      .setName($("上传间隔时间"))
+      .setDesc($("单位为毫秒,默认设置1s"))
       .addText((text) =>
         text
           .setValue(this.plugin.settings.afterUploadTimeout.toString())
@@ -99,8 +99,8 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(set)
-      .setName("关闭提示")
-      .setDesc("关闭右上角结果提示")
+      .setName($("关闭提示"))
+      .setDesc($("关闭右上角结果提示"))
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.isNotice)
@@ -113,29 +113,29 @@ export class SettingTab extends PluginSettingTab {
 
 
 
-    new Setting(set).setName("下载设置").setHeading();
+    new Setting(set).setName($("下载设置")).setHeading();
 
     new Setting(set)
-      .setName("下载域名排除")
-      .setDesc("在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符")
+      .setName($("下载域名排除"))
+      .setDesc($("在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符"))
       .addTextArea((text) =>
         text
-          .setPlaceholder("Enter your secret")
+          .setPlaceholder($("Enter your secret"))
           .setValue(this.plugin.settings.excludeDomains)
           .onChange(async (value) => {
             this.plugin.settings.excludeDomains = value;
             await this.plugin.saveSettings();
           })
       );
-    new Setting(set).setName("上传设置").setHeading();
+    new Setting(set).setName($("上传设置")).setHeading();
 
 
     new Setting(set)
-      .setName("API 地址")
-      .setDesc("Image Api Gateway 地址")
+      .setName($("API 地址"))
+      .setDesc($("Image Api Gateway 地址"))
       .addText((text) =>
         text
-          .setPlaceholder("输入您的 Image Api Gateway 地址")
+          .setPlaceholder($("输入您的 Image Api Gateway 地址"))
           .setValue(this.plugin.settings.api)
           .onChange(async (value) => {
             this.plugin.settings.api = value;
@@ -144,11 +144,11 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(set)
-      .setName("API 访问令牌")
-      .setDesc("用于访问API的令牌")
+      .setName($("API 访问令牌"))
+      .setDesc($("用于访问API的令牌"))
       .addText((text) =>
         text
-          .setPlaceholder("Enter your API Token")
+          .setPlaceholder($("输入您的 API 访问令牌"))
           .setValue(this.plugin.settings.apiToken)
           .onChange(async (value) => {
             this.plugin.settings.apiToken = value;
@@ -157,16 +157,16 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(set)
-      .setName("API 服务搭建")
-      .setDesc("项目地址")
+      .setName($("API 服务搭建"))
+      .setDesc($("项目地址"))
       .addButton((bt) => {
         bt.buttonEl.outerHTML =
           "<a href='https://github.com/haierkeys/image-api-gateway' target='_blank'>https://github.com/haierkeys/image-api-gateway</a>";
       });
 
     new Setting(set)
-      .setName("是否上传后删除原图片")
-      .setDesc("是否上传后删除原图片")
+      .setName($("是否上传后删除原图片"))
+      .setDesc($("在图片上传后是否删除本地原图片"))
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.isDeleteSource)
@@ -177,11 +177,11 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
-    new Setting(set).setName("Support").setHeading();
+    new Setting(set).setName($("支持")).setHeading();
     new Setting(set)
-      .setName("Donate")
+      .setName($("捐赠"))
       .setDesc(
-        "If you like this Plugin, consider donating to support continued development."
+        $("如果您喜欢这个插件，请考虑捐赠以支持继续开发。")
       )
       .addButton((bt) => {
         bt.buttonEl.outerHTML =
@@ -193,29 +193,24 @@ export class SettingTab extends PluginSettingTab {
     debugDiv.setAttr("style", "margin: var(--size-4-2)");
 
     const debugButton = debugDiv.createEl("button");
-    debugButton.setText("Copy Debug Information");
+    debugButton.setText($("复制 Debug 信息"));
     debugButton.onclick = async () => {
       await window.navigator.clipboard.writeText(
         JSON.stringify(
           {
             settings: this.plugin.settings,
             pluginVersion: this.plugin.manifest.version,
-          },
-          null,
-          4
+          }, null, 4
         )
       );
-      new Notice(
-        "Debug information copied to clipboard. May contain sensitive information!"
-      );
+      new Notice($("将调试信息复制到剪贴板, 可能包含敏感信!"));
     };
 
     if (Platform.isDesktopApp) {
       const info = set.createDiv();
       info.setAttr("align", "center");
-      info.setText(
-        "Debugging and logging:\nYou can always see the logs of this and every other plugin by opening the console with"
-      );
+      info.setText($("通过快捷键打开控制台，你可以看到这个插件和其他插件的日志"));
+
       const keys = set.createDiv();
       keys.setAttr("align", "center");
       keys.addClass("custom-shortcuts");
