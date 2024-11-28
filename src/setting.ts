@@ -58,7 +58,7 @@ export class SettingTab extends PluginSettingTab {
 
     set.empty();
 
-    new Setting(set).setName($("通用设置")).setHeading();
+    new Setting(set).setName($("通用")).setHeading();
 
     new Setting(set)
       .setName($("是否自动上传"))
@@ -113,7 +113,7 @@ export class SettingTab extends PluginSettingTab {
 
 
 
-    new Setting(set).setName($("下载设置")).setHeading();
+    new Setting(set).setName($("下载")).setHeading();
 
     new Setting(set)
       .setName($("下载域名排除"))
@@ -127,7 +127,7 @@ export class SettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
-    new Setting(set).setName($("上传设置")).setHeading();
+    new Setting(set).setName($("上传")).setHeading();
 
 
     new Setting(set)
