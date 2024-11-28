@@ -156,13 +156,13 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
+
     new Setting(set)
       .setName($("API 服务搭建"))
       .setDesc($("项目地址"))
-      .addButton((bt) => {
-        bt.buttonEl.outerHTML =
-          "<a href='https://github.com/haierkeys/image-api-gateway' target='_blank'>https://github.com/haierkeys/image-api-gateway</a>";
-      });
+      .settingEl
+      .createEl('a', { text: 'https://github.com/haierkeys/image-api-gateway', href: 'https://github.com/haierkeys/image-api-gateway' });
+
 
     new Setting(set)
       .setName($("是否上传后删除原图片"))
@@ -178,15 +178,13 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(set).setName($("支持")).setHeading();
-    new Setting(set)
+    let y = new Setting(set)
       .setName($("捐赠"))
       .setDesc(
         $("如果您喜欢这个插件，请考虑捐赠以支持继续开发。")
-      )
-      .addButton((bt) => {
-        bt.buttonEl.outerHTML =
-          "<a href='https://ko-fi.com/haierkeys' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>";
-      });
+      ).settingEl
+      .createEl('a', { href: 'https://ko-fi.com/haierkeys' })
+      .createEl('img', { attr: { src: "https://cdn.ko-fi.com/cdn/kofi3.png?v=3", height: '36', border: '0', alt: 'Buy Me a Coffee at ko-fi.com', style: "height:36px!important;border:0px!important;" } });
 
     const debugDiv = set.createDiv();
     debugDiv.setAttr("align", "center");

@@ -110,8 +110,8 @@ export function hasExcludeDomain(src: string, excludeDomains: string): boolean {
     item = item.replace(/\./g, "\\."); //将.替换为\.，因为.在正则表达式中有特殊含义
     item = item.replace("*", ".*");
 
-    var patt = new RegExp("^" + item, "i"); //正则表达式
-    var res = patt.exec(domain); //执行匹配，并获取到匹配结果
+    let patt = new RegExp("^" + item, "i"); //正则表达式
+    let res = patt.exec(domain); //执行匹配，并获取到匹配结果
 
     if (res != null) {
       has = true;
