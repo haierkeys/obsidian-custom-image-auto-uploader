@@ -14,7 +14,7 @@ export default <lang>{
   "网络错误,请检查网络是否通畅": "Network error, please check if the network is stable",
 
   // setting
-  "通用": "General",
+  "通用": "Common",
   "是否自动上传": "Automatic upload?",
   "如果关闭,您只能手动上传图片": "If disabled, you can only upload images manually",
   "是否自动下载": "Automatic download?",
