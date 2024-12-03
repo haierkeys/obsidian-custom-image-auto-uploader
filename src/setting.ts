@@ -6,7 +6,7 @@ export interface PluginSettings {
   //是否自动上传
   isAutoUpload: boolean;
   isAutoDown: boolean;
-  isNotice: boolean;
+  isCloseNotice: boolean;
   afterUploadTimeout: number;
   //API地址
   api: string;
@@ -36,7 +36,7 @@ export interface PluginSettings {
 export const DEFAULT_SETTINGS: PluginSettings = {
   isAutoUpload: true,
   isAutoDown: true,
-  isNotice: true,
+  isCloseNotice: true,
   afterUploadTimeout: 1000,
   api: "http://127.0.0.1:36677/upload",
   apiToken: "",
@@ -103,9 +103,9 @@ export class SettingTab extends PluginSettingTab {
       .setDesc($("关闭右上角结果提示"))
       .addToggle((toggle) =>
         toggle
-          .setValue(this.plugin.settings.isNotice)
+          .setValue(this.plugin.settings.isCloseNotice)
           .onChange(async (value) => {
-            this.plugin.settings.isNotice = value;
+            this.plugin.settings.isCloseNotice = value;
             this.display();
             await this.plugin.saveSettings();
           })

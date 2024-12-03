@@ -1,19 +1,24 @@
-import { Menu, MenuItem, TFile, Plugin, moment, Notice, } from "obsidian";
+import { Menu, MenuItem, TFile, Plugin, moment, Notice } from "obsidian";
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
 import {
-  imageDown, imageUpload, getFileSaveRandomName, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain,
+  imageDown,
+  imageUpload,
+  getFileSaveRandomName,
+  statusCheck,
+  replaceInText,
+  hasExcludeDomain,
+  autoAddExcludeDomain,
 } from "./utils";
 import { $ } from "./lang";
 
-
-const mdImageRegex = /!\[([^\]]*)\]\((.*?)\s*("(?:.*[^"])")?\s*\)|!\[\[([^\]]*)\]\]/g;
+const mdImageRegex =
+  /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]]*)\]\]/g;
 
 export default class CustomImageAutoUploader extends Plugin {
   settings: PluginSettings;
   statusBar: any;
 
   onload = async () => {
-
     await this.loadSettings();
 
     this.statusBar = this.addStatusBarItem();
@@ -23,33 +28,50 @@ export default class CustomImageAutoUploader extends Plugin {
     this.addSettingTab(new SettingTab(this.app, this));
 
     //注册命令
-    this.addCommand({ id: "down-all-images", name: $("下载全部图片"), callback: this.downImage, });
-    this.addCommand({ id: "upload-all-images", name: $("上传全部图片"), callback: this.uploadImage, });
+    this.addCommand({
+      id: "down-all-images",
+      name: $("下载全部图片"),
+      callback: this.downImage,
+    });
+    this.addCommand({
+      id: "upload-all-images",
+      name: $("上传全部图片"),
+      callback: this.uploadImage,
+    });
 
     //注册菜单
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
         menu.addItem((item: MenuItem) => {
-          item.setIcon("download").setTitle($("下载全部图片")).onClick((e) => { this.downImage(); });
+          item
+            .setIcon("download")
+            .setTitle($("下载全部图片"))
+            .onClick((e) => {
+              this.downImage();
+            });
         });
         menu.addItem((item: MenuItem) => {
-          item.setIcon("upload").setTitle($("上传全部图片")).onClick((e) => { this.uploadImage(); });
+          item
+            .setIcon("upload")
+            .setTitle($("上传全部图片"))
+            .onClick((e) => {
+              this.uploadImage();
+            });
         });
       })
     );
 
-
     //注册编译器事件
     this.registerEvent(
       this.app.workspace.on(
-        "editor-change", async function () {
+        "editor-change",
+        async function () {
           if (this.settings.isAutoDown) {
             await this.downImage(true);
           }
         }.bind(this)
       )
     );
-
   };
 
   //下载
@@ -102,7 +124,13 @@ export default class CustomImageAutoUploader extends Plugin {
       } else {
         isModify = true;
         downSussCount++;
-        fileContent = replaceInText(fileContent, match[0], imageAlt, result.path ? result.path : "", imgURL);
+        fileContent = replaceInText(
+          fileContent,
+          match[0],
+          imageAlt,
+          result.path ? result.path : "",
+          imgURL
+        );
       }
     }
 
@@ -115,20 +143,24 @@ export default class CustomImageAutoUploader extends Plugin {
       } else if (activeFile instanceof TFile) {
         this.app.vault.modify(activeFile, fileContent);
       }
-      if (this.settings.isNotice) {
-        new Notice(`Down Result:\nsucceed: ${downSussCount} \nfailed: ${downCount - downSussCount}`);
+      if (!this.settings.isCloseNotice) {
+        new Notice(
+          `Down Result:\nsucceed: ${downSussCount} \nfailed: ${downCount - downSussCount
+          }`
+        );
       }
     }
 
     if (this.settings.isAutoUpload) {
       // 需要等待500 毫秒
-      sleep(this.settings.afterUploadTimeout).then(() => { this.uploadImage(isWorkspace); });
+      sleep(this.settings.afterUploadTimeout).then(() => {
+        this.uploadImage(isWorkspace);
+      });
     }
   };
 
   //上传部分
   uploadImage = async (isWorkspace = false) => {
-
     let cursor = this.app.workspace.activeEditor?.editor?.getCursor();
     let fileContent = "";
     let activeFile = this.app.workspace.getActiveFile();
@@ -167,7 +199,12 @@ export default class CustomImageAutoUploader extends Plugin {
       } else if (result.imageUrl) {
         isModify = true;
         uploadSussCount++;
-        fileContent = replaceInText(fileContent, match[0], imageAlt, result.imageUrl);
+        fileContent = replaceInText(
+          fileContent,
+          match[0],
+          imageAlt,
+          result.imageUrl
+        );
         autoAddExcludeDomain(result.imageUrl, this);
       }
     }
@@ -182,16 +219,23 @@ export default class CustomImageAutoUploader extends Plugin {
         this.app.vault.modify(activeFile, fileContent);
       }
 
-      if (this.settings.isNotice) {
-        new Notice(`Upload Result:\nsucceed: ${uploadSussCount} \nfailed: ${uploadCount - uploadSussCount}`);
+      if (!this.settings.isCloseNotice) {
+        new Notice(
+          `Upload Result:\nsucceed: ${uploadSussCount} \nfailed: ${uploadCount - uploadSussCount
+          }`
+        );
       }
     }
   };
 
-
   onunload() { }
 
-  loadSettings = async () => { this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData()); };
+  loadSettings = async () => {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  };
 
-  saveSettings = async () => { await this.saveData(this.settings); statusCheck(this); };
+  saveSettings = async () => {
+    await this.saveData(this.settings);
+    statusCheck(this);
+  };
 }
