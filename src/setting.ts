@@ -35,7 +35,7 @@ export interface PluginSettings {
   //本地图片上传后是否删除
   isDeleteSource: boolean;
   //元数据上传设置
-  metadataUploadSets: Array<MetadataUploadSet>;
+  metadataNeedSets: Array<MetadataUploadSet>;
 
   [propName: string]: any;
 }
@@ -61,7 +61,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   excludeDomains: "",
   saveDir: "",
   isDeleteSource: true,
-  metadataUploadSets: [
+  metadataNeedSets: [
     <MetadataUploadSet>{ key: "cover", type: "none" },
     <MetadataUploadSet>{ key: "images", type: "none" },
   ],

@@ -1,4 +1,4 @@
-import { requestUrl, TFile, Vault, } from "obsidian";
+import { requestUrl, TFile, Vault } from "obsidian";
 import { fileTypeFromBuffer, FileTypeResult } from "file-type";
 import CustomImageAutoUploader from "./main";
 import { $ } from "./lang";
@@ -49,11 +49,9 @@ export function getDirname(path: string): string {
 }
 
 export async function checkCreateFolder(path: string, vault: Vault) {
-
   if (path != "" && !vault.getFolderByPath(path)) {
     vault.createFolder(path);
   }
-
 }
 
 export async function getAttachmentFolder(file: string, plugin: CustomImageAutoUploader) {
@@ -61,7 +59,6 @@ export async function getAttachmentFolder(file: string, plugin: CustomImageAutoU
   let folderList = folder.split("/");
   return folderList[0] ? folderList[0] + "/" + file : file;
 }
-
 
 /**
  * 替换文本中的图片链接
@@ -85,7 +82,6 @@ export function replaceInText(content: string, search: string, desc: string, pat
 }
 
 export function statusCheck(plugin: CustomImageAutoUploader): void {
-
   let title = "";
 
   title = plugin.settings.isAutoUpload ? $("自动上传") + "🟢" : $("自动上传") + "⚪";
@@ -94,7 +90,6 @@ export function statusCheck(plugin: CustomImageAutoUploader): void {
 }
 
 export function hasExcludeDomain(src: string, excludeDomains: string): boolean {
-
   if (excludeDomains.trim() === "") {
     return false;
   }
@@ -122,7 +117,6 @@ export function hasExcludeDomain(src: string, excludeDomains: string): boolean {
 }
 
 export function autoAddExcludeDomain(src: string, plugin: CustomImageAutoUploader): void {
-
   let url = new URL(src);
   const domain = url.hostname;
   let has = hasExcludeDomain(src, plugin.settings.excludeDomains);
@@ -142,19 +136,18 @@ export function autoAddExcludeDomain(src: string, plugin: CustomImageAutoUploade
  * @returns Promise<ImageDownResult>
  */
 export async function imageDown(url: string, name: string, plugin: CustomImageAutoUploader): Promise<ImageDownResult> {
-
   const response = await requestUrl({ url });
 
   if (response.status !== 200) {
-    return { err: false, msg: $("网络错误,请检查网络是否通畅"), };
+    return { err: false, msg: $("网络错误,请检查网络是否通畅") };
   }
 
-  const imageExtensions = new Set(["jpg", "png", "gif", "webp", "flif", "cr2", "tif", "bmp", "jxr", "psd", "ico", "bpg", "jp2", "jpm", "jpx", "heic", "cur", "dcm", "avif",]);
+  const imageExtensions = new Set(["jpg", "png", "gif", "webp", "flif", "cr2", "tif", "bmp", "jxr", "psd", "ico", "bpg", "jp2", "jpm", "jpx", "heic", "cur", "dcm", "avif"]);
 
   let type = <FileTypeResult>await fileTypeFromBuffer(response.arrayBuffer);
 
   if (!imageExtensions.has(type.ext) && type) {
-    return { err: true, msg: $("下载文件不是允许的图片类型"), };
+    return { err: true, msg: $("下载文件不是允许的图片类型") };
   }
 
   try {
@@ -164,9 +157,9 @@ export async function imageDown(url: string, name: string, plugin: CustomImageAu
 
     await plugin.app.vault.createBinary(userPath, response.arrayBuffer);
 
-    return { err: false, msg: "", path: path, type, };
+    return { err: false, msg: "", path: path, type };
   } catch (err) {
-    return { err: true, msg: $("图片文件创建失败:") + err.message, };
+    return { err: true, msg: $("图片文件创建失败:") + err.message };
   }
 }
 
@@ -183,7 +176,7 @@ export async function imageUpload(path: string, plugin: CustomImageAutoUploader)
   let file = this.app.vault.getFileByPath(userPath);
 
   if (!file) {
-    return { err: true, msg: $("待上传图片不存在"), };
+    return { err: true, msg: $("待上传图片不存在") };
   }
 
   let body = await file.vault.readBinary(file);
@@ -193,27 +186,66 @@ export async function imageUpload(path: string, plugin: CustomImageAutoUploader)
 
   let response;
   try {
-    response = await fetch(
-      plugin.settings.api, { method: "POST", headers: plugin.settings.apiToken == "" ? new Headers() : new Headers({ Authorization: plugin.settings.apiToken }), body: requestData, }
-    );
+    response = await fetch(plugin.settings.api, {
+      method: "POST",
+      headers: plugin.settings.apiToken == "" ? new Headers() : new Headers({ Authorization: plugin.settings.apiToken }),
+      body: requestData,
+    });
   } catch (error) {
-    return { err: true, msg: $("网络错误,请检查网络是否通畅"), };
+    return { err: true, msg: $("网络错误,请检查网络是否通畅") };
   }
 
   if (response && !response.ok) {
     let result = await response.text();
-    return { err: true, msg: $("网络错误,请检查网络是否通畅"), };
+    return { err: true, msg: $("网络错误,请检查网络是否通畅") };
   }
 
   let result = await response.json();
 
   if (result && !result.status) {
-    return { err: true, msg: "API Error:" + result.message + result.details.join(""), apiError: result.details.join(""), };
+    return {
+      err: true,
+      msg: "API Error:" + result.message + result.details.join(""),
+      apiError: result.details.join(""),
+    };
   } else {
     if (plugin.settings.isDeleteSource && file instanceof TFile) {
       plugin.app.vault.delete(file, true);
     }
 
-    return { err: false, msg: result.message, imageUrl: result.data.imageUrl, };
+    return { err: false, msg: result.message, imageUrl: result.data.imageUrl };
   }
+}
+export interface Metadata {
+  key: string;
+  type: string;
+  value: Array<string>;
+}
+export function metadataCacheHandle(activeFile: TFile, plugin: CustomImageAutoUploader): Metadata[] {
+  const cache = plugin.app.metadataCache.getFileCache(activeFile);
+
+  let metadataNeedKeys = [];
+  plugin.settings.metadataNeedSets.forEach((item) => {
+    metadataNeedKeys.push(item.key);
+  });
+
+  let handleMetadata: Metadata[] = []; // 初始化为空数组
+
+  if (cache?.frontmatter) {
+    console.log(cache.frontmatter);
+    Object.keys(cache.frontmatter).forEach((key) => {
+      if (cache?.frontmatter && plugin.settings.metadataNeedKeys.includes(key)) {
+        if (typeof cache.frontmatter[key].value == "string") {
+          handleMetadata.push({ key: key, type: "string", value: [<string>cache.frontmatter[key].value] });
+        } else if (Array.isArray(cache.frontmatter[key].value)) {
+          let pics = [];
+          for (let index = 0; index < cache.frontmatter[key].value.length; index++) {
+            pics.push(<string>cache.frontmatter[key].value[index]);
+          }
+          handleMetadata.push({ key: key, type: "array", value: pics });
+        }
+      }
+    });
+  }
+  return handleMetadata;
 }
