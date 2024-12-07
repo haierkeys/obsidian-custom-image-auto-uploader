@@ -28,7 +28,7 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Adresy obrazów na liście wykluczeń nie będą pobierane, jedna domena na linię, obsługiwany jest symbol * jako wieloznacznik",
     "上传": "Wyślij",
     "API 地址": "Adres API",
-    "Image Api Gateway 地址": "Adres bramy API obrazu",
+    "Image api 网关地址": "Adres bramy API obrazu",
     "API 访问令牌": "Token dostępu API",
     "用于访问API的令牌": "Token do dostępu do API",
     "输入您的 API 访问令牌": "Wpisz swój token dostępu do API",

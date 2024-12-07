@@ -28,7 +28,7 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Hariç tutma listesinde bulunan resim adresleri indirilmeyecek, her satırda bir alan adı, * joker karakteri desteklenir",
     "上传": "Yükle",
     "API 地址": "API adresi",
-    "Image Api Gateway 地址": "Resim API Geçidi adresi",
+    "Image api 网关地址": "Resim API Geçidi adresi",
     "API 访问令牌": "API erişim token'ı",
     "用于访问API的令牌": "API'ye erişim için kullanılan token",
     "输入您的 API 访问令牌": "API erişim token'ınızı girin",

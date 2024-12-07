@@ -28,7 +28,7 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Adresat e imazheve në listën e përjashtimit nuk do të shkarkohen, një domen për rresht, mbështet përdorimin e karaktereve zamenuese *",
     "上传": "Ngarkoni",
     "API 地址": "Adresa API",
-    "Image Api Gateway 地址": "Adresa e Image API Gateway",
+    "Image api 网关地址": "Adresa e Image API Gateway",
     "API 访问令牌": "Tokeni i hyrjes API",
     "用于访问API的令牌": "Tokeni për akses në API",
     "输入您的 API 访问令牌": "Futni tokenin tuaj të hyrjes API",

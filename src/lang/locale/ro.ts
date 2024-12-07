@@ -28,7 +28,7 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Adresele imaginilor din lista de excludere nu vor fi descărcate, un domeniu pe rând, suportă caracterul wildcard *",
     "上传": "Încarcă",
     "API 地址": "Adresă API",
-    "Image Api Gateway 地址": "Adresă Image API Gateway",
+    "Image api 网关地址": "Adresă Image API Gateway",
     "API 访问令牌": "Token de acces API",
     "用于访问API的令牌": "Token pentru acces la API",
     "输入您的 API 访问令牌": "Introduceți tokenul dumneavoastră de acces API",

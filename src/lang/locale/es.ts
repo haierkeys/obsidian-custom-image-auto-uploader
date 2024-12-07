@@ -28,7 +28,7 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Las direcciones de imágenes en la lista de exclusión no serán descargadas. Un dominio por línea, soporta el comodín *",
     "上传": "Subir",
     "API 地址": "Dirección de la API",
-    "Image Api Gateway 地址": "Dirección del portal de la API de imágenes",
+    "Image api 网关地址": "Dirección del portal de la API de imágenes",
     "API 访问令牌": "Token de acceso API",
     "用于访问API的令牌": "Token para acceder a la API",
     "输入您的 API 访问令牌": "Introduce tu token de acceso a la API",

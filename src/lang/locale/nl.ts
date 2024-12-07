@@ -28,7 +28,7 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Afbeeldingsadressen in de uitsluitingslijst worden niet gedownload, één domein per regel, ondersteunt het gebruik van het * wildcard teken",
     "上传": "Uploaden",
     "API 地址": "API-adres",
-    "Image Api Gateway 地址": "Image API Gateway adres",
+    "Image api 网关地址": "Image API Gateway adres",
     "API 访问令牌": "API-toegangstoken",
     "用于访问API的令牌": "Token voor toegang tot de API",
     "输入您的 API 访问令牌": "Voer uw API-toegangstoken in",

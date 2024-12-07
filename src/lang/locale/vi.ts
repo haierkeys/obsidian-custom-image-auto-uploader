@@ -28,7 +28,7 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Địa chỉ hình ảnh trong danh sách loại trừ sẽ không được tải xuống, một tên miền mỗi dòng, hỗ trợ ký tự đại diện *",
     "上传": "Tải lên",
     "API 地址": "Địa chỉ API",
-    "Image Api Gateway 地址": "Địa chỉ Cổng API Hình ảnh",
+    "Image api 网关地址": "Địa chỉ Cổng API Hình ảnh",
     "API 访问令牌": "Mã thông báo truy cập API",
     "用于访问API的令牌": "Mã thông báo được sử dụng để truy cập API",
     "输入您的 API 访问令牌": "Nhập mã thông báo truy cập API của bạn",

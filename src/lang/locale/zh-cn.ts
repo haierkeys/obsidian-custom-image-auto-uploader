@@ -29,7 +29,7 @@ export default <lang>{
   "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符",
   "上传": "上传",
   "API 地址": "API 地址",
-  "Image Api Gateway 地址": "Image Api Gateway 地址",
+  "Image api 网关地址": "Image api 网关地址",
   "API 访问令牌": "API 访问令牌",
   "用于访问API的令牌": "用于访问API的令牌",
   "输入您的 API 访问令牌": "输入您的 API 访问令牌",
