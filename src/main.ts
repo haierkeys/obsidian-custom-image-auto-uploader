@@ -23,17 +23,17 @@ export default class CustomImageAutoUploader extends Plugin {
     this.addSettingTab(new SettingTab(this.app, this));
 
     //注册命令
-    this.addCommand({ id: "down-all-images", name: $("下载全部图片"), callback: this.downImage, });
-    this.addCommand({ id: "upload-all-images", name: $("上传全部图片"), callback: this.uploadImage, });
+    this.addCommand({ id: "down-all-images", name: $("下载全部图片"), callback: this.ContentDownImage, });
+    this.addCommand({ id: "upload-all-images", name: $("上传全部图片"), callback: this.ContentDownImage, });
 
     //注册菜单
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
         menu.addItem((item: MenuItem) => {
-          item.setIcon("download").setTitle($("下载全部图片")).onClick((e) => { this.downImage(); });
+          item.setIcon("download").setTitle($("下载全部图片")).onClick((e) => { this.ContentDownImage(); });
         });
         menu.addItem((item: MenuItem) => {
-          item.setIcon("upload").setTitle($("上传全部图片")).onClick((e) => { this.uploadImage(); });
+          item.setIcon("upload").setTitle($("上传全部图片")).onClick((e) => { this.ContentDownImage(); });
         });
       })
     );
@@ -44,7 +44,7 @@ export default class CustomImageAutoUploader extends Plugin {
       this.app.workspace.on(
         "editor-change", async function () {
           if (this.settings.isAutoDown) {
-            await this.downImage(true);
+            await this.ContentDownImage(true);
           }
         }.bind(this)
       )
@@ -53,7 +53,9 @@ export default class CustomImageAutoUploader extends Plugin {
   };
 
   //下载
-  downImage = async (isWorkspace = false) => {
+  ContentDownImage = async (isWorkspace = false) => {
+
+    console.log(this.settings);
 
     let cursor = this.app.workspace.activeEditor?.editor?.getCursor();
     let fileContent = "";
@@ -122,12 +124,12 @@ export default class CustomImageAutoUploader extends Plugin {
 
     if (this.settings.isAutoUpload) {
       // 需要等待500 毫秒
-      sleep(this.settings.afterUploadTimeout).then(() => { this.uploadImage(isWorkspace); });
+      sleep(this.settings.afterUploadTimeout).then(() => { this.ContentDownUploadImage(isWorkspace); });
     }
   };
 
   //上传部分
-  uploadImage = async (isWorkspace = false) => {
+  ContentDownUploadImage = async (isWorkspace = false) => {
 
     let cursor = this.app.workspace.activeEditor?.editor?.getCursor();
     let fileContent = "";

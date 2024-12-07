@@ -2,6 +2,20 @@ import { App, PluginSettingTab, Notice, Setting, Platform } from "obsidian";
 import CustomImageAutoUploader from "./main";
 import { $ } from "./lang";
 
+
+
+
+
+export interface MetadataUploadSet {
+  key: string;
+  //设置宽度
+  width?: string;
+  //设置高度
+  height?: string;
+  //默认裁剪|居中裁剪 | 固定尺寸拉伸 | 固定尺寸等比缩放不裁切 | 不处理
+  type: "fixed-size-ratio-crop" | "fixed-size-ratio-center-crop" | "warp" | "fixed-size-ratio-zoom" | "none";
+}
+
 export interface PluginSettings {
   //是否自动上传
   isAutoUpload: boolean;
@@ -20,6 +34,8 @@ export interface PluginSettings {
   saveDir: string;
   //本地图片上传后是否删除
   isDeleteSource: boolean;
+  //元数据上传设置
+  metadataUploadSets: Array<MetadataUploadSet>;
 
   [propName: string]: any;
 }
@@ -33,6 +49,8 @@ export interface PluginSettings {
  */
 
 
+
+
 export const DEFAULT_SETTINGS: PluginSettings = {
   isAutoUpload: true,
   isAutoDown: true,
@@ -43,6 +61,10 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   excludeDomains: "",
   saveDir: "",
   isDeleteSource: true,
+  metadataUploadSets: [
+    <MetadataUploadSet>{ key: "cover", type: "none" },
+    <MetadataUploadSet>{ key: "images", type: "none" },
+  ],
 };
 
 export class SettingTab extends PluginSettingTab {
