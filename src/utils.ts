@@ -218,3 +218,37 @@ export async function imageUpload(path: string, plugin: CustomImageAutoUploader)
     return { err: false, msg: result.message, imageUrl: result.data.imageUrl, };
   }
 }
+
+export interface Metadata {
+  key: string;
+  type: string;
+  value: Array<string>;
+}
+export function metadataCacheHandle(activeFile: TFile, plugin: CustomImageAutoUploader): Metadata[] {
+  const cache = plugin.app.metadataCache.getFileCache(activeFile);
+
+  let metadataNeedKeys = [];
+  plugin.settings.metadataNeedSets.forEach((item) => {
+    metadataNeedKeys.push(item.key);
+  });
+
+  let handleMetadata: Metadata[] = []; // 初始化为空数组
+
+  if (cache?.frontmatter) {
+    console.log(cache.frontmatter);
+    Object.keys(cache.frontmatter).forEach((key) => {
+      if (cache?.frontmatter && plugin.settings.metadataNeedKeys.includes(key)) {
+        if (typeof cache.frontmatter[key].value == "string") {
+          handleMetadata.push({ key: key, type: "string", value: [<string>cache.frontmatter[key].value] });
+        } else if (Array.isArray(cache.frontmatter[key].value)) {
+          let pics = [];
+          for (let index = 0; index < cache.frontmatter[key].value.length; index++) {
+            pics.push(<string>cache.frontmatter[key].value[index]);
+          }
+          handleMetadata.push({ key: key, type: "array", value: pics });
+        }
+      }
+    });
+  }
+  return handleMetadata;
+}
