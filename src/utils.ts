@@ -2,7 +2,7 @@ import { requestUrl, TFile, Vault } from "obsidian";
 import { fileTypeFromBuffer, FileTypeResult } from "file-type";
 import CustomImageAutoUploader from "./main";
 import { $ } from "./lang";
-import { MetadataUploadSet } from "./setting";
+import { UploadSet } from "./setting";
 
 export interface ImageDownResult {
   err: boolean;
@@ -174,7 +174,7 @@ export async function imageDown(url: string, plugin: CustomImageAutoUploader): P
  * @param plugin CustomImageAutoUploader
  * @returns Promise<ImageUploadResult>
  */
-export async function imageUpload(path: string, postdata: MetadataUploadSet, plugin: CustomImageAutoUploader): Promise<ImageUploadResult> {
+export async function imageUpload(path: string, postdata: UploadSet, plugin: CustomImageAutoUploader): Promise<ImageUploadResult> {
   //获取用户设置的附件目录
   let file = await getAttachmentUploadPath(path, plugin);
 
@@ -219,18 +219,16 @@ export interface Metadata {
   key: string;
   type: string;
   value: Array<string>;
-  params: MetadataUploadSet;
+  params: UploadSet;
 }
 export function metadataCacheHandle(activeFile: TFile, plugin: CustomImageAutoUploader): Metadata[] {
   const cache = plugin.app.metadataCache.getFileCache(activeFile);
 
   let metadataNeedKeys = Array<string>();
 
-  plugin.settings.metadataNeedSets.forEach((item, i) => {
+  plugin.settings.propertyNeedSets.forEach((item, i) => {
     metadataNeedKeys[i] = item.key;
   });
-
-  console.log(metadataNeedKeys);
 
   let handleMetadata: Metadata[] = []; // 初始化为空数组
 
@@ -239,13 +237,13 @@ export function metadataCacheHandle(activeFile: TFile, plugin: CustomImageAutoUp
       if (cache?.frontmatter && metadataNeedKeys.includes(key)) {
         let i: number = metadataNeedKeys.indexOf(key);
         if (typeof cache.frontmatter[key] == "string") {
-          handleMetadata.push({ key: key, type: "string", value: [<string>cache.frontmatter[key]], params: plugin.settings.metadataNeedSets[i] });
+          handleMetadata.push({ key: key, type: "string", value: [<string>cache.frontmatter[key]], params: plugin.settings.propertyNeedSets[i] });
         } else if (Array.isArray(cache.frontmatter[key])) {
           let pics = [];
           for (let index = 0; index < cache.frontmatter[key].length; index++) {
             pics.push(<string>cache.frontmatter[key][index]);
           }
-          handleMetadata.push({ key: key, type: "array", value: pics, params: plugin.settings.metadataNeedSets[i] });
+          handleMetadata.push({ key: key, type: "array", value: pics, params: plugin.settings.propertyNeedSets[i] });
         }
       }
     });

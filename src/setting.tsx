@@ -1,18 +1,35 @@
+import * as React from "react";
 import { App, PluginSettingTab, Notice, Setting, Platform } from "obsidian";
 import CustomImageAutoUploader from "./main";
 import { $ } from "./lang";
 import { KofiImage } from "./res";
+import { createRoot } from "react-dom/client";
+import { SettingsView } from "./views/settings-view";
 
-export interface MetadataUploadSet {
+export const ImageSvrProcessMode = {
+  // 不处理
+  none: { label: "默认不处理", value: "none" },
+  // 默认裁剪
+  fillTopleft: { label: "默认裁剪", value: "fill-topleft" },
+  // 居中裁剪
+  fillCenter: { label: "居中裁剪", value: "fill-center" },
+  // 固定尺寸拉伸
+  resize: { label: "固定尺寸拉伸", value: "resize" },
+  // 固定尺寸等比缩放不裁切
+  fit: { label: "固定尺寸拉伸", value: "fit" },
+};
+
+export interface UploadSet {
   [key: string]: string;
   key: string;
   //设置宽度
   width: string;
   //设置高度
   height: string;
-  //默认裁剪|居中裁剪 | 固定尺寸拉伸 | 固定尺寸等比缩放不裁切 | 不处理
-  type: "fixed-size-ratio-crop" | "fixed-size-ratio-center-crop" | "warp" | "fixed-size-ratio-zoom" | "none";
+  // PropertyUploadSetType
+  type: string;
 }
+
 
 export interface PluginSettings {
   //是否自动上传
@@ -30,8 +47,10 @@ export interface PluginSettings {
   // isHandleClipboard: boolean;
   //本地图片上传后是否删除
   isDeleteSource: boolean;
+  //内容部分上传设置
+  contentSet: UploadSet;
   //元数据上传设置
-  metadataNeedSets: Array<MetadataUploadSet>;
+  propertyNeedSets: Array<UploadSet>;
   //  [propName: string]: any;
 }
 
@@ -51,8 +70,12 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   apiToken: "",
   excludeDomains: "",
   isDeleteSource: true,
+  contentSet: { key: "", type: ImageSvrProcessMode.none.value, width: "0", height: "0" },
   //元数据上传设置
-  metadataNeedSets: [<MetadataUploadSet>{ key: "cover", type: "none", width: "0", height: "0" }, <MetadataUploadSet>{ key: "images", type: "none", width: "0", height: "0" }],
+  propertyNeedSets: [
+    { key: "cover", type: ImageSvrProcessMode.none.value, width: "0", height: "0" },
+    { key: "images", type: ImageSvrProcessMode.none.value, width: "0", height: "0" },
+  ],
 };
 
 export class SettingTab extends PluginSettingTab {
@@ -165,6 +188,13 @@ export class SettingTab extends PluginSettingTab {
           await this.plugin.saveSettings();
         })
       );
+
+    const root = document.createElement("div");
+    root.className = "tags-overview-table-settings";
+    set.appendChild(root);
+
+    const reactRoot = createRoot(root);
+    reactRoot.render(<SettingsView plugin={this.plugin} />);
 
     new Setting(set).setName($("支持")).setHeading();
     let y = new Setting(set)

@@ -1,5 +1,5 @@
 import { Menu, MenuItem, TFile, Plugin, Notice, } from "obsidian";
-import { SettingTab, PluginSettings, MetadataUploadSet, DEFAULT_SETTINGS } from "./setting";
+import { SettingTab, PluginSettings, PropertyUploadSet, DEFAULT_SETTINGS } from "./setting";
 import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle } from "./utils";
 import { $ } from "./lang";
 
@@ -180,7 +180,7 @@ export default class CustomImageAutoUploader extends Plugin {
       let file = match[2] ? match[2] : match[4];
       let imageAlt = match[3] ? match[3] : match[1] ? match[1] : file;
 
-      let result = await imageUpload(file, <MetadataUploadSet>{}, this);
+      let result = await imageUpload(file, <PropertyUploadSet>{}, this);
 
       if (result.err) {
         new Notice(result.msg);
@@ -210,7 +210,7 @@ export default class CustomImageAutoUploader extends Plugin {
 
   //下载
   MetadataDownImage = async (isWorkspace = false) => {
-    if (this.settings.metadataNeedSets.length == 0) {
+    if (this.settings.propertyNeedSets.length == 0) {
       return;
     }
 
@@ -228,9 +228,6 @@ export default class CustomImageAutoUploader extends Plugin {
       let downSussCount = 0;
 
       const metadata = metadataCacheHandle(activeFile, this);
-
-      console.log(metadata);
-
       for (const i in metadata) {
         const item = metadata[i];
         for (const y in item.value) {
