@@ -22,12 +22,12 @@ export const Icon = ({ iconType, onClick, className, label, active, disabled }: 
         onClick
           ? (e: MouseEvent) => {
               if (!disabled) {
-                onClick(e);
+                onClick(e)
               }
             }
           : undefined
       }>
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`svg-icon-icon ${className}-svg`}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`svg-icon-icon ${className}-svg`} style={{  cursor: "pointer" }}>
         {iconType === ICON_TYPE.trash ? (
           <>
             <path d="M3 6h18" />
@@ -44,5 +44,5 @@ export const Icon = ({ iconType, onClick, className, label, active, disabled }: 
         )}
       </svg>
     </div>
-  );
+  )
 };

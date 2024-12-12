@@ -191,7 +191,7 @@ export class SettingTab extends PluginSettingTab {
       );
 
     const root = document.createElement("div");
-    root.className = "tags-overview-table-settings";
+    root.className = "custom-image-auto-uploader-settings"
     set.appendChild(root);
 
     const reactRoot = createRoot(root);

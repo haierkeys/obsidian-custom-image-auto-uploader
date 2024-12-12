@@ -1,22 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 
-import { ICON_TYPE, Icon } from "src/icon";
-import TagsOverviewPlugin from "src/main";
-import { UploadSet, ImageSvrProcessMode } from "src/setting";
-import { $ } from "src/lang";
+import { ICON_TYPE, Icon } from "src/icon"
+import TagsOverviewPlugin from "src/main"
+import { UploadSet, ImageSvrProcessMode } from "src/setting"
+import { $ } from "src/lang"
 
 export const SettingsView = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
-  const frontMatterPropertiesSet = new Set<string>();
+  const frontMatterPropertiesSet = new Set<string>()
   plugin.app.vault.getMarkdownFiles().forEach((file) => {
-    const cache = plugin.app.metadataCache.getFileCache(file);
+    const cache = plugin.app.metadataCache.getFileCache(file)
     if (cache?.frontmatter) {
-      Object.keys(cache.frontmatter).forEach((key) => frontMatterPropertiesSet.add(key));
+      Object.keys(cache.frontmatter).forEach((key) => frontMatterPropertiesSet.add(key))
     }
-  });
+  })
 
   // Convert to array and sort
-  const frontMatterProperties: string[] = Array.from(frontMatterPropertiesSet);
-  frontMatterProperties.sort((a, b) => a.localeCompare(b));
+  const frontMatterProperties: string[] = Array.from(frontMatterPropertiesSet)
+  frontMatterProperties.sort((a, b) => a.localeCompare(b))
 
   return (
     <>
@@ -35,35 +35,34 @@ export const SettingsView = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
       </div>
       <PropertyNeedSet plugin={plugin} frontMatterProperties={frontMatterProperties} />
     </>
-  );
-};
+  )
+}
 
 export const ContentSet = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
-  const [contentSet, setContentSet] = useState<UploadSet>(plugin.settings.contentSet);
+  const [contentSet, setContentSet] = useState<UploadSet>(plugin.settings.contentSet)
 
   useEffect(() => {
-    save();
-  }, [contentSet]);
+    save()
+  }, [contentSet])
 
   const setWidth = (value: string) => {
-     setContentSet({ key: "", type: contentSet.type, width: value, height: contentSet.height });
-  };
+    setContentSet({ key: "", type: contentSet.type, width: value, height: contentSet.height })
+  }
 
   const setHeight = (value: string) => {
-    setContentSet({ key: "", type: contentSet.type, width: contentSet.width, height: value });
-
-  };
+    setContentSet({ key: "", type: contentSet.type, width: contentSet.width, height: value })
+  }
 
   const setType = (value: string) => {
-    setContentSet({ key: "", type: value, width: contentSet.width, height: contentSet.height });
-  };
+    setContentSet({ key: "", type: value, width: contentSet.width, height: contentSet.height })
+  }
 
   const save = async () => {
-    plugin.settings.contentSet = contentSet;
-    await plugin.saveData(plugin.settings);
-  };
+    plugin.settings.contentSet = contentSet
+    await plugin.saveData(plugin.settings)
+  }
 
-  const ImageSvrProcessModeEntries = Object.entries(ImageSvrProcessMode);
+  const ImageSvrProcessModeEntries = Object.entries(ImageSvrProcessMode)
 
   const TableRows = (
     <tr>
@@ -85,11 +84,11 @@ export const ContentSet = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
       </td>
       <td></td>
     </tr>
-  );
+  )
 
   return (
     <div>
-      <table className="tags-overview-settings-table" style={{ width: "100%", marginBottom: "5px" }}>
+      <table className="custom-image-auto-uploader-settings-table">
         <thead>
           <tr>
             <th style={{ textAlign: "center" }}></th>
@@ -103,63 +102,63 @@ export const ContentSet = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
       </table>
     </div>
   )
-};
+}
 
 export const PropertyNeedSet = ({ plugin, frontMatterProperties }: { plugin: TagsOverviewPlugin; frontMatterProperties: string[] }) => {
-  const [propertyNeedSets, setPropertyNeedSets] = useState<UploadSet[]>(plugin.settings.propertyNeedSets);
+  const [propertyNeedSets, setPropertyNeedSets] = useState<UploadSet[]>(plugin.settings.propertyNeedSets)
 
   useEffect(() => {
-    save();
-  }, [propertyNeedSets]);
+    save()
+  }, [propertyNeedSets])
 
-  const selectedTypes: string[] = propertyNeedSets.map((propertyNeedSet: UploadSet) => propertyNeedSet.key);
+  const selectedTypes: string[] = propertyNeedSets.map((propertyNeedSet: UploadSet) => propertyNeedSet.key)
 
   const add = (property: string) => {
     if (!propertyNeedSets.find((selectedProperty) => selectedProperty.property === property)) {
-      setPropertyNeedSets([...propertyNeedSets, { key: property, type: ImageSvrProcessMode.none.value, width: "0", height: "0" }]);
+      setPropertyNeedSets([...propertyNeedSets, { key: property, type: ImageSvrProcessMode.none.value, width: "0", height: "0" }])
     }
-  };
+  }
 
   const setWidth = (propertyNeedSet: UploadSet, value: string) => {
-    const index = propertyNeedSets.indexOf(propertyNeedSet);
-    const tempPropertyNeeds = [...propertyNeedSets];
-    tempPropertyNeeds[index].width = value;
-    setPropertyNeedSets([...tempPropertyNeeds]);
-  };
+    const index = propertyNeedSets.indexOf(propertyNeedSet)
+    const tempPropertyNeeds = [...propertyNeedSets]
+    tempPropertyNeeds[index].width = value
+    setPropertyNeedSets([...tempPropertyNeeds])
+  }
 
   const setHeight = (propertyNeedSet: UploadSet, value: string) => {
-    const index = propertyNeedSets.indexOf(propertyNeedSet);
-    const tempPropertyNeeds = [...propertyNeedSets];
-    tempPropertyNeeds[index].height = value;
-    setPropertyNeedSets([...tempPropertyNeeds]);
-  };
+    const index = propertyNeedSets.indexOf(propertyNeedSet)
+    const tempPropertyNeeds = [...propertyNeedSets]
+    tempPropertyNeeds[index].height = value
+    setPropertyNeedSets([...tempPropertyNeeds])
+  }
 
   const setType = (propertyNeedSet: UploadSet, value: string) => {
-    const index = propertyNeedSets.indexOf(propertyNeedSet);
-    const tempPropertyNeeds = [...propertyNeedSets];
-    tempPropertyNeeds[index].type = value;
-    setPropertyNeedSets([...tempPropertyNeeds]);
-  };
+    const index = propertyNeedSets.indexOf(propertyNeedSet)
+    const tempPropertyNeeds = [...propertyNeedSets]
+    tempPropertyNeeds[index].type = value
+    setPropertyNeedSets([...tempPropertyNeeds])
+  }
 
   const remove = (index: number) => {
-    const tempPropertyNeeds = [...propertyNeedSets];
-    tempPropertyNeeds.splice(index, 1);
-    setPropertyNeedSets([...tempPropertyNeeds]);
-  };
+    const tempPropertyNeeds = [...propertyNeedSets]
+    tempPropertyNeeds.splice(index, 1)
+    setPropertyNeedSets([...tempPropertyNeeds])
+  }
 
   const save = async () => {
-    plugin.settings.propertyNeedSets = propertyNeedSets;
-    await plugin.saveData(plugin.settings);
-  };
+    plugin.settings.propertyNeedSets = propertyNeedSets
+    await plugin.saveData(plugin.settings)
+  }
 
-  const ImageSvrProcessModeEntries = Object.entries(ImageSvrProcessMode);
+  const ImageSvrProcessModeEntries = Object.entries(ImageSvrProcessMode)
 
   const TableRows =
     propertyNeedSets.length === 0 ? (
       <tr>
-        <td colSpan={3} className="no-columns-added">
-          <i>No extra filters added</i>
-          <p>The default ones will be displayed</p>
+        <td colSpan={5} className="no-columns-added">
+          <i>No property added</i>
+          <p>No property images need to be uploaded</p>
         </td>
       </tr>
     ) : (
@@ -187,18 +186,18 @@ export const PropertyNeedSet = ({ plugin, frontMatterProperties }: { plugin: Tag
                 className="move-up-icon"
                 iconType={ICON_TYPE.trash}
                 onClick={() => {
-                  remove(index);
+                  remove(index)
                 }}
               />
             </td>
           </tr>
-        );
+        )
       })
-    );
+    )
 
   return (
     <div>
-      <table className="tags-overview-settings-table" style={{ width: "100%", marginBottom: "5px" }}>
+      <table className="custom-image-auto-uploader-settings-table" style={{ width: "100%", marginBottom: "5px" }}>
         <thead>
           <tr>
             <th style={{ textAlign: "center" }}>{$("属性")}</th>
@@ -229,4 +228,4 @@ export const PropertyNeedSet = ({ plugin, frontMatterProperties }: { plugin: Tag
       </table>
     </div>
   )
-};
+}

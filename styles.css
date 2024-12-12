@@ -1,0 +1,46 @@
+.custom-image-auto-uploader-settings {
+  padding: 0.75em 0;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.custom-image-auto-uploader-settings-table {
+  width: 100%;
+  margin-bottom: 20px;
+  border: 0 !important;
+  background-color: var(--background-secondary);
+}
+.custom-image-auto-uploader-settings-table th, .custom-image-auto-uploader-settings-table td {
+  border: 0 !important;
+}
+.custom-image-auto-uploader-settings-table th {
+  text-align: left;
+  padding: 8px 10px;
+  font-size: var(--font-ui-smaller);
+}
+.custom-image-auto-uploader-settings-table .no-columns-added {
+  padding: 15px;
+  text-align: center;
+  background-color: var(--background-secondary);
+}
+.custom-image-auto-uploader-settings-table .no-columns-added p {
+  margin: 4px;
+  font-size: 10px;
+}
+.custom-image-auto-uploader-settings-table thead {
+  border-bottom: 1px solid var(--color-base-40) !important;
+}
+.custom-image-auto-uploader-settings-table tbody tr {
+  background-color: var(--background-secondary);
+}
+.custom-image-auto-uploader-settings-table tbody tr:nth-child(odd) {
+  background-color: var(--background-secondary-alt);
+}
+.custom-image-auto-uploader-settings-table tbody td {
+  padding: 4px 8px;
+  font-size: var(--font-ui-small);
+}
+.custom-image-auto-uploader-settings-table tfoot td {
+  padding: 8px 10px;
+}
+
+/*# sourceMappingURL=styles.css.map */
