@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ICON_TYPE, Icon } from "src/icon";
 import TagsOverviewPlugin from "src/main";
 import { UploadSet, ImageSvrProcessMode } from "src/setting";
+import { $ } from "src/lang";
 
 export const SettingsView = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
   const frontMatterPropertiesSet = new Set<string>();
@@ -21,15 +22,15 @@ export const SettingsView = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
     <>
       <div className="setting-item">
         <div className="setting-item-info">
-          <div className="setting-item-name">笔记正文图片</div>
-          <div className="setting-item-description">设置图片的尺寸, 裁剪, 拉伸, 缩放, 尺寸最大不会超过服务端相关设置</div>
+          <div className="setting-item-name">{$("笔记正文图片")}</div>
+          <div className="setting-item-description">{$("设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置")}</div>
         </div>
       </div>
       <ContentSet plugin={plugin} />
       <div className="setting-item">
         <div className="setting-item-info">
-          <div className="setting-item-name">笔记属性图片</div>
-          <div className="setting-item-description">设置图片的尺寸, 裁剪, 拉伸, 缩放, 尺寸最大不会超过服务端相关设置</div>
+          <div className="setting-item-name">{$("笔记属性图片")}</div>
+          <div className="setting-item-description">{$("设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置")}</div>
         </div>
       </div>
       <PropertyNeedSet plugin={plugin} frontMatterProperties={frontMatterProperties} />
@@ -66,7 +67,7 @@ export const ContentSet = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
 
   const TableRows = (
     <tr>
-      <td style={{ textAlign: "center", width: "20%" }}>正文图片</td>
+      <td style={{ textAlign: "center", width: "20%" }}>{$("正文图片")}</td>
       <td style={{ textAlign: "center", width: "20%" }}>
         <input type="text" style={{ width: "60px" }} value={contentSet.width} onChange={(e) => setWidth(e.target.value)} />
       </td>
@@ -88,20 +89,20 @@ export const ContentSet = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
 
   return (
     <div>
-      <table className="tags-overview-settings-table" style={{  width: "100%", marginBottom: "5px" }}>
+      <table className="tags-overview-settings-table" style={{ width: "100%", marginBottom: "5px" }}>
         <thead>
           <tr>
             <th style={{ textAlign: "center" }}></th>
-            <th style={{ textAlign: "center" }}>宽度</th>
-            <th style={{ textAlign: "center" }}>高度</th>
-            <th style={{ textAlign: "center" }}>调整压缩</th>
+            <th style={{ textAlign: "center" }}>{$("宽度")}</th>
+            <th style={{ textAlign: "center" }}>{$("高度")}</th>
+            <th style={{ textAlign: "center" }}>{$("调整压缩")}</th>
             <th></th>
           </tr>
         </thead>
         <tbody>{TableRows}</tbody>
       </table>
     </div>
-  );
+  )
 };
 
 export const PropertyNeedSet = ({ plugin, frontMatterProperties }: { plugin: TagsOverviewPlugin; frontMatterProperties: string[] }) => {
@@ -197,13 +198,13 @@ export const PropertyNeedSet = ({ plugin, frontMatterProperties }: { plugin: Tag
 
   return (
     <div>
-      <table className="tags-overview-settings-table" style={{  width: "100%", marginBottom: "5px" }}>
+      <table className="tags-overview-settings-table" style={{ width: "100%", marginBottom: "5px" }}>
         <thead>
           <tr>
-            <th style={{ textAlign: "center" }}>属性</th>
-            <th style={{ textAlign: "center" }}>宽度</th>
-            <th style={{ textAlign: "center" }}>高度</th>
-            <th style={{ textAlign: "center" }}>调整压缩</th>
+            <th style={{ textAlign: "center" }}>{$("属性")}</th>
+            <th style={{ textAlign: "center" }}>{$("宽度")}</th>
+            <th style={{ textAlign: "center" }}>{$("高度")}</th>
+            <th style={{ textAlign: "center" }}>{$("调整压缩")}</th>
             <th></th>
           </tr>
         </thead>
@@ -211,9 +212,9 @@ export const PropertyNeedSet = ({ plugin, frontMatterProperties }: { plugin: Tag
         <tfoot>
           <tr>
             <td colSpan={3}>
-              <span style={{ display: "inline-block", marginRight: "15px" }}>添加属性图片上传</span>
+              <span style={{ display: "inline-block", marginRight: "15px" }}>{$("添加属性图片上传")}</span>
               <select className="dropdown" onChange={(e) => add(e.target.value)}>
-                <option value="">选择属性</option>
+                <option value="">{$("选择属性")}</option>
                 {frontMatterProperties
                   .filter((property) => !selectedTypes.includes(property))
                   .map((property) => (
@@ -227,5 +228,5 @@ export const PropertyNeedSet = ({ plugin, frontMatterProperties }: { plugin: Tag
         </tfoot>
       </table>
     </div>
-  );
+  )
 };

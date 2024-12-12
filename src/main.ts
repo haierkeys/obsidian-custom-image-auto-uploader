@@ -1,5 +1,5 @@
 import { Menu, MenuItem, TFile, Plugin, Notice, } from "obsidian";
-import { SettingTab, PluginSettings, PropertyUploadSet, DEFAULT_SETTINGS } from "./setting";
+import { SettingTab, PluginSettings, UploadSet, DEFAULT_SETTINGS } from "./setting";
 import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle } from "./utils";
 import { $ } from "./lang";
 
@@ -180,7 +180,7 @@ export default class CustomImageAutoUploader extends Plugin {
       let file = match[2] ? match[2] : match[4];
       let imageAlt = match[3] ? match[3] : match[1] ? match[1] : file;
 
-      let result = await imageUpload(file, <PropertyUploadSet>{}, this);
+      let result = await imageUpload(file, this.settings.contentSet, this);
 
       if (result.err) {
         new Notice(result.msg);

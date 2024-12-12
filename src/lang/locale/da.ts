@@ -41,5 +41,21 @@ export default <lang>{
     "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "Hvis du kan lide dette plugin, bedes du overveje at donere for at støtte den fortsatte udvikling",
     "复制 Debug 信息": "Kopier fejlfindingsinformation",
     "将调试信息复制到剪贴板, 可能包含敏感信!": "Fejlfindingsinformationer er blevet kopieret til udklipsholderen, de kan indeholde følsomme oplysninger!",
-    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Åbn konsollen med en genvejstast, så kan du se logfilerne for dette plugin og andre plugins"
+    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Åbn konsollen med en genvejstast, så kan du se logfilerne for dette plugin og andre plugins",
+
+    "不处理": "Behandle ikke",
+    "等比左上填充(裁剪)": "Proportional udfyldning fra øverste venstre hjørne (beskæring)",
+    "等比居中填充(裁剪)": "Proportional udfyldning centreret (beskæring)",
+    "固定尺寸拉伸": "Fast størrelse strækning",
+    "等比适应": "Proportional tilpasning",
+    "笔记正文图片": "Billede af notens hovedtekst",
+    "笔记属性图片": "Billede af noteegenskab",
+    "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Indstil billedkomprimeringsmodus, 0 betyder ingen grænser, den maksimale værdi vil ikke overskride serverindstillingerne",
+    "正文图片": "Hovedtekstbillede",
+    "宽度": "Bredde",
+    "高度": "Højde",
+    "调整压缩": "Juster komprimering",
+    "属性": "Egenskab",
+    "添加属性图片上传": "Tilføj upload af billede af egenskab",
+    "选择属性": "Vælg egenskab"
 };

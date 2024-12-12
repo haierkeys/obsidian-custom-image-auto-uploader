@@ -41,5 +41,21 @@ export default <lang>{
     "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "Bu eklentiyi beğendiyseniz, gelişimine devam etmek için bağış yapmayı düşünün.",
     "复制 Debug 信息": "Hata ayıklama bilgilerini kopyala",
     "将调试信息复制到剪贴板, 可能包含敏感信!": "Hata ayıklama bilgilerini panoya kopyalayın, hassas bilgiler içerebilir!",
-    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Konsolu kısayol ile açın, bu eklentinin ve diğer eklentilerin günlüklerini görebilirsiniz"
+    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Konsolu kısayol ile açın, bu eklentinin ve diğer eklentilerin günlüklerini görebilirsiniz",
+
+    "不处理": "İşlemeyin",
+    "等比左上填充(裁剪)": "Sol üst köşeden orantılı doldurma (kesme)",
+    "等比居中填充(裁剪)": "Orantılı merkezden doldurma (kesme)",
+    "固定尺寸拉伸": "Sabit boyuta germe",
+    "等比适应": "Orantılı uyum",
+    "笔记正文图片": "Not içeriği resmi",
+    "笔记属性图片": "Not özellikleri resmi",
+    "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Resim sıkıştırma modunu ayarlayın, 0 sınırsız demektir, maksimum değer sunucu ayarlarını geçmeyecektir",
+    "正文图片": "Ana içerik resmi",
+    "宽度": "Genişlik",
+    "高度": "Yükseklik",
+    "调整压缩": "Sıkıştırmayı ayarla",
+    "属性": "Özellik",
+    "添加属性图片上传": "Özellik resmi yüklemesi ekle",
+    "选择属性": "Özellik seçin",
 };

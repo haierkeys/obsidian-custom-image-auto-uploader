@@ -41,5 +41,22 @@ export default <lang>{
   "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "Ha tetszik ez a bővítmény, fontolja meg adományozást a további fejlesztések támogatásához",
   "复制 Debug 信息": "Másolja a hibakeresési információkat",
   "将调试信息复制到剪贴板, 可能包含敏感信!": "A hibakeresési információk másolva lettek a vágólapra, érzékeny információkat tartalmazhatnak!",
-  "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Nyissa meg a konzolt gyorsbillentyűkkel, és megtekintheti ennek a bővítménynek és más bővítményeknek a naplóit"
+  "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Nyissa meg a konzolt gyorsbillentyűkkel, és megtekintheti ennek a bővítménynek és más bővítményeknek a naplóit",
+
+
+  "不处理": "Ne dolgozza fel",
+  "等比左上填充(裁剪)": "Arányos kitöltés a bal felső sarokból (levágás)",
+  "等比居中填充(裁剪)": "Arányos kitöltés középre (levágás)",
+  "固定尺寸拉伸": "Fix méretre nyújtás",
+  "等比适应": "Arányos igazítás",
+  "笔记正文图片": "A jegyzet szövegtörzsének képe",
+  "笔记属性图片": "A jegyzet tulajdonságának képe",
+  "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Állítsa be a kép tömörítési módját, 0 korlátozás nélkül, a maximális érték nem haladhatja meg a szerver beállításait",
+  "正文图片": "A szövegtörzs képe",
+  "宽度": "Szélesség",
+  "高度": "Magasság",
+  "调整压缩": "Tömörítés beállítása",
+  "属性": "Tulajdonság",
+  "添加属性图片上传": "Tulajdonság képek feltöltése hozzáadása",
+  "选择属性": "Tulajdonság kiválasztása"
 };

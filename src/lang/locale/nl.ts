@@ -41,5 +41,21 @@ export default <lang>{
     "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "Als u van deze plugin houdt, overweeg dan om te doneren om de doorontwikkeling te ondersteunen",
     "复制 Debug 信息": "Debug-informatie kopiëren",
     "将调试信息复制到剪贴板, 可能包含敏感信!": "Kopieer de debug-informatie naar het klembord, het kan gevoelige gegevens bevatten!",
-    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Open de console met sneltoetsen om de logboeken van deze plugin en andere plugins te bekijken"
+    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Open de console met sneltoetsen om de logboeken van deze plugin en andere plugins te bekijken",
+
+    "不处理": "Niet verwerken",
+    "等比左上填充(裁剪)": "Proportioneel vullen vanaf de linkerbovenhoek (bijsnijden)",
+    "等比居中填充(裁剪)": "Proportioneel vullen in het midden (bijsnijden)",
+    "固定尺寸拉伸": "Rekken naar vaste grootte",
+    "等比适应": "Proportionele aanpassing",
+    "笔记正文图片": "Afbeelding van de hoofdinhoud van de notitie",
+    "笔记属性图片": "Afbeelding van de eigenschappen van de notitie",
+    "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Stel de afbeeldingscompressiemodus in, 0 betekent geen beperking, de maximale waarde zal de serverinstellingen niet overschrijden",
+    "正文图片": "Afbeelding van de tekstinhoud",
+    "宽度": "Breedte",
+    "高度": "Hoogte",
+    "调整压缩": "Pas compressie aan",
+    "属性": "Eigenschap",
+    "添加属性图片上传": "Voeg upload van afbeeldingeigenschappen toe",
+    "选择属性": "Kies eigenschap",
 };

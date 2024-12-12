@@ -102,7 +102,8 @@ export function $(str: keyof typeof en, params?: Record<string, unknown>): strin
 
 我提供一段typescript的代码，键的部分保持简体中文,你帮我把值的部分翻译成英文。
 
-键的部分保持简体中文,再帮我把值的部分翻译成英文
+
+键的部分保持简体中文,再帮我把值的部分翻译成繁体中文
 
 
 键的部分保持简体中文,再帮我把值的部分翻译成阿拉伯语 ar

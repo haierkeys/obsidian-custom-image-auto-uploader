@@ -41,5 +41,21 @@ export default <lang>{
     "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "Dacă vă place acest plugin, vă rugăm să luați în considerare o donație pentru a sprijini dezvoltarea continuă",
     "复制 Debug 信息": "Copiază informațiile de depanare",
     "将调试信息复制到剪贴板, 可能包含敏感信!": "Copiază informațiile de depanare în clipboard, poate conține informații sensibile!",
-    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Deschideți consola folosind o combinație de taste, pentru a vizualiza jurnalele acestui plugin și ale altor pluginuri"
+    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Deschideți consola folosind o combinație de taste, pentru a vizualiza jurnalele acestui plugin și ale altor pluginuri",
+
+    "不处理": "Nu procesați",
+    "等比左上填充(裁剪)": "Umplere proporțională din colțul din stânga sus (tăiere)",
+    "等比居中填充(裁剪)": "Umplere proporțională centrată (tăiere)",
+    "固定尺寸拉伸": "Întindere la dimensiune fixă",
+    "等比适应": "Ajustare proporțională",
+    "笔记正文图片": "Imaginea conținutului notei",
+    "笔记属性图片": "Imaginea proprietăților notei",
+    "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Setați modul de compresie a imaginii, 0 înseamnă fără restricții, valoarea maximă nu va depăși setările serverului",
+    "正文图片": "Imaginea conținutului principal",
+    "宽度": "Lățime",
+    "高度": "Înălțime",
+    "调整压缩": "Ajustați compresia",
+    "属性": "Proprietate",
+    "添加属性图片上传": "Adăugați încărcarea imaginii proprietății",
+    "选择属性": "Selectați proprietatea",
 };

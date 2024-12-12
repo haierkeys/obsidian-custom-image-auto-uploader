@@ -41,5 +41,21 @@ export default <lang>{
     "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "Nëse ju pëlqen ky shtojcë, ju lutemi merrni parasysh dhurimin për të mbështetur zhvillimin e mëtejshëm",
     "复制 Debug 信息": "Kopjoni informacionin e debug",
     "将调试信息复制到剪贴板, 可能包含敏感信!": "Kopjoni informacionin e debug në shiritin e ngjitjes, mund të përmbajë informacion të ndjeshëm!",
-    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Hapni konsolën me shkurtore, mund të shihni regjistrat e këtij shtojce dhe shtojcave të tjera"
+    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Hapni konsolën me shkurtore, mund të shihni regjistrat e këtij shtojce dhe shtojcave të tjera",
+
+    "不处理": "Mos procesoni",
+    "等比左上填充(裁剪)": "Përmbushje proporcionale nga këndi i majtë i sipërm (prerje)",
+    "等比居中填充(裁剪)": "Përmbushje proporcionale në qendër (prerje)",
+    "固定尺寸拉伸": "Shtrirje në madhësi fikse",
+    "等比适应": "Përshtatje proporcionale",
+    "笔记正文图片": "Imazhi i përmbajtjes së shënimit",
+    "笔记属性图片": "Imazhi i pronave të shënimit",
+    "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Caktoni modalitetin e kompresimit të imazhit, 0 do të thotë pa kufizime, vlera maksimale nuk do të kalojë cilësimet e serverit",
+    "正文图片": "Imazhi i përmbajtjes kryesore",
+    "宽度": "Gjerësi",
+    "高度": "Lartësi",
+    "调整压缩": "Përshtatni kompresimin",
+    "属性": "Pronë",
+    "添加属性图片上传": "Shto ngarkimin e imazhit të pronës",
+    "选择属性": "Zgjidhni pronën",
 };

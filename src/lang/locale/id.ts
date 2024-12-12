@@ -41,5 +41,21 @@ export default <lang>{
     "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "Jika Anda menyukai plugin ini, pertimbangkan untuk menyumbang guna mendukung pengembangan lebih lanjut",
     "复制 Debug 信息": "Salin informasi debug",
     "将调试信息复制到剪贴板, 可能包含敏感信!": "Informasi debug telah disalin ke papan klip, mungkin mengandung informasi sensitif!",
-    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Buka konsol menggunakan pintasan, Anda dapat melihat log dari plugin ini dan plugin lainnya"
+    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Buka konsol menggunakan pintasan, Anda dapat melihat log dari plugin ini dan plugin lainnya",
+
+    "不处理": "Tidak diproses",
+    "等比左上填充(裁剪)": "Pengisian proporsional dari sudut kiri atas (potong)",
+    "等比居中填充(裁剪)": "Pengisian proporsional terpusat (potong)",
+    "固定尺寸拉伸": "Peregangan ukuran tetap",
+    "等比适应": "Penyesuaian proporsional",
+    "笔记正文图片": "Gambar tubuh catatan",
+    "笔记属性图片": "Gambar properti catatan",
+    "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Atur mode kompresi gambar, 0 berarti tanpa batasan, nilai maksimum tidak akan melebihi pengaturan server",
+    "正文图片": "Gambar tubuh teks",
+    "宽度": "Lebar",
+    "高度": "Tinggi",
+    "调整压缩": "Sesuaikan kompresi",
+    "属性": "Properti",
+    "添加属性图片上传": "Tambah unggah gambar properti",
+    "选择属性": "Pilih properti"
 };

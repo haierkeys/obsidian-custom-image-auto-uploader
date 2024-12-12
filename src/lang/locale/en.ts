@@ -41,5 +41,23 @@ export default <lang>{
   "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "If you like this plugin, please consider donating to support continued development.",
   "复制 Debug 信息": "Copy debug information",
   "将调试信息复制到剪贴板, 可能包含敏感信!": "Copy debug information to clipboard, it may contain sensitive information!",
-  "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Open the console using the shortcut, you can see the logs of this plugin and other plugins"
+  "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Open the console using the shortcut, you can see the logs of this plugin and other plugins",
+
+
+  "不处理": "Do not process",
+  "等比左上填充(裁剪)": "Aspect ratio top-left fill (crop)",
+  "等比居中填充(裁剪)": "Aspect ratio center fill (crop)",
+  "固定尺寸拉伸": "Fixed size stretch",
+  "等比适应": "Aspect ratio fit",
+  "笔记正文图片": "Note body image",
+  "笔记属性图片": "Note property image",
+  "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Set image compression mode, 0 means no limit, the maximum value will not exceed server-side settings",
+  "正文图片": "Body image",
+  "宽度": "Width",
+  "高度": "Height",
+  "调整压缩": "Adjust compression",
+  "属性": "Property",
+  "添加属性图片上传": "Add property image upload",
+  "选择属性": "Select property"
+
 };

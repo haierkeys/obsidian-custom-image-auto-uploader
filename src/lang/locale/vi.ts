@@ -41,5 +41,22 @@ export default <lang>{
     "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "Nếu bạn thích plugin này, hãy cân nhắc ủng hộ để hỗ trợ phát triển tiếp.",
     "复制 Debug 信息": "Sao chép thông tin gỡ lỗi",
     "将调试信息复制到剪贴板, 可能包含敏感信!": "Sao chép thông tin gỡ lỗi vào clipboard, có thể chứa thông tin nhạy cảm!",
-    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Mở bảng điều khiển bằng phím tắt, bạn có thể xem nhật ký của plugin này và các plugin khác"
+    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Mở bảng điều khiển bằng phím tắt, bạn có thể xem nhật ký của plugin này và các plugin khác",
+
+
+    "不处理": "Không xử lý",
+    "等比左上填充(裁剪)": "Điền tỉ lệ từ góc trên bên trái (cắt)",
+    "等比居中填充(裁剪)": "Điền tỉ lệ trung tâm (cắt)",
+    "固定尺寸拉伸": "Kéo dài đến kích thước cố định",
+    "等比适应": "Điều chỉnh tỉ lệ",
+    "笔记正文图片": "Hình ảnh nội dung chính của ghi chú",
+    "笔记属性图片": "Hình ảnh thuộc tính của ghi chú",
+    "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Cài đặt chế độ nén hình ảnh, 0 có nghĩa là không giới hạn, giá trị tối đa không vượt quá cài đặt của máy chủ",
+    "正文图片": "Hình ảnh nội dung chính",
+    "宽度": "Chiều rộng",
+    "高度": "Chiều cao",
+    "调整压缩": "Điều chỉnh nén",
+    "属性": "Thuộc tính",
+    "添加属性图片上传": "Thêm tải lên hình ảnh thuộc tính",
+    "选择属性": "Chọn thuộc tính",
 };

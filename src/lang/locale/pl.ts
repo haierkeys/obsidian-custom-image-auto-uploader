@@ -41,5 +41,21 @@ export default <lang>{
     "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "Jeśli lubisz ten plugin, rozważ dokonanie darowizny na rzecz dalszego rozwoju",
     "复制 Debug 信息": "Kopiuj informacje o debugowaniu",
     "将调试信息复制到剪贴板, 可能包含敏感信!": "Kopiuj informacje o debugowaniu do schowka, mogą zawierać poufne dane!",
-    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Otwórz konsolę za pomocą skrótów, aby zobaczyć logi tego pluginu i innych pluginów"
+    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Otwórz konsolę za pomocą skrótów, aby zobaczyć logi tego pluginu i innych pluginów",
+
+    "不处理": "Nie przetwarzaj",
+    "等比左上填充(裁剪)": "Proporcjonalne wypełnienie z lewego górnego rogu (przycinanie)",
+    "等比居中填充(裁剪)": "Proporcjonalne wypełnienie na środku (przycinanie)",
+    "固定尺寸拉伸": "Rozciąganie do stałego rozmiaru",
+    "等比适应": "Proporcjonalne dopasowanie",
+    "笔记正文图片": "Obraz treści notatki",
+    "笔记属性图片": "Obraz właściwości notatki",
+    "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Ustaw tryb kompresji obrazu, 0 oznacza brak ograniczeń, maksymalna wartość nie przekroczy ustawień serwera",
+    "正文图片": "Obraz treści głównej",
+    "宽度": "Szerokość",
+    "高度": "Wysokość",
+    "调整压缩": "Dostosowanie kompresji",
+    "属性": "Właściwość",
+    "添加属性图片上传": "Dodaj przesyłanie obrazu właściwości",
+    "选择属性": "Wybierz właściwość",
 };

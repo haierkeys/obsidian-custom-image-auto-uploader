@@ -41,5 +41,22 @@ export default <lang>{
     "如果您喜欢这个插件，请考虑捐赠以支持继续开发。": "Si t'agrada aquest complement, considera fer una donació per ajudar a continuar el desenvolupament",
     "复制 Debug 信息": "Copiar informació de depuració",
     "将调试信息复制到剪贴板, 可能包含敏感信!": "S'ha copiat la informació de depuració al porta-retalls, pot contenir informació sensible!",
-    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Obre la consola amb una tecla de drecera per veure els registres d'aquest complement i d'altres complements"
+    "通过快捷键打开控制台，你可以看到这个插件和其他插件的日志": "Obre la consola amb una tecla de drecera per veure els registres d'aquest complement i d'altres complements",
+
+    "不处理": "No processar",
+    "等比左上填充(裁剪)": "Ompliment proporcional des de l'angle superior esquerre (retallar)",
+    "等比居中填充(裁剪)": "Ompliment proporcional centrat (retallar)",
+    "固定尺寸拉伸": "Estirament de mida fixa",
+    "等比适应": "Adaptació proporcional",
+    "笔记正文图片": "Imatge del cos de la nota",
+    "笔记属性图片": "Imatge de la propietat de la nota",
+    "设置图片压缩模式, 0不限制, 最大值不会超过服务端相关设置": "Configura el mode de compressió d'imatges, 0 sense límits, el valor màxim no superarà la configuració del servidor",
+    "正文图片": "Imatge del cos del text",
+    "宽度": "Amplada",
+    "高度": "Alçada",
+    "调整压缩": "Ajustar la compressió",
+    "属性": "Propietat",
+    "添加属性图片上传": "Afegir càrrega d'imatge de propietat",
+    "选择属性": "Seleccionar propietat"
+
 };

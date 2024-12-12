@@ -8,16 +8,17 @@ import { SettingsView } from "./views/settings-view";
 
 export const ImageSvrProcessMode = {
   // 不处理
-  none: { label: "默认不处理", value: "none" },
+  none: { label: $("不处理"), value: "none" },
   // 默认裁剪
-  fillTopleft: { label: "默认裁剪", value: "fill-topleft" },
+  fillTopleft: { label: $("等比左上填充(裁剪)"), value: "fill-topleft" },
   // 居中裁剪
-  fillCenter: { label: "居中裁剪", value: "fill-center" },
+  fillCenter: { label: $("等比居中填充(裁剪)"), value: "fill-center" },
   // 固定尺寸拉伸
-  resize: { label: "固定尺寸拉伸", value: "resize" },
+  resize: { label: $("固定尺寸拉伸"), value: "resize" },
   // 固定尺寸等比缩放不裁切
-  fit: { label: "固定尺寸拉伸", value: "fit" },
+  fit: { label: $("等比适应"), value: "fit" },
 };
+
 
 export interface UploadSet {
   [key: string]: string;
