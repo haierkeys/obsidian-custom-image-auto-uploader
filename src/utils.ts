@@ -23,10 +23,17 @@ export interface ImageUploadResult {
  * @param url
  * @returns string
  */
-export function getUrlFileName(url: string): string {
+export function getUrlFileName(url: string, hasExt: Boolean = true): string {
   let pathname = new URL(url).pathname;
   let fileName = pathname.substring(pathname.lastIndexOf("/") + 1);
+  fileName = fileName.substring(0,fileName.lastIndexOf('.'))
   return decodeURI(fileName).replaceAll(/[\\\\/:*?\"<>|]/g, "-");
+}
+
+export function getDirname(path: string): string {
+  let folderList = path.split("/");
+  folderList.pop();
+  return folderList.join("/");
 }
 
 /**
@@ -44,11 +51,7 @@ export function getFileRandomSaveKey(): string {
   return name;
 }
 
-export function getDirname(path: string): string {
-  let folderList = path.split("/");
-  folderList.pop();
-  return folderList.join("/");
-}
+
 
 export async function checkCreateFolder(path: string, vault: Vault) {
   if (path != "" && !vault.getFolderByPath(path)) {
@@ -77,7 +80,7 @@ export function replaceInText(content: string, search: string, desc: string, pat
   let newLink = "";
 
   if (url) {
-    newLink = `![${desc} (${url})](${path})`;
+    newLink = `![${desc}](${path})`;
   } else {
     newLink = `![${desc}](${path})`;
   }
@@ -154,8 +157,12 @@ export async function imageDown(url: string, plugin: CustomImageAutoUploader): P
     return { err: true, msg: $("下载文件不是允许的图片类型") };
   }
 
+  let urlObj = new URL(url);
+
+  console.log(urlObj, getUrlFileName(url,false), response.arrayBuffer);
+
   try {
-    const name = getFileRandomSaveKey();
+    const name = getUrlFileName(url, false) != "" ? getUrlFileName(url, false) : getFileRandomSaveKey();
     const path = `${name}.${type.ext}`;
     const userPath = await getAttachmentSavePath(path, plugin);
     checkCreateFolder(getDirname(userPath), this.app.vault);
