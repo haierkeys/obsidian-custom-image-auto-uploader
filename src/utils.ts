@@ -159,8 +159,6 @@ export async function imageDown(url: string, plugin: CustomImageAutoUploader): P
 
   let urlObj = new URL(url);
 
-  console.log(urlObj, getUrlFileName(url,false), response.arrayBuffer);
-
   try {
     const name = getUrlFileName(url, false) != "" ? getUrlFileName(url, false) : getFileRandomSaveKey();
     const path = `${name}.${type.ext}`;
