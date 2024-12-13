@@ -56,22 +56,13 @@ export async function checkCreateFolder(path: string, vault: Vault) {
 
 }
 
-export async function getAttachmentSavePath(file: string, plugin: CustomImageAutoUploader) {
+export async function getAttachmentSavePath(file: string, plugin: CustomImageAutoUploader): Promise<string> {
   return await plugin.app.fileManager.getAvailablePathForAttachment(file);
 }
 
 
-export async function getAttachmentUploadPath(image: string, plugin: CustomImageAutoUploader) {
-
-
-  let loadedFiles = plugin.app.vault.getAllLoadedFiles();
-  let activeFile = plugin.app.workspace.getActiveFile();
-  let curMdDir = activeFile ? getDirname(activeFile.path) : "";
-  for (const file of loadedFiles) {
-    if (file.path.startsWith(curMdDir) && file.path.endsWith(image)) {
-      return file.path;
-    }
-  }
+export async function getAttachmentUploadPath(image: string, plugin: CustomImageAutoUploader): Promise<TFile | null> {
+  return plugin.app.metadataCache.getFirstLinkpathDest(image, image);
 }
 
 /**
@@ -189,9 +180,8 @@ export async function imageDown(url: string, name: string, plugin: CustomImageAu
  */
 export async function imageUpload(path: string, plugin: CustomImageAutoUploader): Promise<ImageUploadResult> {
   //获取用户设置的附件目录
-  let uploadImgPath = await getAttachmentUploadPath(path, plugin);
+  let file = await getAttachmentUploadPath(path, plugin);
 
-  let file = this.app.vault.getFileByPath(uploadImgPath);
 
   if (!file) {
     return { err: true, msg: $("待上传图片不存在"), };
