@@ -213,7 +213,7 @@ export async function imageUpload(path: string, postdata: UploadSet, plugin: Cus
     return { err: true, msg: "API Error:" + result.message + result.details.join(""), apiError: result.details.join("") };
   } else {
     if (plugin.settings.isDeleteSource && file instanceof TFile) {
-      plugin.app.vault.delete(file, true);
+      plugin.app.fileManager.trashFile(file);
     }
 
     return { err: false, msg: result.message, imageUrl: result.data.imageUrl };
