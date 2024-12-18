@@ -1,8 +1,8 @@
 [中文文档](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/readme-zh.md) / [English Document](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/README.md)
 
-# 自定义图片自动上传插件 / Custom Image Auto Uploader For Obsidian
+# 自定义图片自动上传云端保存插件 For Obsidian
 
-您可以将笔记中的图片上传保存到您的远端服务器、家庭 NAS 或者同步保存在您的云存储上（阿里云 OSS、亚马逊 S3、Cloudflare R2）。
+您可以将笔记中的图片上传保存到您的远端服务器、家庭 NAS 或者同步保存在您的云存储上（阿里云 OSS 、亚马逊 S3 、Cloudflare R2 ）,并且您还可以对图片进行拉伸裁剪以及修改尺寸。
 
 ![](https://github.com/user-attachments/assets/0878061b-d77c-48c5-aa61-cc5154612a7b)
 
@@ -25,10 +25,10 @@
 如果觉得这个插件很有用，并且想要支持它的继续开发，你可以在这里支持我:
 
 
-
 ## 快速开始
 
 1. 安装插件
+  打开 OBSidian 社区插件市场, 搜索 **Custom Image Auto Uploader** 安装
 2. 打开插件配置项，将 **上传设置** > **API 地址** 设置为您的 **Image Api Gateway** 地址,
    例如: `http://127.0.0.1:8000/api/upload`
 3. 设置 **API 访问令牌**。
