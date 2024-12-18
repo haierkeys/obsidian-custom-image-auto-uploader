@@ -147,7 +147,7 @@ export default class CustomImageAutoUploader extends Plugin {
       if (isWorkspace) {
         await this.app.workspace.activeEditor?.editor?.setValue(filePropertyContent + fileContent);
         if (cursor) {
-          this.app.workspace.activeEditor?.editor?.setCursor(cursor);
+          await this.app.workspace.activeEditor?.editor?.setCursor(cursor);
         }
       } else if (activeFile instanceof TFile) {
         await this.app.vault.modify(activeFile, filePropertyContent + fileContent);
@@ -214,12 +214,12 @@ export default class CustomImageAutoUploader extends Plugin {
 
     if (isModify) {
       if (isWorkspace) {
-        this.app.workspace.activeEditor?.editor?.setValue(filePropertyContent + fileContent);
+        await this.app.workspace.activeEditor?.editor?.setValue(filePropertyContent + fileContent);
         if (cursor) {
-          this.app.workspace.activeEditor?.editor?.setCursor(cursor);
+          await this.app.workspace.activeEditor?.editor?.setCursor(cursor);
         }
       } else if (activeFile instanceof TFile) {
-        this.app.vault.modify(activeFile, filePropertyContent + fileContent);
+        await this.app.vault.modify(activeFile, filePropertyContent + fileContent);
       }
 
       if (!this.settings.isCloseNotice) {
