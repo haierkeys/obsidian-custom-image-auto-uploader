@@ -23,7 +23,7 @@
 ## 价格
 
 如果觉得这个插件很有用，并且想要支持它的继续开发，你可以在这里支持我:
-
+[<img src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" alt="BuyMeACoffee" width="100">](https://ko-fi.com/haierkeys)
 
 ## 快速开始
 

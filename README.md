@@ -25,6 +25,7 @@ You can upload and save images in your notes to your remote server, home NAS, or
 ## Pricing
 
 If you find this plugin useful and would like to support its continued development, you can support me here:
+[<img src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" alt="BuyMeACoffee" width="100">](https://ko-fi.com/haierkeys)
 
 ## Quick Start
 
