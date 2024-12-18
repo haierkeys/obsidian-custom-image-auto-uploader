@@ -26,7 +26,7 @@ export interface ImageUploadResult {
 export function getUrlFileName(url: string, hasExt: Boolean = true): string {
   let pathname = new URL(url).pathname;
   let fileName = pathname.substring(pathname.lastIndexOf("/") + 1);
-  fileName = fileName.substring(0,fileName.lastIndexOf('.'))
+  fileName = fileName.substring(0, fileName.lastIndexOf('.'))
   return decodeURI(fileName).replaceAll(/[\\\\/:*?\"<>|]/g, "-");
 }
 
@@ -242,6 +242,10 @@ export function metadataCacheHandle(activeFile: TFile, plugin: CustomImageAutoUp
       if (cache?.frontmatter && metadataNeedKeys.includes(key)) {
         let i: number = metadataNeedKeys.indexOf(key);
         if (typeof cache.frontmatter[key] == "string") {
+          const match = cache.frontmatter[key].match(/^\!\[\[(.*)\]\]$/);
+          if (match) {
+            cache.frontmatter[key] = match[1];
+          }
           handleMetadata.push({ key: key, type: "string", value: [<string>cache.frontmatter[key]], params: plugin.settings.propertyNeedSets[i] });
         } else if (Array.isArray(cache.frontmatter[key])) {
           let pics = [];
@@ -253,5 +257,6 @@ export function metadataCacheHandle(activeFile: TFile, plugin: CustomImageAutoUp
       }
     });
   }
+
   return handleMetadata;
 }

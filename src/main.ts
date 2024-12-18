@@ -22,15 +22,15 @@ export default class CustomImageAutoUploader extends Plugin {
     this.addCommand({
       id: "down-all-images",
       name: $("下载全部图片"),
-      callback: function () {
-        this.ContentDownImage(), this.MetadataDownImage();
+      callback: async function () {
+        await this.ContentDownImage(), this.MetadataDownImage();
       },
     });
     this.addCommand({
       id: "upload-all-images",
       name: $("上传全部图片"),
-      callback: function () {
-        this.ContentUploadImage(), this.MetadataUploadImage();
+      callback: async function () {
+        await this.ContentUploadImage(), this.MetadataUploadImage();
       },
     });
 
@@ -41,16 +41,16 @@ export default class CustomImageAutoUploader extends Plugin {
           item
             .setIcon("download")
             .setTitle($("下载全部图片"))
-            .onClick((e) => {
-              this.ContentDownImage(), this.MetadataDownImage();
+            .onClick(async (e) => {
+              await this.ContentDownImage(),this.MetadataDownImage();
             });
         });
         menu.addItem((item: MenuItem) => {
           item
             .setIcon("upload")
             .setTitle($("上传全部图片"))
-            .onClick((e) => {
-              this.ContentUploadImage(), this.MetadataUploadImage();
+            .onClick(async (e) => {
+              await this.ContentUploadImage(), this.MetadataUploadImage();
             });
         });
       })
@@ -61,7 +61,7 @@ export default class CustomImageAutoUploader extends Plugin {
       this.app.workspace.on(
         "editor-change",
         async function () {
-          this.ContentImageAutoHandle(true);
+          await this.ContentImageAutoHandle(true);
           this.MetadataImageAutoHandle(true);
         }.bind(this)
       )
@@ -93,6 +93,8 @@ export default class CustomImageAutoUploader extends Plugin {
   //下载
   ContentDownImage = async (isWorkspace = false) => {
     let cursor = this.app.workspace.activeEditor?.editor?.getCursor();
+    let fileFullContent = "";
+    let filePropertyContent = "";
     let fileContent = "";
     let activeFile = this.app.workspace.getActiveFile();
 
@@ -101,9 +103,17 @@ export default class CustomImageAutoUploader extends Plugin {
     }
 
     if (isWorkspace) {
-      fileContent = <string>this.app.workspace.activeEditor?.editor?.getValue();
+      fileFullContent = <string>this.app.workspace.activeEditor?.editor?.getValue();
     } else if (activeFile instanceof TFile) {
-      fileContent = await this.app.vault.read(activeFile);
+      fileFullContent = await this.app.vault.read(activeFile);
+    }
+
+    const propertyMatch = fileContent.match(/^---\n((?:.|\n)*)---\n/mg);
+    if (propertyMatch) {
+      fileContent = fileContent.substring(propertyMatch[0].length);
+      filePropertyContent = propertyMatch[0];
+    } else {
+      fileContent = fileFullContent;
     }
 
     let isModify = false;
@@ -135,12 +145,12 @@ export default class CustomImageAutoUploader extends Plugin {
 
     if (isModify) {
       if (isWorkspace) {
-        this.app.workspace.activeEditor?.editor?.setValue(fileContent);
+        await this.app.workspace.activeEditor?.editor?.setValue(filePropertyContent + fileContent);
         if (cursor) {
           this.app.workspace.activeEditor?.editor?.setCursor(cursor);
         }
       } else if (activeFile instanceof TFile) {
-        await this.app.vault.modify(activeFile, fileContent);
+        await this.app.vault.modify(activeFile, filePropertyContent + fileContent);
       }
       if (!this.settings.isCloseNotice) {
         new Notice(`Down Result:\nsucceed: ${downSussCount} \nfailed: ${downCount - downSussCount}`);
@@ -151,6 +161,8 @@ export default class CustomImageAutoUploader extends Plugin {
   //上传部分
   ContentUploadImage = async (isWorkspace = false) => {
     let cursor = this.app.workspace.activeEditor?.editor?.getCursor();
+    let fileFullContent = "";
+    let filePropertyContent = "";
     let fileContent = "";
     let activeFile = this.app.workspace.getActiveFile();
 
@@ -159,9 +171,17 @@ export default class CustomImageAutoUploader extends Plugin {
     }
 
     if (isWorkspace) {
-      fileContent = <string>this.app.workspace.activeEditor?.editor?.getValue();
+      fileFullContent = <string>this.app.workspace.activeEditor?.editor?.getValue();
     } else if (activeFile instanceof TFile) {
-      fileContent = await this.app.vault.cachedRead(activeFile);
+      fileFullContent = await this.app.vault.read(activeFile);
+    }
+
+    const propertyMatch = fileContent.match(/^---\n((?:.|\n)*)---\n/mg);
+    if (propertyMatch) {
+      fileContent = fileContent.substring(propertyMatch[0].length);
+      filePropertyContent = propertyMatch[0];
+    } else {
+      fileContent = fileFullContent;
     }
 
     let isModify = false;
@@ -194,12 +214,12 @@ export default class CustomImageAutoUploader extends Plugin {
 
     if (isModify) {
       if (isWorkspace) {
-        this.app.workspace.activeEditor?.editor?.setValue(fileContent);
+        this.app.workspace.activeEditor?.editor?.setValue(filePropertyContent + fileContent);
         if (cursor) {
           this.app.workspace.activeEditor?.editor?.setCursor(cursor);
         }
       } else if (activeFile instanceof TFile) {
-        this.app.vault.modify(activeFile, fileContent);
+        this.app.vault.modify(activeFile, filePropertyContent + fileContent);
       }
 
       if (!this.settings.isCloseNotice) {
@@ -253,7 +273,11 @@ export default class CustomImageAutoUploader extends Plugin {
       if (isModify) {
         this.app.fileManager.processFrontMatter(activeFile, (frontmatter) => {
           for (const item of metadata) {
-            frontmatter[item.key] = item.value;
+            if (item.type == "string") {
+              frontmatter[item.key] = item.value[0];
+            } else {
+              frontmatter[item.key] = item.value;
+            }
           }
         });
         if (!this.settings.isCloseNotice) {
@@ -318,7 +342,7 @@ export default class CustomImageAutoUploader extends Plugin {
     }
   };
 
-  onunload() {}
+  onunload() { }
 
   loadSettings = async () => {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());

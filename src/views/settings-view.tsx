@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react"
 
 import { ICON_TYPE, Icon } from "src/icon"
-import TagsOverviewPlugin from "src/main"
+import CustomImageAutoUploader from "src/main"
 import { UploadSet, ImageSvrProcessMode } from "src/setting"
 import { $ } from "src/lang"
 
-export const SettingsView = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
+export const SettingsView = ({ plugin }: { plugin: CustomImageAutoUploader }) => {
   const frontMatterPropertiesSet = new Set<string>()
   plugin.app.vault.getMarkdownFiles().forEach((file) => {
     const cache = plugin.app.metadataCache.getFileCache(file)
@@ -38,7 +38,7 @@ export const SettingsView = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
   )
 }
 
-export const ContentSet = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
+export const ContentSet = ({ plugin }: { plugin: CustomImageAutoUploader }) => {
   const [contentSet, setContentSet] = useState<UploadSet>(plugin.settings.contentSet)
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export const ContentSet = ({ plugin }: { plugin: TagsOverviewPlugin }) => {
   )
 }
 
-export const PropertyNeedSet = ({ plugin, frontMatterProperties }: { plugin: TagsOverviewPlugin; frontMatterProperties: string[] }) => {
+export const PropertyNeedSet = ({ plugin, frontMatterProperties }: { plugin: CustomImageAutoUploader; frontMatterProperties: string[] }) => {
   const [propertyNeedSets, setPropertyNeedSets] = useState<UploadSet[]>(plugin.settings.propertyNeedSets)
 
   useEffect(() => {
