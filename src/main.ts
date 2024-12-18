@@ -304,7 +304,11 @@ export default class CustomImageAutoUploader extends Plugin {
       if (isModify) {
         this.app.fileManager.processFrontMatter(activeFile, (frontmatter) => {
           for (const item of metadata) {
-            frontmatter[item.key] = item.value;
+            if (item.type == "string") {
+              frontmatter[item.key] = item.value[0];
+            } else {
+              frontmatter[item.key] = item.value;
+            }
           }
         });
         if (!this.settings.isCloseNotice) {
