@@ -1,51 +1,58 @@
-[中文文档](readme-zh.md) / [English Document](README.md)
+[中文文档](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/readme-zh.md) / [English Document](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/README.md)
 
-# Custom Image Auto Uploader For Obsidian
 
-You can upload and save images from your notes to your remote server, home NAS, or synchronize them to your cloud storage (Alibaba Cloud OSS, Amazon S3, Cloudflare R2).
+# **Custom Image Auto Uploader For Obsidian**
 
-- Drag-and-drop image upload
-- Paste image upload
-- Batch download online images to local storage
-- Batch upload local image files in notes to remote servers
-- Batch upload all local image files in notes to remote servers, such as your web server or home NAS
-- Optionally synchronize to cloud storage services like Alibaba Cloud OSS, Amazon S3, or Cloudflare R2
+This plugin allows you to upload and save images in your notes to your remote server, home NAS, or cloud storage such as Alibaba Cloud OSS, Amazon S3, or Cloudflare R2.
 
-## Pricing
+![](https://github.com/user-attachments/assets/0878061b-d77c-48c5-aa61-cc5154612a7b)
 
-If you find this plugin useful and want to support its continued development, you can support me here:
+
+## **Plugin Features**
+- **Batch Download** network images in your notes to local storage.
+- **Batch Upload** local images in your notes to remote services ([Image API Gateway](https://github.com/haierkeys/obsidian-image-api-gateway)).
+- Drag and paste to upload images seamlessly.
+- Save images in notes **to remote servers**, such as your web server or home NAS.
+- Save images in notes **to cloud storage**, such as Alibaba Cloud OSS, Amazon S3, or Cloudflare R2.
+- Multi-platform support: **Windows, macOS, Linux, Android, iOS**.
+- Multi-language support.
+- Add resizing and cropping functionality for images, either in note properties or inline text (e.g., for Hugo blog cover images):
+  - Proportional top-left crop
+  - Proportional center crop
+  - Fixed-size stretch
+  - Proportional fit
+
+
+## **Pricing**
+
+If you find this plugin useful and would like to support its continued development, you can contribute here:
 
 - [<img src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" alt="BuyMeACoffee" width="100">](https://ko-fi.com/haierkeys)
 
-## Quick Start
+
+
+## **Quick Start**
 
 1. Install the plugin.
-2. Open the plugin settings and configure the **Upload Settings** > **API Address** to your **Image API Gateway** address, e.g., `http://127.0.0.1:8000/api/upload`.
+2. Open the plugin settings and configure **Upload Settings** > **API Address** to your **Image API Gateway** URL.
+   Example: `http://127.0.0.1:8000/api/upload`
 3. Set the **API Access Token**.
-4. Start the **Image API Gateway** service on the remote server.
-5. Create a note and upload an image to check if it works successfully.
+4. Start the **Image API Gateway** service on your remote server.
+5. Create a note and upload an image to verify that the upload works correctly.
 
-## Setting Up the Image Upload API
 
-This plugin requires the **Image API Gateway** to be configured for image uploads.
-**Image API Gateway** is a free tool, refer to [https://github.com/haierkeys/image-api-gateway](https://github.com/haierkeys/image-api-gateway) for deployment instructions.
+## **Image Upload API Setup**
 
-## Development
+This plugin requires the **Image API Gateway** to upload images.
+**Image API Gateway** is a free tool. To deploy and use it, refer to:
+[https://github.com/haierkeys/obsidian-image-api-gateway](https://github.com/haierkeys/obsidian-image-api-gateway).
 
-### Installation
+
+## **Development**
 
 ```bash
 pnpm install
-```
-
-### Run
-
-```bash
 pnpm run dev
-```
-
-### Build
-
-```bash
 pnpm run build
 ```
+
