@@ -62,7 +62,7 @@ export default class CustomImageAutoUploader extends Plugin {
         "editor-change",
         async function () {
           await this.ContentImageAutoHandle(true);
-          this.MetadataImageAutoHandle(true);
+          await this.MetadataImageAutoHandle(true);
         }.bind(this)
       )
     );
@@ -73,8 +73,8 @@ export default class CustomImageAutoUploader extends Plugin {
       await this.ContentDownImage(true);
     }
     if (this.settings.isAutoUpload) {
-      sleep(this.settings.afterUploadTimeout).then(() => {
-        this.ContentUploadImage(true);
+      sleep(this.settings.afterUploadTimeout).then(async () => {
+        await this.ContentUploadImage(true);
       });
     }
   };
@@ -84,8 +84,8 @@ export default class CustomImageAutoUploader extends Plugin {
       await this.MetadataDownImage(true);
     }
     if (this.settings.isAutoUpload) {
-      sleep(this.settings.afterUploadTimeout).then(() => {
-        this.ContentUploadImage(true);
+      sleep(this.settings.afterUploadTimeout).then(async () => {
+        await this.MetadataUploadImage(true);
       });
     }
   };
@@ -106,6 +106,10 @@ export default class CustomImageAutoUploader extends Plugin {
       fileFullContent = <string>this.app.workspace.activeEditor?.editor?.getValue();
     } else if (activeFile instanceof TFile) {
       fileFullContent = await this.app.vault.read(activeFile);
+    }
+
+    if (!fileFullContent) {
+      return;
     }
 
     const propertyMatch = fileFullContent.match(/^---\n((?:.|\n)*)---\n/mg);
@@ -176,6 +180,9 @@ export default class CustomImageAutoUploader extends Plugin {
       fileFullContent = await this.app.vault.read(activeFile);
     }
 
+    if (!fileFullContent) {
+      return;
+    }
     const propertyMatch = fileFullContent.match(/^---\n((?:.|\n)*)---\n/mg);
 
     if (propertyMatch) {
@@ -237,8 +244,7 @@ export default class CustomImageAutoUploader extends Plugin {
       return;
     }
 
-    let cursor = this.app.workspace.activeEditor?.editor?.getCursor();
-    let fileContent = "";
+
     let activeFile = this.app.workspace.getActiveFile();
 
     if (this.app.workspace.activeEditor) {
@@ -292,8 +298,7 @@ export default class CustomImageAutoUploader extends Plugin {
 
   //上传部分
   MetadataUploadImage = async (isWorkspace = false) => {
-    let cursor = this.app.workspace.activeEditor?.editor?.getCursor();
-    let fileContent = "";
+
     let activeFile = this.app.workspace.getActiveFile();
 
     if (this.app.workspace.activeEditor) {
