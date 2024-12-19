@@ -62,18 +62,29 @@ export interface PluginSettings {
 
  */
 
+// 默认插件设置
 export const DEFAULT_SETTINGS: PluginSettings = {
+  // 是否自动上传
   isAutoUpload: true,
+  // 是否自动下载
   isAutoDown: true,
+  // 是否关闭提示
   isCloseNotice: true,
+  // 上传后的超时时间，单位为毫秒
   afterUploadTimeout: 1000,
+  // API 地址
   api: "http://127.0.0.1:36677/upload",
+  // API 令牌
   apiToken: "",
+  // 排除的域名列表
   excludeDomains: "",
+  // 本地图片上传后是否删除
   isDeleteSource: true,
+  // 上传后的图片是否随机后缀
   uploadImageRandomSearch: true,
+  // 内容部分上传设置
   contentSet: { key: "", type: ImageSvrProcessMode.none.value, width: "0", height: "0" },
-  //元数据上传设置
+  // 元数据上传设置
   propertyNeedSets: [
     { key: "cover", type: ImageSvrProcessMode.none.value, width: "0", height: "0" },
     { key: "images", type: ImageSvrProcessMode.none.value, width: "0", height: "0" },
