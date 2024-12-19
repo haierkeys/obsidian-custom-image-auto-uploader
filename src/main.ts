@@ -108,9 +108,9 @@ export default class CustomImageAutoUploader extends Plugin {
       fileFullContent = await this.app.vault.read(activeFile);
     }
 
-    const propertyMatch = fileContent.match(/^---\n((?:.|\n)*)---\n/mg);
+    const propertyMatch = fileFullContent.match(/^---\n((?:.|\n)*)---\n/mg);
     if (propertyMatch) {
-      fileContent = fileContent.substring(propertyMatch[0].length);
+      fileContent = fileFullContent.substring(propertyMatch[0].length);
       filePropertyContent = propertyMatch[0];
     } else {
       fileContent = fileFullContent;
@@ -176,13 +176,16 @@ export default class CustomImageAutoUploader extends Plugin {
       fileFullContent = await this.app.vault.read(activeFile);
     }
 
-    const propertyMatch = fileContent.match(/^---\n((?:.|\n)*)---\n/mg);
+    const propertyMatch = fileFullContent.match(/^---\n((?:.|\n)*)---\n/mg);
+
     if (propertyMatch) {
-      fileContent = fileContent.substring(propertyMatch[0].length);
+      fileContent = fileFullContent.substring(propertyMatch[0].length);
       filePropertyContent = propertyMatch[0];
     } else {
       fileContent = fileFullContent;
     }
+
+
 
     let isModify = false;
     let uploadCount = 0;
