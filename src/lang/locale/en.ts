@@ -58,6 +58,11 @@ export default <lang>{
   "调整压缩": "Adjust compression",
   "属性": "Property",
   "添加属性图片上传": "Add property image upload",
-  "选择属性": "Select property"
+  "选择属性": "Select property",
+
+
+
+  "图片上传地址增加随机查询": "Add random query to image upload URL",
+  "在图片地址末尾增加随机查询,用于规避CDN缓存": "Add a random query at the end of the image URL to avoid CDN caching",
 
 };

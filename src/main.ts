@@ -1,6 +1,6 @@
 import { Menu, MenuItem, TFile, Plugin, Notice, } from "obsidian";
 import { SettingTab, PluginSettings, UploadSet, DEFAULT_SETTINGS } from "./setting";
-import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle } from "./utils";
+import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString } from "./utils";
 import { $ } from "./lang";
 
 const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]]*)\]\]/g;
@@ -217,7 +217,12 @@ export default class CustomImageAutoUploader extends Plugin {
       } else if (result.imageUrl) {
         isModify = true;
         uploadSussCount++;
-        fileContent = replaceInText(fileContent, match[0], imageAlt, result.imageUrl);
+        let searchStr = "";
+        if (this.settings.uploadImageRandomSearch) {
+          searchStr = `?${generateRandomString(10)}`;
+        }
+
+        fileContent = replaceInText(fileContent, match[0], imageAlt, result.imageUrl + searchStr);
         autoAddExcludeDomain(result.imageUrl, this);
       }
     }
@@ -325,7 +330,11 @@ export default class CustomImageAutoUploader extends Plugin {
             new Notice(result.msg);
           } else {
             if (result.imageUrl) {
-              metadata[i].value[y] = result.imageUrl;
+              let searchStr = "";
+              if (this.settings.uploadImageRandomSearch) {
+                searchStr = `?${generateRandomString(10)}`;
+              }
+              metadata[i].value[y] = result.imageUrl + searchStr;
               isModify = true;
               uploadSussCount++;
             }

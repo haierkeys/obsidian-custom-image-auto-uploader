@@ -36,6 +36,28 @@ export function getDirname(path: string): string {
   return folderList.join("/");
 }
 
+
+/**
+ * 生成指定长度的随机字符串
+ * @param length - 随机字符串的长度
+ * @returns 生成的随机字符串
+ */
+export function generateRandomString(length: number): string {
+  // 定义包含所有可能字符的字符串
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  // 循环生成随机字符串
+  for (let i = 0; i < length; i++) {
+    // 生成一个随机索引
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    // 将随机索引对应的字符添加到结果字符串中
+    result += characters[randomIndex];
+  }
+  // 返回生成的随机字符串
+  return result;
+}
+
+
 /**
  * 返回随机保存文件名
  * @param nameSet
