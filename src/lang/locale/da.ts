@@ -57,5 +57,9 @@ export default <lang>{
     "调整压缩": "Juster komprimering",
     "属性": "Egenskab",
     "添加属性图片上传": "Tilføj upload af billede af egenskab",
-    "选择属性": "Vælg egenskab"
+    "选择属性": "Vælg egenskab",
+
+    "图片上传地址增加随机查询": "Tilføj en tilfældig forespørgsel til billede-upload-adressen for at undgå CDN-cachelagring",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Tilføj en tilfældig forespørgsel til billede-upload-adressen for at undgå CDN-cachelagring",
+    "一键上传下载": "Upload og download i et klik",
 };

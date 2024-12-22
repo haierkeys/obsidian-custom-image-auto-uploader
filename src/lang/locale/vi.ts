@@ -59,4 +59,9 @@ export default <lang>{
     "属性": "Thuộc tính",
     "添加属性图片上传": "Thêm tải lên hình ảnh thuộc tính",
     "选择属性": "Chọn thuộc tính",
+
+    "图片上传地址增加随机查询": "Thêm tải lên hình ảnh thuộc tính",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Thêm tải lên hình ảnh thuộc tính",
+
+    "一键上传下载": "Tải lên và tải xuống một lần",
 };

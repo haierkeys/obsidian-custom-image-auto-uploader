@@ -58,4 +58,8 @@ export default <lang>{
     "属性": "Egenskap",
     "添加属性图片上传": "Legg til opplasting av bildeegenskap",
     "选择属性": "Velg egenskap",
+
+    "图片上传地址增加随机查询": "Legg til en tilfeldig forespørsel til bilde-opplastingsadressen for å unngå CDN-cache",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Legg til en tilfeldig forespørsel til bilde-opplastingsadressen for å unngå CDN-cache",
+    "一键上传下载": "Last opp og last ned i ett klikk",
 };

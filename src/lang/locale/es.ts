@@ -57,5 +57,9 @@ export default <lang>{
     "调整压缩": "Ajustar compresión",
     "属性": "Propiedad",
     "添加属性图片上传": "Añadir carga de imagen de propiedad",
-    "选择属性": "Seleccionar propiedad"
+    "选择属性": "Seleccionar propiedad",
+
+    "图片上传地址增加随机查询": "Añadir una consulta aleatoria a la dirección de carga de imágenes para evitar el almacenamiento en caché de CDN",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Añadir una consulta aleatoria a la dirección de carga de imágenes para evitar el almacenamiento en caché de CDN",
+    "一键上传下载": "Cargar y descargar en un solo clic",
 };

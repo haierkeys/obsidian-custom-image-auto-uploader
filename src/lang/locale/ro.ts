@@ -58,4 +58,8 @@ export default <lang>{
     "属性": "Proprietate",
     "添加属性图片上传": "Adăugați încărcarea imaginii proprietății",
     "选择属性": "Selectați proprietatea",
+
+    "图片上传地址增加随机查询": "Adăugați o întrebare aleatorie la adresa de încărcare a imaginii pentru a evita cache-ul CDN",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Adăugați o întrebare aleatorie la adresa de încărcare a imaginii pentru a evita cache-ul CDN",
+    "一键上传下载": "Încărcare și descărcare într-un clic",
 };

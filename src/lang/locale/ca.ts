@@ -57,6 +57,9 @@ export default <lang>{
     "调整压缩": "Ajustar la compressió",
     "属性": "Propietat",
     "添加属性图片上传": "Afegir càrrega d'imatge de propietat",
-    "选择属性": "Seleccionar propietat"
+    "选择属性": "Seleccionar propietat",
 
+    "图片上传地址增加随机查询": "Afegir una consulta aleatòria a l'adreça d'upload d'imatges per evitar el cach de CDN",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Afegir una consulta aleatòria a l'adreça d'upload d'imatges per evitar el cach de CDN",
+    "一键上传下载": "Pujar i descarregar en un sol clic",
 };

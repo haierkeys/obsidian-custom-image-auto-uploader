@@ -6,6 +6,7 @@ import { KofiImage } from "./res"
 import { createRoot } from "react-dom/client"
 import { SettingsView } from "./views/settings-view"
 
+
 export const ImageSvrProcessMode = {
   // 不处理
   none: { label: $("不处理"), value: "none" },

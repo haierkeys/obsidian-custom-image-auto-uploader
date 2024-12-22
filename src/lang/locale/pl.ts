@@ -58,4 +58,8 @@ export default <lang>{
     "属性": "Właściwość",
     "添加属性图片上传": "Dodaj przesyłanie obrazu właściwości",
     "选择属性": "Wybierz właściwość",
+
+    "图片上传地址增加随机查询": "Dodaj losową zapytanie do adresu przesyłania obrazu, aby uniknąć buforowania CDN",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Dodaj losową zapytanie do adresu przesyłania obrazu, aby uniknąć buforowania CDN",
+    "一键上传下载": "Przesyłanie i pobieranie w jednym kliknięciu",
 };

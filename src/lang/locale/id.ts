@@ -57,5 +57,9 @@ export default <lang>{
     "调整压缩": "Sesuaikan kompresi",
     "属性": "Properti",
     "添加属性图片上传": "Tambah unggah gambar properti",
-    "选择属性": "Pilih properti"
+    "选择属性": "Pilih properti",
+
+    "图片上传地址增加随机查询": "Tambahkan permintaan acak ke alamat unggah gambar untuk menghindari cache CDN",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Tambahkan permintaan acak ke alamat unggah gambar untuk menghindari cache CDN",
+    "一键上传下载": "Unggah dan unduh dalam satu klik",
 };

@@ -1,185 +1,208 @@
-import { Menu, MenuItem, TFile, Plugin, Notice } from "obsidian"
+import { Menu, MenuItem, TFile, Plugin, Notice, setIcon } from "obsidian"
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting"
-import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString } from "./utils"
+import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString, showTaskNotice, showErrorNotice, getAttachmentUploadPath, setMenu } from "./utils"
+import { DownTask, UploadTask, Metadata } from "./interface"
 import { $ } from "./lang"
+import { json } from "stream/consumers"
 
 const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]]*)\]\]/g
 
 export default class CustomImageAutoUploader extends Plugin {
   settings: PluginSettings
-  statusBar: any
+  statusBar: HTMLElement[] = []
+  downloadStatus: { current: number; total: number } = { current: 0, total: 0 }
+  uploadStatus: { current: number; total: number } = { current: 0, total: 0 }
+  // 添加状态显示类型变量
+  statusType: "download" | "upload" | "all" | "none" = "none"
+  fromPluginSet = false
+
+  /**
+   * 重置任务状态并设置显示类型
+   * @param type 显示类型：'download' | 'upload' | 'all' | 'none'
+   * @param reset 是否重置计数，默认为 true
+   */
+  resetStatus(type: "download" | "upload" | "all" | "none", reset: boolean = true): void {
+    // 设置显示类型
+    this.statusType = type
+    console.log("resetStatus", type)
+
+    // 重置计数
+    if (reset) {
+      this.downloadStatus = { current: 0, total: 0 }
+      this.uploadStatus = { current: 0, total: 0 }
+    }
+
+    // 更新状态栏显示
+    statusCheck(this)
+  }
 
   async onload() {
     await this.loadSettings()
-    this.statusBar = this.addStatusBarItem()
+
     statusCheck(this)
 
     // 注册设置选项
     this.addSettingTab(new SettingTab(this.app, this))
+
+    // 注册编译器事件
+    this.registerEvent(
+      this.app.workspace.on("editor-change", async () => {
+        console.log("editor-change", this.fromPluginSet)
+        if (!this.fromPluginSet) {
+          this.resetStatus("all", true)
+          await this.ContentImageAutoHandle()
+          await this.MetadataImageAutoHandle()
+          showTaskNotice(this, "all")
+        }
+      })
+    )
 
     // 注册命令
     this.addCommand({
       id: "down-all-images",
       name: $("下载全部图片"),
       callback: async () => {
+        this.resetStatus("download", true)
         await this.ContentDownImage()
         await this.MetadataDownImage()
+        showTaskNotice(this, "download")
       },
     })
     this.addCommand({
       id: "upload-all-images",
       name: $("上传全部图片"),
       callback: async () => {
+        this.resetStatus("upload", true)
         await this.ContentUploadImage()
         await this.MetadataUploadImage()
+        showTaskNotice(this, "upload")
       },
     })
 
     // 注册菜单
     this.registerEvent(
-      this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
-        menu.addItem((item: MenuItem) => {
-          item
-            .setIcon("download")
-            .setTitle($("下载全部图片"))
-            .onClick(async () => {
-              await this.ContentDownImage()
-              await this.MetadataDownImage()
-            })
-        })
-        menu.addItem((item: MenuItem) => {
-          item
-            .setIcon("upload")
-            .setTitle($("上传全部图片"))
-            .onClick(async () => {
-              await this.ContentUploadImage()
-              await this.MetadataUploadImage()
-            })
-        })
+      this.app.workspace.on("file-menu", (menu: Menu) => {
+        setMenu(menu, this)
       })
     )
-
-    // 注册编译器事件
     this.registerEvent(
-      this.app.workspace.on("editor-change", async () => {
-        await this.ContentImageAutoHandle(true)
-        await this.MetadataImageAutoHandle(true)
+      this.app.workspace.on("editor-menu", (menu: Menu) => {
+        setMenu(menu, this)
       })
     )
+
+    this.addRibbonIcon("image", "Custom Image Auto Uploader / " + $("Custom Image Auto Uploader"), (event) => {
+      const menu = new Menu()
+      setMenu(menu, this, true)
+      menu.showAtMouseEvent(event)
+    })
   }
 
-  async ContentImageAutoHandle(isWorkspace = false) {
-    if (this.settings.isAutoDown) {
-      await this.ContentDownImage(true)
+  async ContentImageAutoHandle(isManual: boolean = false) {
+    if (this.settings.isAutoDown || isManual) {
+      await this.ContentDownImage()
     }
-    if (this.settings.isAutoUpload) {
+    if (this.settings.isAutoUpload || isManual) {
       await sleep(this.settings.afterUploadTimeout)
-      await this.ContentUploadImage(true)
+      await this.ContentUploadImage()
     }
   }
 
-  async MetadataImageAutoHandle(isWorkspace = false) {
-    if (this.settings.isAutoDown) {
-      await this.MetadataDownImage(true)
+  async MetadataImageAutoHandle(isManual: boolean = false) {
+    if (this.settings.isAutoDown || isManual) {
+      await this.MetadataDownImage()
     }
-    if (this.settings.isAutoUpload) {
+    if (this.settings.isAutoUpload || isManual) {
       await sleep(this.settings.afterUploadTimeout)
-      await this.MetadataUploadImage(true)
+      await this.MetadataUploadImage()
     }
   }
 
-  async ContentDownImage(isWorkspace = false) {
-    const cursor = this.app.workspace.activeEditor?.editor?.getCursor()
-    let fileFullContent = ""
+  async ContentDownImage() {
+    if (!this.app.workspace.activeEditor || !this.app.workspace.activeEditor.editor) return
+
+    let cursor = this.app.workspace.activeEditor.editor.getCursor()
+    let fileFullContent = this.app.workspace.activeEditor.editor.getValue() || ""
+    if (!fileFullContent) return
+
     let filePropertyContent = ""
+    let filePropertyContentEndLine = 0
     let fileContent = ""
-    const activeFile = this.app.workspace.getActiveFile()
-
-    if (this.app.workspace.activeEditor) {
-      isWorkspace = true
-    }
-
-    if (isWorkspace) {
-      fileFullContent = this.app.workspace.activeEditor?.editor?.getValue() || ""
-    } else if (activeFile instanceof TFile) {
-      fileFullContent = await this.app.vault.read(activeFile)
-    }
-
-    if (!fileFullContent) {
-      return
-    }
-
     const propertyMatch = fileFullContent.match(/^---\n((?:.|\n)*)---\n/gm)
     if (propertyMatch) {
       fileContent = fileFullContent.substring(propertyMatch[0].length)
       filePropertyContent = propertyMatch[0]
+
+      const activeFile = this.app.workspace.getActiveFile()
+      if (activeFile) {
+        const cachedMetadata = this.app.metadataCache.getFileCache(activeFile)
+        filePropertyContentEndLine = cachedMetadata?.frontmatterPosition?.end.line || 0
+      }
     } else {
       fileContent = fileFullContent
     }
 
-    let isModify = false
-    let downCount = 0
-    let downSussCount = 0
+    // 第一次循环：收集任务并统计数量
+    const downloadTasks: DownTask[] = []
 
     const matches = fileContent.matchAll(mdImageRegex)
-
     for (const match of matches) {
       if (!/^http/.test(match[2]) || hasExcludeDomain(match[2], this.settings.excludeDomains)) {
         continue
       }
 
-      downCount++
-
-      const imgURL = match[2]
       let imageAlt = match[3] ? match[3] : match[1] ? match[1] : ""
       imageAlt = imageAlt.replaceAll('"', "")
+      downloadTasks.push({
+        matchText: match[0],
+        imageAlt,
+        imageUrl: match[2],
+      })
 
-      const result = await imageDown(imgURL, this)
+      this.downloadStatus.total++
+      statusCheck(this)
+    }
+
+    // 第二次循环：批量异步处理任务
+    let isModify = false
+    const downloadResults = await Promise.all(
+      downloadTasks.map(async (task) => {
+        const result = await imageDown(task.imageUrl, this)
+        return { task, result }
+      })
+    )
+    // 处理下载结果
+    for (const { task, result } of downloadResults) {
       if (result.err) {
-        new Notice(result.msg)
-      } else {
+        showErrorNotice(result.msg)
+      } else if (result.path) {
         isModify = true
-        downSussCount++
-        fileContent = replaceInText(fileContent, match[0], imageAlt, result.path || "", imgURL)
+        this.downloadStatus.current++
+        statusCheck(this)
+        fileContent = replaceInText(fileContent, task.matchText, task.imageAlt, result.path, task.imageUrl)
       }
     }
 
     if (isModify) {
-      if (isWorkspace) {
-        this.app.workspace.activeEditor?.editor?.setValue(filePropertyContent + fileContent)
-        if (cursor) {
-          await this.app.workspace.activeEditor?.editor?.setCursor(cursor)
-        }
-      } else if (activeFile instanceof TFile) {
-        await this.app.vault.modify(activeFile, filePropertyContent + fileContent)
-      }
-      if (!this.settings.isCloseNotice) {
-        new Notice(`Down Result:\nsucceed: ${downSussCount} \nfailed: ${downCount - downSussCount}`)
-      }
+      this.fromPluginSet = true
+
+      this.app.workspace.activeEditor?.editor?.setValue(filePropertyContent + fileContent)
+      await this.app.workspace.activeEditor?.editor?.setCursor({ line: cursor.line - filePropertyContentEndLine, ch: 0 })
+
+      this.fromPluginSet = false
     }
   }
 
-  async ContentUploadImage(isWorkspace = false) {
-    const cursor = this.app.workspace.activeEditor?.editor?.getCursor()
-    let fileFullContent = ""
+  async ContentUploadImage() {
+    if (!this.app.workspace.activeEditor || !this.app.workspace.activeEditor.editor) return
+
+    let cursor = this.app.workspace.activeEditor.editor.getCursor()
+
+    let fileFullContent = this.app.workspace.activeEditor.editor.getValue() || ""
+    if (!fileFullContent) return
+
     let filePropertyContent = ""
     let fileContent = ""
-    const activeFile = this.app.workspace.getActiveFile()
-
-    if (this.app.workspace.activeEditor) {
-      isWorkspace = true
-    }
-
-    if (isWorkspace) {
-      fileFullContent = this.app.workspace.activeEditor?.editor?.getValue() || ""
-    } else if (activeFile instanceof TFile) {
-      fileFullContent = await this.app.vault.read(activeFile)
-    }
-
-    if (!fileFullContent) {
-      return
-    }
-
     const propertyMatch = fileFullContent.match(/^---\n((?:.|\n)*)---\n/gm)
     if (propertyMatch) {
       fileContent = fileFullContent.substring(propertyMatch[0].length)
@@ -188,143 +211,199 @@ export default class CustomImageAutoUploader extends Plugin {
       fileContent = fileFullContent
     }
 
-    let isModify = false
-    let uploadCount = 0
-    let uploadSussCount = 0
-
+    const uploadTasks: UploadTask[] = []
     const matches = fileContent.matchAll(mdImageRegex)
-
     for (const match of matches) {
       if (/^http/.test(match[2]) || /^http/.test(match[4])) {
         continue
       }
 
-      uploadCount++
-
       const file = match[2] ? match[2] : match[4]
+      let readfile = await getAttachmentUploadPath(file, this)
+      if (!readfile) continue
+
       const imageAlt = match[3] ? match[3] : match[1] ? match[1] : file
+      uploadTasks.push({
+        matchText: match[0],
+        imageAlt,
+        imageFile: readfile,
+      })
+      this.uploadStatus.total++
+      statusCheck(this)
+    }
 
-      const result = await imageUpload(file, this.settings.contentSet, this)
-
+    // 第二次循环：批量异步处理任务
+    let isModify = false
+    const uploadResults = await Promise.all(
+      uploadTasks.map(async (task) => {
+        const result = await imageUpload(task.imageFile, this.settings.contentSet, this)
+        return { task, result }
+      })
+    )
+    // 处理上传结果
+    for (const { task, result } of uploadResults) {
       if (result.err) {
-        new Notice(result.msg)
+        showErrorNotice(result.msg)
       } else if (result.imageUrl) {
         isModify = true
-        uploadSussCount++
+        this.uploadStatus.current++
+        statusCheck(this)
+
         const searchStr = this.settings.uploadImageRandomSearch ? `?${generateRandomString(10)}` : ""
-        fileContent = replaceInText(fileContent, match[0], imageAlt, result.imageUrl + searchStr)
+        fileContent = replaceInText(fileContent, task.matchText, task.imageAlt, result.imageUrl + searchStr)
         autoAddExcludeDomain(result.imageUrl, this)
       }
     }
 
     if (isModify) {
-      if (isWorkspace) {
-        this.app.workspace.activeEditor?.editor?.setValue(filePropertyContent + fileContent)
-        if (cursor) {
-          await this.app.workspace.activeEditor?.editor?.setCursor(cursor)
-        }
-      } else if (activeFile instanceof TFile) {
-        await this.app.vault.modify(activeFile, filePropertyContent + fileContent)
-      }
+      this.fromPluginSet = true
 
-      if (!this.settings.isCloseNotice) {
-        new Notice(`Upload Result:\nsucceed: ${uploadSussCount} \nfailed: ${uploadCount - uploadSussCount}`)
-      }
+      this.app.workspace.activeEditor?.editor?.setValue(filePropertyContent + fileContent)
+      await this.app.workspace.activeEditor?.editor?.setCursor(cursor)
+
+      this.fromPluginSet = false
     }
   }
 
-  async MetadataDownImage(isWorkspace = false) {
+  /**
+   * 处理当前活动文件中的元数据图片下载任务
+   * @param isWorkspace - 是否处理工作区中的所有文件，默认为 false
+   */
+  async MetadataDownImage() {
     if (this.settings.propertyNeedSets.length === 0) {
       return
     }
-
     const activeFile = this.app.workspace.getActiveFile()
+    if (!activeFile) return
 
-    if (this.app.workspace.activeEditor) {
-      isWorkspace = true
+    const cachedMetadata = this.app.metadataCache.getFileCache(activeFile)
+    if (!cachedMetadata) return
+
+    // 第一次循环：收集任务并统计数量
+    const downloadTasks: DownTask[] = []
+    const metadata = metadataCacheHandle(cachedMetadata, this)
+    for (const item of metadata) {
+      for (const pic of item.value) {
+        if (!/^http/.test(pic) || hasExcludeDomain(pic, this.settings.excludeDomains)) {
+          continue
+        }
+        downloadTasks.push({
+          matchText: pic,
+          imageAlt: "",
+          imageUrl: pic,
+          metadataItem: item,
+        })
+        this.downloadStatus.total++
+        statusCheck(this)
+      }
     }
 
-    if (activeFile) {
-      let isModify = false
-      let downCount = 0
-      let downSussCount = 0
+    // 第二次循环：批量异步处理任务
+    let isModify = false
+    const downloadResults = await Promise.all(
+      downloadTasks.map(async (task) => {
+        const result = await imageDown(task.imageUrl, this)
+        return { task, result }
+      })
+    )
 
-      const metadata = metadataCacheHandle(activeFile, this)
-      for (const item of metadata) {
-        for (let i = 0; i < item.value.length; i++) {
-          const pic = item.value[i]
-          if (!/^http/.test(pic) || hasExcludeDomain(pic, this.settings.excludeDomains)) {
-            continue
-          }
-
-          downCount++
-          const result = await imageDown(pic, this)
-          if (result.err) {
-            new Notice(result.msg)
-          } else if (result.path) {
-            item.value[i] = result.path
-            isModify = true
-            downSussCount++
-          }
+    // 处理下载结果
+    for (const { task, result } of downloadResults) {
+      if (result.err) {
+        showErrorNotice(result.msg)
+      } else if (result.path && task.metadataItem) {
+        isModify = true
+        this.downloadStatus.current++
+        statusCheck(this)
+        const index = task.metadataItem.value.indexOf(task.matchText)
+        if (index !== -1) {
+          task.metadataItem.value[index] = result.path
         }
       }
+    }
 
-      if (isModify) {
-        await this.app.fileManager.processFrontMatter(activeFile, (frontmatter) => {
-          for (const item of metadata) {
-            frontmatter[item.key] = item.type === "string" ? item.value[0] : item.value
-          }
-        })
-        if (!this.settings.isCloseNotice) {
-          new Notice(`Metadata Down Result:\nsucceed: ${downSussCount} \nfailed: ${downCount - downSussCount}`)
+    if (isModify) {
+      this.fromPluginSet = true
+      await this.app.fileManager.processFrontMatter(activeFile, (frontmatter) => {
+        for (const item of metadata) {
+          frontmatter[item.key] = item.type === "string" ? item.value[0] : item.value
         }
-      }
+      })
+      setTimeout(() => {
+        this.fromPluginSet = false
+      }, 1000)
     }
   }
 
-  async MetadataUploadImage(isWorkspace = false) {
+  async MetadataUploadImage() {
+    if (this.settings.propertyNeedSets.length === 0) {
+      return
+    }
     const activeFile = this.app.workspace.getActiveFile()
+    if (!activeFile) return
 
-    if (this.app.workspace.activeEditor) {
-      isWorkspace = true
+    const cachedMetadata = this.app.metadataCache.getFileCache(activeFile)
+    if (!cachedMetadata) return
+
+    // 第一次循环：收集任务并统计数量
+    const uploadTasks: UploadTask[] = []
+    const metadata = metadataCacheHandle(cachedMetadata, this)
+    for (const item of metadata) {
+      for (const pic of item.value) {
+        if (/^http/.test(pic)) {
+          continue
+        }
+        let readfile = await getAttachmentUploadPath(pic, this)
+        if (!readfile) continue
+
+        if (!item.params) continue
+
+        uploadTasks.push({
+          matchText: pic,
+          imageAlt: "",
+          imageFile: readfile,
+          metadataItem: item,
+        })
+
+        this.uploadStatus.total++
+        statusCheck(this)
+      }
+    }
+    // 第二次循环：批量异步处理任务
+    let isModify = false
+    const uploadResults = await Promise.all(
+      uploadTasks.map(async (task) => {
+        const result = await imageUpload(task.imageFile, task.metadataItem?.params, this)
+        return { task, result }
+      })
+    )
+
+    // 处理上传结果
+    for (const { task, result } of uploadResults) {
+      if (result.err) {
+        showErrorNotice(result.msg)
+      } else if (result.imageUrl && task.metadataItem) {
+        isModify = true
+        this.uploadStatus.current++
+        statusCheck(this)
+        const searchStr = this.settings.uploadImageRandomSearch ? `?${generateRandomString(10)}` : ""
+        const index = task.metadataItem.value.indexOf(task.matchText)
+        if (index !== -1) {
+          task.metadataItem.value[index] = result.imageUrl + searchStr
+        }
+      }
     }
 
-    if (activeFile) {
-      let isModify = false
-      let uploadCount = 0
-      let uploadSussCount = 0
-
-      const metadata = metadataCacheHandle(activeFile, this)
-
-      for (const item of metadata) {
-        for (let i = 0; i < item.value.length; i++) {
-          const pic = item.value[i]
-          if (/^http/.test(pic)) {
-            continue
-          }
-          uploadCount++
-          const result = await imageUpload(pic, item.params, this)
-          if (result.err) {
-            new Notice(result.msg)
-          } else if (result.imageUrl) {
-            const searchStr = this.settings.uploadImageRandomSearch ? `?${generateRandomString(10)}` : ""
-            item.value[i] = result.imageUrl + searchStr
-            isModify = true
-            uploadSussCount++
-          }
+    if (isModify) {
+      this.fromPluginSet = true
+      await this.app.fileManager.processFrontMatter(activeFile, (frontmatter) => {
+        for (const item of metadata) {
+          frontmatter[item.key] = item.type === "string" ? item.value[0] : item.value
         }
-      }
-
-      if (isModify) {
-        await this.app.fileManager.processFrontMatter(activeFile, (frontmatter) => {
-          for (const item of metadata) {
-            frontmatter[item.key] = item.type === "string" ? item.value[0] : item.value
-          }
-        })
-        if (!this.settings.isCloseNotice) {
-          new Notice(`Metadata Upload Result:\nsucceed: ${uploadSussCount} \nfailed: ${uploadCount - uploadSussCount}`)
-        }
-      }
+      })
+      setTimeout(() => {
+        this.fromPluginSet = false
+      }, 1000)
     }
   }
 
@@ -334,8 +413,10 @@ export default class CustomImageAutoUploader extends Plugin {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
   }
 
-  async saveSettings() {
+  async saveSettings(isStatusCheck: boolean = true) {
     await this.saveData(this.settings)
-    statusCheck(this)
+    if (isStatusCheck) {
+      this.resetStatus("none")
+    }
   }
 }

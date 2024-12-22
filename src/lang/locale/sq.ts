@@ -58,4 +58,8 @@ export default <lang>{
     "属性": "Pronë",
     "添加属性图片上传": "Shto ngarkimin e imazhit të pronës",
     "选择属性": "Zgjidhni pronën",
+
+    "图片上传地址增加随机查询": "Shto një pyetje të rastëv në adresën e ngarkimit të imazhit për të evitë keshën e CDN",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Shto një pyetje të rastëv në adresën e ngarkimit të imazhit për të evitë keshën e CDN",
+    "一键上传下载": "Ngarko dhe shkarko në një klik",
 };

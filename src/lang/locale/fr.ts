@@ -1,11 +1,16 @@
 import { lang } from "../../lang";
 
 export default <lang>{
+    "Custom Image Auto Uploader": "Custom Image Auto Uploader",
+    "已开启": "Activé",
+    "已关闭": "Désactivé",
+
     //main
     "下载全部图片": "Télécharger toutes les images",
     "上传全部图片": "Téléverser toutes les images",
 
     //utils
+    "自动上传下载": "Téléversement et téléchargement automatiques",
     "自动上传": "Téléversement automatique",
     "自动下载": "Téléchargement automatique",
     "下载文件不是允许的图片类型": "Le fichier téléchargé n'est pas un type d'image autorisé",
@@ -57,5 +62,9 @@ export default <lang>{
     "调整压缩": "Ajuster la compression",
     "属性": "Propriété",
     "添加属性图片上传": "Ajouter un téléchargement d'image de propriété",
-    "选择属性": "Sélectionner la propriété"
+    "选择属性": "Sélectionner la propriété",
+
+    "图片上传地址增加随机查询": "Ajouter une requête aléatoire à l'adresse de téléchargement d'images pour éviter le cache CDN",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Ajouter une requête aléatoire à l'adresse de téléchargement d'images pour éviter le cache CDN",
+    "一键上传下载": "Télécharger et télécharger en un clic",
 };

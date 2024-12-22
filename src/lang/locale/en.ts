@@ -1,11 +1,17 @@
 import { lang } from "../../lang";
 
 export default <lang>{
+  "Custom Image Auto Uploader": "Custom Image Auto Uploader",
+  "已开启": "Enabled",
+  "已关闭": "Disabled",
+
+
   //main
   "下载全部图片": "Download all images",
   "上传全部图片": "Upload all images",
 
   //utils
+  "自动上传下载": "Automatic upload and download",
   "自动上传": "Automatic upload",
   "自动下载": "Automatic download",
   "下载文件不是允许的图片类型": "Downloaded file is not an allowed image type",
@@ -64,5 +70,5 @@ export default <lang>{
 
   "图片上传地址增加随机查询": "Add random query to image upload URL",
   "在图片地址末尾增加随机查询,用于规避CDN缓存": "Add a random query at the end of the image URL to avoid CDN caching",
-
+  "一键上传下载": "One-click upload and download",
 };

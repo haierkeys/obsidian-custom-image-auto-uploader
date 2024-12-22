@@ -58,5 +58,9 @@ export default <lang>{
   "调整压缩": "Tömörítés beállítása",
   "属性": "Tulajdonság",
   "添加属性图片上传": "Tulajdonság képek feltöltése hozzáadása",
-  "选择属性": "Tulajdonság kiválasztása"
+  "选择属性": "Tulajdonság kiválasztása",
+
+  "图片上传地址增加随机查询": "Egy véletlenszerű lekérdezést ad hozzá a kép feltöltési címéhez, hogy elkerülje a CDN gyorsítótárazását",
+  "在图片地址末尾增加随机查询,用于规避CDN缓存": "Egy véletlenszerű lekérdezést ad hozzá a kép feltöltési címéhez, hogy elkerülje a CDN gyorsítótárazását",
+  "一键上传下载": "Feltöltés és letöltés egy kattintással",
 };

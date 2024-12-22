@@ -58,4 +58,9 @@ export default <lang>{
     "属性": "Özellik",
     "添加属性图片上传": "Özellik resmi yüklemesi ekle",
     "选择属性": "Özellik seçin",
+
+
+    "图片上传地址增加随机查询": "Resim yükleme adresine rastgele sorgu ekleyerek CDN önbelleğini önleme",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Resim yükleme adresine rastgele sorgu ekleyerek CDN önbelleğini önleme",
+    "一键上传下载": "Tüm resimleri yükle ve indir",
 };

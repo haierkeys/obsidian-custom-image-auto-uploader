@@ -58,4 +58,8 @@ export default <lang>{
     "属性": "Eigenschap",
     "添加属性图片上传": "Voeg upload van afbeeldingeigenschappen toe",
     "选择属性": "Kies eigenschap",
+
+    "图片上传地址增加随机查询": "Voeg een willekeurige query toe aan de afbeelding-uploadadres om CDN-cache te voorkomen",
+    "在图片地址末尾增加随机查询,用于规避CDN缓存": "Voeg een willekeurige query toe aan de afbeelding-uploadadres om CDN-cache te voorkomen",
+    "一键上传下载": "Upload en download in één klik",
 };
