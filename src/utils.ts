@@ -3,8 +3,18 @@ import { fileTypeFromBuffer, FileTypeResult } from "file-type"
 import CustomImageAutoUploader from "./main"
 import { $ } from "./lang"
 import { UploadSet } from "./setting"
-import { DownTask, UploadTask, Metadata } from "./interface"
-import { time } from "console"
+import { Metadata } from "./interface"
+
+export const IMAGE_MIME_TYPES: Record<string, string[]> = {
+  "image/bmp": ["bmp"],
+  "image/avif": ["avif"],
+  "image/gif": ["gif"],
+  "image/jpeg": ["jpg", "jpeg"],
+  "image/png": ["png"],
+  "image/webp": ["webp"],
+}
+export const IMAGE_EXTENSIONS = Object.values(IMAGE_MIME_TYPES).flat()
+
 export interface ImageDownResult {
   err: boolean
   msg: string
@@ -192,11 +202,9 @@ export async function imageDown(url: string, plugin: CustomImageAutoUploader): P
     return { err: false, msg: $("网络错误,请检查网络是否通畅") }
   }
 
-  const imageExtensions = new Set(["jpg", "png", "gif", "webp", "flif", "cr2", "tif", "bmp", "jxr", "psd", "ico", "bpg", "jp2", "jpm", "jpx", "heic", "cur", "dcm", "avif"])
-
   let type = <FileTypeResult>await fileTypeFromBuffer(response.arrayBuffer)
 
-  if (!imageExtensions.has(type.ext) && type) {
+  if (!IMAGE_EXTENSIONS.includes(type.ext) && type) {
     return { err: true, msg: $("下载文件不是允许的图片类型") }
   }
 
@@ -224,12 +232,17 @@ export async function imageDown(url: string, plugin: CustomImageAutoUploader): P
  * @returns 上传结果
  */
 export async function imageUpload(file: TFile, postData: UploadSet | undefined, plugin: CustomImageAutoUploader): Promise<ImageUploadResult> {
+  if (!IMAGE_EXTENSIONS.includes(file.extension)) {
+    return { err: true, msg: $("上传文件不是允许的图片类型") }
+  }
+
   let body = await file.vault.readBinary(file)
 
   if (!postData) return { err: true, msg: $("扩展参数为空") }
 
   let requestData = new FormData()
-  requestData.append("imagefile", new Blob([body]), file.name)
+  requestData.append("imagefile", new Blob([body], { type: `image/${file.extension}` }), file.name)
+
   Object.keys(postData).forEach((v, i, p) => {
     requestData.append(v, postData[v])
   })
@@ -401,6 +414,7 @@ export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto:
           await plugin.ContentImageAutoHandle(true)
           await plugin.MetadataImageAutoHandle(true)
           showTaskNotice(plugin, "all")
+          statusCheck(plugin)
         })
     })
   }
@@ -415,10 +429,7 @@ export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto:
 
         await plugin.MetadataDownImage()
         showTaskNotice(plugin, "download")
-        setTimeout(() => {
-          console.log("statusCheck", plugin.statusType)
-          statusCheck(plugin)
-        }, 2000)
+        statusCheck(plugin)
       })
   })
   menu.addItem((item: MenuItem) => {
@@ -430,6 +441,7 @@ export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto:
         await plugin.ContentUploadImage()
         await plugin.MetadataUploadImage()
         showTaskNotice(plugin, "upload")
+        statusCheck(plugin)
       })
   })
 }

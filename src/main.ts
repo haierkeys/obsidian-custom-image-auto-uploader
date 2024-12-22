@@ -1,9 +1,8 @@
-import { Menu, MenuItem, TFile, Plugin, Notice, setIcon } from "obsidian"
+import { Menu, Plugin } from "obsidian"
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting"
 import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString, showTaskNotice, showErrorNotice, getAttachmentUploadPath, setMenu } from "./utils"
-import { DownTask, UploadTask, Metadata } from "./interface"
+import { DownTask, UploadTask } from "./interface"
 import { $ } from "./lang"
-import { json } from "stream/consumers"
 
 const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]]*)\]\]/g
 
@@ -24,7 +23,6 @@ export default class CustomImageAutoUploader extends Plugin {
   resetStatus(type: "download" | "upload" | "all" | "none", reset: boolean = true): void {
     // 设置显示类型
     this.statusType = type
-    console.log("resetStatus", type)
 
     // 重置计数
     if (reset) {
@@ -47,7 +45,6 @@ export default class CustomImageAutoUploader extends Plugin {
     // 注册编译器事件
     this.registerEvent(
       this.app.workspace.on("editor-change", async () => {
-        console.log("editor-change", this.fromPluginSet)
         if (!this.fromPluginSet) {
           this.resetStatus("all", true)
           await this.ContentImageAutoHandle()
