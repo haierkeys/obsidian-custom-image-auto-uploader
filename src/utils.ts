@@ -5,7 +5,6 @@ import { $ } from "./lang"
 import { UploadSet } from "./setting"
 import { DownTask, UploadTask, Metadata } from "./interface"
 import { time } from "console"
-import { $ } from "src/lang"
 export interface ImageDownResult {
   err: boolean
   msg: string
