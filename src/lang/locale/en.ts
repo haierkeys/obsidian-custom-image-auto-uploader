@@ -71,4 +71,13 @@ export default <lang>{
   "图片上传地址增加随机查询": "Add random query to image upload URL",
   "在图片地址末尾增加随机查询,用于规避CDN缓存": "Add a random query at the end of the image URL to avoid CDN caching",
   "一键上传下载": "One-click upload and download",
+
+  "上传速度优化": "Upload speed optimization",
+  "在图片上传前是否进行压缩": "Whether to compress the image before uploading",
+  "上传速度优化 - 压缩质量": "Upload speed optimization - Compression quality",
+  "压缩后的图片质量,范围0-1,默认0.8": "The quality of the compressed image, range 0-1, default 0.8",
+  "上传速度优化 - 最大宽度": "Upload speed optimization - Maximum width",
+  "压缩后的最大宽度,单位像素,默认1200": "The maximum width of the compressed image, in pixels, default 1200",
+  "上传速度优化 - 最大高度": "Upload speed optimization - Maximum height",
+  "压缩后的最大高度,单位像素,默认1200": "The maximum height of the compressed image, in pixels, default 1200",
 };

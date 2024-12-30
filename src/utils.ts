@@ -240,6 +240,64 @@ export async function imageUpload(file: TFile, postData: UploadSet | undefined, 
 
   if (!postData) return { err: true, msg: $("扩展参数为空") }
 
+  let compressedBody = body
+
+
+  if (plugin.settings.isCompress) {
+    try {
+      const img = new Image()
+      const canvas = document.createElement("canvas")
+      const ctx = canvas.getContext("2d")
+
+      // 创建临时URL以加载图片
+      const blob = new Blob([body], { type: `image/${file.extension}` })
+      const url = URL.createObjectURL(blob)
+
+      await new Promise((resolve, reject) => {
+        img.onload = () => {
+          // 设置压缩后的尺寸,保持宽高比
+          const maxWidth = plugin.settings.compressMaxWidth
+          const maxHeight = plugin.settings.compressMaxHeight
+          let width = img.width
+          let height = img.height
+
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width)
+            width = maxWidth
+          }
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height)
+            height = maxHeight
+          }
+
+          canvas.width = width
+          canvas.height = height
+
+          // 绘制并压缩
+          ctx?.drawImage(img, 0, 0, width, height)
+
+          // 转换为二进制
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                blob.arrayBuffer().then((buffer) => {
+                  compressedBody = buffer
+                  resolve(null)
+                })
+              }
+            },`image/${file.extension}`, plugin.settings.compressQuality
+          )
+        }
+        img.src = url
+      })
+
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.warn("图片压缩失败:", error)
+      // 压缩失败时使用原图
+    }
+  }
+
   let requestData = new FormData()
   requestData.append("imagefile", new Blob([body], { type: `image/${file.extension}` }), file.name)
 

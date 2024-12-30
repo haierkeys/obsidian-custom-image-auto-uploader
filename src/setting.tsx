@@ -6,7 +6,6 @@ import { KofiImage } from "./res"
 import { createRoot } from "react-dom/client"
 import { SettingsView } from "./views/settings-view"
 
-
 export const ImageSvrProcessMode = {
   // 不处理
   none: { label: $("不处理"), value: "none" },
@@ -49,6 +48,10 @@ export interface PluginSettings {
   isDeleteSource: boolean
   //上传后的图片是否随机后缀
   uploadImageRandomSearch: boolean
+  isCompress: boolean
+  compressMaxWidth: number
+  compressMaxHeight: number
+  compressQuality: number
   //内容部分上传设置
   contentSet: UploadSet
   //元数据上传设置
@@ -83,6 +86,11 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   isDeleteSource: true,
   // 上传后的图片是否随机后缀
   uploadImageRandomSearch: true,
+  // 图片预压缩设置
+  isCompress: true,
+  compressMaxWidth: 1200,
+  compressMaxHeight: 1200,
+  compressQuality: 0.8,
   // 内容部分上传设置
   contentSet: { key: "", type: ImageSvrProcessMode.none.value, width: "0", height: "0" },
   // 元数据上传设置
@@ -165,6 +173,49 @@ export class SettingTab extends PluginSettingTab {
     new Setting(set).setName($("上传")).setHeading()
 
     new Setting(set)
+      .setName($("上传速度优化"))
+      .setDesc($("在图片上传前是否进行压缩"))
+      .addToggle((toggle) =>
+        toggle.setValue(this.plugin.settings.isCompress).onChange(async (value) => {
+          this.plugin.settings.isCompress = value
+          this.display()
+          await this.plugin.saveSettings()
+        })
+      )
+
+    if (this.plugin.settings.isCompress) {
+      new Setting(set)
+        .setName($("上传速度优化 - 压缩质量"))
+        .setDesc($("压缩后的图片质量,范围0-1,默认0.8"))
+        .addText((text) =>
+          text.setValue(this.plugin.settings.compressQuality.toString()).onChange(async (value) => {
+            this.plugin.settings.compressQuality = Number(value)
+            await this.plugin.saveSettings()
+          })
+        )
+
+      new Setting(set)
+        .setName($("上传速度优化 - 最大宽度"))
+        .setDesc($("压缩后的最大宽度,单位像素,默认1200"))
+        .addText((text) =>
+          text.setValue(this.plugin.settings.compressMaxWidth.toString()).onChange(async (value) => {
+            this.plugin.settings.compressMaxWidth = Number(value)
+            await this.plugin.saveSettings()
+          })
+        )
+
+      new Setting(set)
+        .setName($("上传速度优化 - 最大高度"))
+        .setDesc($("压缩后的最大高度,单位像素,默认1200"))
+        .addText((text) =>
+          text.setValue(this.plugin.settings.compressMaxHeight.toString()).onChange(async (value) => {
+            this.plugin.settings.compressMaxHeight = Number(value)
+            await this.plugin.saveSettings()
+          })
+        )
+    }
+
+    new Setting(set)
       .setName($("是否上传后删除原图片"))
       .setDesc($("在图片上传后是否删除本地原图片"))
       .addToggle((toggle) =>
@@ -177,7 +228,7 @@ export class SettingTab extends PluginSettingTab {
 
     new Setting(set)
       .setName($("图片上传地址增加随机查询"))
-      .setDesc($("在图片地址末尾增加随机查询,用于规避CDN缓存") +" eg: https://domain.com/upload-image.png?Bh7OP5YGJ0")
+      .setDesc($("在图片地址末尾增加随机查询,用于规避CDN缓存") + " eg: https://domain.com/upload-image.png?Bh7OP5YGJ0")
       .addToggle((toggle) =>
         toggle.setValue(this.plugin.settings.uploadImageRandomSearch).onChange(async (value) => {
           this.plugin.settings.uploadImageRandomSearch = value
