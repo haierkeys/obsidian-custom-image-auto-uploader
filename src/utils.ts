@@ -242,8 +242,8 @@ export async function imageUpload(file: TFile, postData: UploadSet | undefined, 
 
   let compressedBody = body
 
-
   if (plugin.settings.isCompress) {
+    console.log("开始压缩图片")
     try {
       const img = new Image()
       const canvas = document.createElement("canvas")
@@ -285,7 +285,9 @@ export async function imageUpload(file: TFile, postData: UploadSet | undefined, 
                   resolve(null)
                 })
               }
-            },`image/${file.extension}`, plugin.settings.compressQuality
+            },
+            `image/${file.extension}`,
+            plugin.settings.compressQuality
           )
         }
         img.src = url
@@ -299,7 +301,7 @@ export async function imageUpload(file: TFile, postData: UploadSet | undefined, 
   }
 
   let requestData = new FormData()
-  requestData.append("imagefile", new Blob([body], { type: `image/${file.extension}` }), file.name)
+  requestData.append("imagefile", new Blob([compressedBody], { type: `image/${file.extension}` }), file.name)
 
   Object.keys(postData).forEach((v, i, p) => {
     requestData.append(v, postData[v])
