@@ -90,7 +90,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   isCompress: true,
   compressMaxWidth: 1200,
   compressMaxHeight: 1200,
-  compressQuality: 0.8,
+  compressQuality: 1,
   // 内容部分上传设置
   contentSet: { key: "", type: ImageSvrProcessMode.none.value, width: "0", height: "0" },
   // 元数据上传设置
