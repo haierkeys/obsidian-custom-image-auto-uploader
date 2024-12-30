@@ -243,7 +243,6 @@ export async function imageUpload(file: TFile, postData: UploadSet | undefined, 
   let compressedBody = body
 
   if (plugin.settings.isCompress) {
-    console.log("开始压缩图片")
     try {
       const img = new Image()
       const canvas = document.createElement("canvas")
@@ -295,8 +294,7 @@ export async function imageUpload(file: TFile, postData: UploadSet | undefined, 
 
       URL.revokeObjectURL(url)
     } catch (error) {
-      console.warn("图片压缩失败:", error)
-      // 压缩失败时使用原图
+      return { err: true, msg: $("图片压缩失败:")+error.message }
     }
   }
 
