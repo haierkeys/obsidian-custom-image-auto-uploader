@@ -6,8 +6,8 @@
 <h1 align="center">Custom Image Auto Uploader Plugin for Obsidian</h1>
 
 <p align="center">
-<a href="https://npmjs.com/package/changelog.md"><img src="https://img.shields.io/github/release/haierkeys/obsidian-custom-image-auto-uploader" alt="NPM version"></a>
-<img src="https://img.shields.io/github/license/haierkeys/obsidian-custom-image-auto-uploader.svg" alt="preview" >
+<img src="https://img.shields.io/github/release/haierkeys/obsidian-custom-image-auto-uploader" alt="version">
+<img src="https://img.shields.io/github/license/haierkeys/obsidian-custom-image-auto-uploader.svg" alt="license" >
 </p>
 
 You can batch download images from your notes on 💻 desktop, 📱 iOS, and 🤖 Android platforms, and batch upload and save them to a remote server, home NAS, or cloud storage (such as Alibaba Cloud OSS, Amazon S3, Cloudflare R2). Additionally, you can stretch, crop, and resize the images.

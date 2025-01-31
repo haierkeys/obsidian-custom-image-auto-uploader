@@ -4,8 +4,8 @@
 <h1 align="center">自定义图片上传云端保存插件 For Obsidian</h1>
 
 <p align="center">
-<a href="https://npmjs.com/package/changelog.md"><img src="https://img.shields.io/github/release/haierkeys/obsidian-custom-image-auto-uploader" alt="NPM version"></a>
-<img src="https://img.shields.io/github/license/haierkeys/obsidian-custom-image-auto-uploader.svg" alt="preview" >
+<img src="https://img.shields.io/github/release/haierkeys/obsidian-custom-image-auto-uploader" alt="version">
+<img src="https://img.shields.io/github/license/haierkeys/obsidian-custom-image-auto-uploader.svg" alt="license" >
 </p>
 
 您可以在 💻电脑端,📱ios端, 🤖安卓端将笔记中的图片批量下载,批量上传保存到远端服务器、家庭 NAS 或者云存储上（阿里云 OSS 、亚马逊 S3 、Cloudflare R2 ）,并且您还可以对图片进行拉伸裁剪以及修改尺寸。
