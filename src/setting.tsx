@@ -4,7 +4,7 @@ import CustomImageAutoUploader from "./main"
 import { $ } from "./lang"
 import { KofiImage } from "./res"
 import { createRoot } from "react-dom/client"
-import { SettingsView } from "./views/settings-view"
+import { SettingsView, CompressionView } from "./views/settings-view"
 
 export const ImageSvrProcessMode = {
   // 不处理
@@ -40,6 +40,7 @@ export interface PluginSettings {
   api: string
   //API Token
   apiToken: string
+  clipboardReadTip: string
   //处理排除的域名清单
   excludeDomains: string
   //// 是否处理剪贴板图片
@@ -76,10 +77,11 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   isCloseNotice: true,
   // 上传后的超时时间，单位为毫秒
   afterUploadTimeout: 1000,
-  // API 地址
+  // API 网关地址
   api: "http://127.0.0.1:36677/upload",
   // API 令牌
   apiToken: "",
+  clipboardReadTip:"",
   // 排除的域名列表
   excludeDomains: "",
   // 本地图片上传后是否删除
@@ -108,10 +110,16 @@ export class SettingTab extends PluginSettingTab {
     this.plugin = plugin
   }
 
+
   display(): void {
     const { containerEl: set } = this
 
     set.empty()
+
+    new Setting(set)
+      .setName("| " + "常规")
+      .setHeading()
+      .setClass("custom-image-auto-uploader-settings-tag")
 
     new Setting(set)
       .setName($("是否自动上传"))
@@ -156,7 +164,48 @@ export class SettingTab extends PluginSettingTab {
         })
       )
 
-    new Setting(set).setName($("下载")).setHeading()
+    new Setting(set)
+      .setName("| " + "API 网关")
+      .setHeading()
+      .setClass("custom-image-auto-uploader-settings-tag")
+
+    const root2 = document.createElement("div")
+    root2.className = "custom-image-auto-uploader-settings"
+    set.appendChild(root2)
+
+    const reactRoot2 = createRoot(root2)
+    reactRoot2.render(<SettingsView plugin={this.plugin} />)
+
+    const api = new Setting(set)
+      .setName($("API 网关地址"))
+      .setDesc($("Image API Gateway 地址"))
+      .addText((text) =>
+        text
+          .setPlaceholder($("输入您的 Image API Gateway 地址"))
+          .setValue(this.plugin.settings.api)
+          .onChange(async (value) => {
+            this.plugin.settings.api = value
+            await this.plugin.saveSettings()
+          })
+      )
+
+    const apiToken = new Setting(set)
+      .setName($("API 访问令牌"))
+      .setDesc($("用于访问API的令牌"))
+      .addText((text) =>
+        text
+          .setPlaceholder($("输入您的 API 访问令牌"))
+          .setValue(this.plugin.settings.apiToken)
+          .onChange(async (value) => {
+            this.plugin.settings.apiToken = value
+            await this.plugin.saveSettings()
+          })
+      )
+
+    new Setting(set)
+      .setName("| " + $("下载"))
+      .setHeading()
+      .setClass("custom-image-auto-uploader-settings-tag")
 
     new Setting(set)
       .setName($("下载域名排除"))
@@ -170,7 +219,10 @@ export class SettingTab extends PluginSettingTab {
             await this.plugin.saveSettings()
           })
       )
-    new Setting(set).setName($("上传")).setHeading()
+    new Setting(set)
+      .setName("| " + $("上传"))
+      .setHeading()
+      .setClass("custom-image-auto-uploader-settings-tag")
 
     new Setting(set)
       .setName($("上传速度优化"))
@@ -236,48 +288,24 @@ export class SettingTab extends PluginSettingTab {
           await this.plugin.saveSettings()
         })
       )
-
-    new Setting(set)
-      .setName($("API 地址"))
-      .setDesc($("Image api 网关地址"))
-      .addText((text) =>
-        text
-          .setPlaceholder($("输入您的 Image api 网关地址"))
-          .setValue(this.plugin.settings.api)
-          .onChange(async (value) => {
-            this.plugin.settings.api = value
-            await this.plugin.saveSettings()
-          })
-      )
-
-    new Setting(set)
-      .setName($("API 访问令牌"))
-      .setDesc($("用于访问API的令牌"))
-      .addText((text) =>
-        text
-          .setPlaceholder($("输入您的 API 访问令牌"))
-          .setValue(this.plugin.settings.apiToken)
-          .onChange(async (value) => {
-            this.plugin.settings.apiToken = value
-            await this.plugin.saveSettings()
-          })
-      )
-
-    new Setting(set).setName($("API 服务搭建")).setDesc($("项目地址")).settingEl.createEl("a", { text: "https://github.com/haierkeys/image-api-gateway", href: "https://github.com/haierkeys/image-api-gateway" })
-
     const root = document.createElement("div")
     root.className = "custom-image-auto-uploader-settings"
     set.appendChild(root)
 
     const reactRoot = createRoot(root)
-    reactRoot.render(<SettingsView plugin={this.plugin} />)
+    reactRoot.render(<CompressionView plugin={this.plugin} />)
 
-    new Setting(set).setName($("支持")).setHeading()
+    new Setting(set)
+      .setName("| " + $("支持"))
+      .setHeading()
+      .setClass("custom-image-auto-uploader-settings-tag")
     let y = new Setting(set)
       .setName($("捐赠"))
       .setDesc($("如果您喜欢这个插件，请考虑捐赠以支持继续开发。"))
       .settingEl.createEl("a", { href: "https://ko-fi.com/haierkeys" })
-      .createEl("img", { attr: { src: KofiImage, height: "36", border: "0", alt: "Buy Me a Coffee at ko-fi.com", style: "height:36px!important;border:0px!important;" } })
+      .createEl("img", {
+        attr: { src: KofiImage, height: "36", border: "0", alt: "Buy Me a Coffee at ko-fi.com", style: "height:36px!important;border:0px!important;" },
+      })
 
     const debugDiv = set.createDiv()
     debugDiv.setAttr("align", "center")
@@ -314,4 +342,5 @@ export class SettingTab extends PluginSettingTab {
       }
     }
   }
+
 }

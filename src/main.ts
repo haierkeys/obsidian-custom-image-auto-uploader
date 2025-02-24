@@ -7,6 +7,7 @@ import { $ } from "./lang"
 const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]]*)\]\]/g
 
 export default class CustomImageAutoUploader extends Plugin {
+  settingTab: SettingTab
   settings: PluginSettings
   statusBar: HTMLElement[] = []
   downloadStatus: { current: number; total: number } = { current: 0, total: 0 }
@@ -39,8 +40,9 @@ export default class CustomImageAutoUploader extends Plugin {
 
     statusCheck(this)
 
+    this.settingTab = new SettingTab(this.app, this)
     // 注册设置选项
-    this.addSettingTab(new SettingTab(this.app, this))
+    this.addSettingTab(this.settingTab);
 
     // 注册编译器事件
     this.registerEvent(

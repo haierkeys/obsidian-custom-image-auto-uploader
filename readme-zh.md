@@ -29,7 +29,7 @@
 
 1. 安装插件
   打开 OBSidian 社区插件市场, 搜索 **Custom Image Auto Uploader** 安装
-2. 打开插件配置项，将 **上传设置** > **API 地址** 设置为您的 **Image Api Gateway** 地址,
+2. 打开插件配置项，将 **上传设置** > **API 网关地址** 设置为您的 **Image Api Gateway** 地址,
    例如: `http://127.0.0.1:8000/api/upload`
 3. 设置 **API 访问令牌**。
 4. 在远端服务启动 **Image Api Gateway** 服务。
