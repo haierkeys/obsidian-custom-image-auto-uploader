@@ -19,6 +19,7 @@ async function getClipboardContent(plugin: CustomImageAutoUploader): Promise<voi
     }, 2000)
   }
 
+  //
   const clipboardReadTipTipSave = async (clipboardReadTip: string) => {
     plugin.settings.clipboardReadTip = clipboardReadTip
 
