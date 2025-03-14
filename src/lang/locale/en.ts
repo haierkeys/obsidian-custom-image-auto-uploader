@@ -47,9 +47,9 @@ export default <lang>{
   "说明": "Description",
   "自行搭建": "Self-build",
   "速度好, 自由配置, 无隐私风险, 支持云存储和服务端存储": "Speed good, free configuration, no privacy risk, supports cloud storage and server storage",
-  "公共网关": "Public gateway",
+  "多用户开放网关": "Multi-user open gateway",
   "稳定性好, 仅支持用户的云存储": "Stability good, only supports user cloud storage",
-  "粘贴公共网关的接口配置": "Paste public gateway interface configuration",
+  "粘贴多用户开放网关的接口配置": "Paste multi-user open gateway interface configuration",
 
   "未检测到配置信息!": "No configuration information detected!",
 

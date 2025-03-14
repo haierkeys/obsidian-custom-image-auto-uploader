@@ -97,7 +97,7 @@ export const SettingsView = ({ plugin }: { plugin: CustomImageAutoUploader }) =>
               <td style={{ textAlign: "center" }}>{$("速度好, 自由配置, 无隐私风险, 支持云存储和服务端存储")}</td>
             </tr>
             <tr>
-              <td style={{ textAlign: "center" }}>{$("公共网关")}</td>
+              <td style={{ textAlign: "center" }}>{$("多用户开放网关")}</td>
               <td>
                 <a href="https://img.diybeta.com/">https://img.diybeta.com</a>
               </td>
@@ -108,7 +108,7 @@ export const SettingsView = ({ plugin }: { plugin: CustomImageAutoUploader }) =>
       </div>
       <div className="clipboard-read">
         <button className="clipboard-read-button" onClick={() => getClipboardContent(plugin)}>
-          {$("粘贴公共网关的接口配置")}
+          {$("粘贴多用户开放网关的接口配置")}
         </button>
         <div className="clipboard-read-description">{plugin.settings.clipboardReadTip}</div>
       </div>
