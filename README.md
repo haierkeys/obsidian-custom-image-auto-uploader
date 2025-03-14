@@ -19,7 +19,7 @@ You can batch download images from your notes on 💻 desktop, 📱 iOS, and �
 - **Batch upload** local images from notes to remote services ([Image Api Gateway](https://github.com/haierkeys/obsidian-image-api-gateway))
 - Drag and drop, or paste to upload images
 - Batch save images in notes to **remote servers**, such as your web server or home NAS
-- Batch save images in notes to cloud storage, such as Aliyun OSS, Amazon S3, Cloudflare R2
+- Batch save images in notes to cloud storage, such as Aliyun OSS, Amazon S3, Cloudflare R2, MinIO
 - Supports multiple platforms: Windows, MacOS, Linux, Android, iOS
 - Multi-language support
 - Add image stretching, cropping, and resizing functionality to note properties or inline images (e.g., for Hugo blog cover images)
