@@ -1,0 +1,62 @@
+.custom-image-auto-uploader-settings-tag{
+    font-color: red;
+
+}
+
+.custom-image-auto-uploader-settings {
+    padding: 0.75em 0;
+    border-top: 1px solid var(--background-modifier-border);
+}
+
+.custom-image-auto-uploader-settings-table {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 0 !important;
+      background-color: var(--background-secondary);
+
+    th, td {
+        border: 0 !important;
+    }
+
+    th {
+        text-align: left;
+        padding: 8px 10px;
+        font-size: var(--font-ui-smaller);
+    }
+
+    .no-columns-added {
+        padding: 15px;
+        text-align: center;
+        background-color: var(--background-secondary);
+
+        p {
+            margin: 4px;
+            font-size: 10px;
+        }
+    }
+
+    thead  {
+        border-bottom: 1px solid var(--color-base-40) !important;
+    }
+
+    tbody  {
+        tr {
+            background-color: var(--background-secondary);
+
+            &:nth-child(odd) {
+                background-color: var(--background-secondary-alt);
+            }
+        }
+
+        td {
+            padding: 4px 8px;
+            font-size: var(--font-ui-small);
+        }
+    }
+
+
+    tfoot td {
+        padding: 8px 10px;
+    }
+
+}

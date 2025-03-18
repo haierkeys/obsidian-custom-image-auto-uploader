@@ -1,0 +1,11 @@
+{
+	"id": "better-sync",
+	"name": "Better Sync",
+	"version": "0.1",
+	"minAppVersion": "1.6.5",
+	"description": "A faster, more user-friendly note sync plugin supporting seamless synchronization across Mac, Windows, and mobile devices.",
+	"author": "HaierKeys",
+	"authorUrl": "https://blog.diybeta.com",
+	"isDesktopOnly": false,
+	"fundingUrl": "https://ko-fi.com/haierkeys"
+}
