@@ -117,7 +117,7 @@ export class SettingTab extends PluginSettingTab {
     set.empty()
 
     new Setting(set)
-      .setName("| " + "常规")
+      .setName("| " + $("通用"))
       .setHeading()
       .setClass("custom-image-auto-uploader-settings-tag")
 
@@ -165,7 +165,7 @@ export class SettingTab extends PluginSettingTab {
       )
 
     new Setting(set)
-      .setName("| " + "API 网关")
+      .setName("| " + $("API 网关"))
       .setHeading()
       .setClass("custom-image-auto-uploader-settings-tag")
 

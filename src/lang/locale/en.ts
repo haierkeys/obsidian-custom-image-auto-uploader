@@ -21,6 +21,7 @@ export default <lang>{
 
   // setting
   "通用": "Common",
+  "API 网关": "API Gateway",
   "是否自动上传": "Automatic upload?",
   "如果关闭,您只能手动上传图片": "If disabled, you can only upload images manually",
   "是否自动下载": "Automatic download?",
