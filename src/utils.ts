@@ -1,9 +1,8 @@
-import {  TFile, Vault, Notice } from "obsidian"
+import { TFile, Vault, Notice, Plugin } from "obsidian"
 import { fileTypeFromBuffer, FileTypeResult } from "file-type"
 import BetterSync from "./main"
-import { $ } from "./lang"
 import { UploadSet } from "./setting"
-import { Metadata } from "./interface"
+import sq from 'src/lang/locale/sq';
 
 export interface ImageDownResult {
   err: boolean
@@ -61,42 +60,99 @@ export async function getAttachmentUploadPath(image: string, plugin: BetterSync)
   return plugin.app.metadataCache.getFirstLinkpathDest(image, image)
 }
 
+export class WebSocketClient {
+  private ws: WebSocket
+  private wsApi: string
+  private Plugin: BetterSync
+  public wsIsOpen: boolean = false
+  public checkConnection: any
 
+  constructor(plugin: BetterSync) {
+    this.Plugin = plugin
+    this.wsApi = plugin.settings.wsApi
+  }
 
-// 连接服务器
-export async function WebSocketConnect(plugin: BetterSync) {
+  public connect() {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+      this.ws = new WebSocket(this.Plugin.settings.wsApi + "/api/user/sync?lang=en")
+      this.ws.onopen = (e: Event): void => {
+        console.log("Connected to the WebSocket server")
+        this.send("Authorization", this.Plugin.settings.apiToken)
+        this.Receive()
+        this.check()
+      }
+    }
+  }
 
-  console.log(plugin.settings.wsApi + "/api/user/sync")
+  public reConnect() {
+    this.close()
+    this.connect()
+  }
 
+  public close() {
+    this.wsIsOpen = false
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.close(1000, "User manually closed the connection")
+    }
+    clearTimeout(this.checkConnection)
+  }
 
+  public check() {
+    this.checkConnection = setInterval(() => {
+      if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+        this.wsIsOpen = true
+        clearTimeout(this.checkConnection)
+        console.log("WebSocket connection is open.")
+      }
+    }, 3000)
+  }
 
-  let socket = new WebSocket(plugin.settings.wsApi + "/api/user/sync");
+  public isConnected(): boolean {
+    return this.wsIsOpen
+  }
 
-  // 监听连接打开事件
-  socket.onopen = () => {
-    console.log('Connected to the WebSocket server');
+  public async send(action: string, data: any, type: string = "text") {
+    // 循环检查 WebSocket 连接是否打开
+    while (this.ws.readyState !== WebSocket.OPEN) {
+      console.log("WebSocket 连接未打开，等待重试...")
+      await this.sleep(1000) // 每隔一秒重试一次
+    }
+    if (type == "text") {
+      this.ws.send(action + "|" + data)
+    } else if (type == "json") {
+      this.ws.send(action + "|" + JSON.stringify(data))
+    }
+  }
 
-    socket.send("Authorization|" + plugin.settings.apiToken );
+  public sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
 
-  };
-
-  // 监听消息事件
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    console.log(`Received message:`, data);
-  };
-
-  // 监听错误事件
-  socket.onerror = (error) => {
-    console.error('WebSocket error:', error);
-  };
-
-  // 监听连接关闭事件
-  socket.onclose = () => {
-    console.log('Disconnected from the WebSocket server');
-  };
+  public Receive() {
+    this.ws.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      console.log(`Received message:`, data)
+    }
+    this.ws.onerror = (error) => {
+      console.error("WebSocket error:", error)
+    }
+    this.ws.onclose = () => {
+      this.wsIsOpen = false
+      clearTimeout(this.checkConnection)
+      console.log("Disconnected from the WebSocket server")
+    }
+  }
 }
-
+ function hashContent(content: string) {
+    // 使用简单的哈希函数生成哈希值
+    let hash = 0;
+    for (let i = 0; i < content.length; i++) {
+      const char = content.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash &= hash;
+    }
+    return hash;
+  }
 
 /**
  *

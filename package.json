@@ -12,18 +12,19 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^22.13.5",
-    "@types/react": "^19.0.10",
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
-    "@typescript-eslint/eslint-plugin": "^8.24.1",
-    "@typescript-eslint/parser": "^8.24.1",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
     "builtin-modules": "^4.0.0",
     "esbuild": "^0.24.2",
     "obsidian": "^1.8.7",
     "tslib": "^2.8.1",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   },
   "dependencies": {
+    "diff-match-patch-es": "^1.0.1",
     "file-type": "^19.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
