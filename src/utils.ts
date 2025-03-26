@@ -236,7 +236,7 @@ export async function imageUpload(file: TFile, postData: UploadSet | undefined, 
     return { err: true, msg: $("上传文件不是允许的图片类型") }
   }
 
-  let body = await file.vault.readBinary(file)
+  let body = await plugin.app.vault.readBinary(file)
 
   if (!postData) return { err: true, msg: $("扩展参数为空") }
 

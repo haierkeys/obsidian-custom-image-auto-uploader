@@ -8,7 +8,7 @@
 <img src="https://img.shields.io/github/license/haierkeys/obsidian-custom-image-auto-uploader.svg" alt="license" >
 </p>
 
-您可以在 💻电脑端,📱ios端, 🤖安卓端将笔记中的图片批量下载,批量上传保存到远端服务器、家庭 NAS 或者云存储上（阿里云 OSS 、亚马逊 S3 、Cloudflare R2 、MinIO ）,并且您还可以对图片进行拉伸裁剪以及修改尺寸。
+您可以在 电脑和手机 端上将笔记中的图片批量下载,批量上传保存到远端服务器、家庭 NAS、WebDAV 或者云存储上（阿里云 OSS 、亚马逊 S3 、Cloudflare R2 、MinIO ）,并且您还可以对图片进行拉伸裁剪以及修改尺寸。
 
 ![](https://github.com/user-attachments/assets/0878061b-d77c-48c5-aa61-cc5154612a7b)
 
@@ -16,7 +16,7 @@
 - **批量下载**笔记内网络图片到本地
 - **批量上传**笔记中本地图片到远端服务 ( [ Image Api Gateway](https://github.com/haierkeys/obsidian-image-api-gateway) )
 - 拖拽,粘贴 上传图片
-- 批量将笔记内图片保存到 **远端服务器**，例如您的 Web 服务器或家庭 NAS。
+- 批量将笔记内图片保存到 **远端服务器**，例如您的 Web 服务器或家庭 NAS，以及保存在WebDAV服务器内。
 - 批量将笔记内图片保存到云存储内，例如阿里云 OSS、亚马逊 S3、Cloudflare R2。
 - 支持多端使用, 支持 Windows, MacOS, Linux, Android, iOS
 - 支持多国语言
