@@ -1,26 +1,19 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "importHelpers": true,
     "inlineSourceMap": true,
     "inlineSources": true,
     "isolatedModules": true,
-    "lib": [
-      "DOM",
-      "ES5",
-      "ES6",
-      "ES7",
-      "ESNext"
-    ],
+    "jsx": "react-jsx",
+    "lib": ["DOM", "ES5", "ES6", "ES7", "ESNext"],
     "module": "ESNext",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "target": "ES6",
-     "jsx": "react-jsx"
+    "target": "ES6"
   },
-  "include": [
-    "**/*.ts"
-  ]
+  "include": ["**/*.ts"]
 }

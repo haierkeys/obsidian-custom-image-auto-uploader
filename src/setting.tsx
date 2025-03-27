@@ -1,4 +1,4 @@
-import * as React from "react"
+
 import { App, PluginSettingTab, Notice, Setting, Platform } from "obsidian"
 import BetterSync from "./main"
 import { $ } from "./lang"
@@ -7,16 +7,6 @@ import { createRoot } from "react-dom/client"
 import { SettingsView } from "./views/settings-view"
 
 
-export interface UploadSet {
-  [key: string]: string
-  key: string
-  //设置宽度
-  width: string
-  //设置高度
-  height: string
-  // PropertyUploadSetType
-  type: string
-}
 
 export interface PluginSettings {
   //是否自动上传
@@ -27,6 +17,8 @@ export interface PluginSettings {
   wsApi: string
   //API Token
   apiToken: string
+  vault: string
+  lastSyncTime: string
   //  [propName: string]: any;
   clipboardReadTip: string
 }
@@ -50,8 +42,10 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   wsApi: "",
   // API 令牌
   apiToken: "",
+  lastSyncTime: "",
+  vault: "",
   // 剪贴板读取提示
-  clipboardReadTip: ""
+  clipboardReadTip: "",
 }
 
 export class SettingTab extends PluginSettingTab {
@@ -75,7 +69,7 @@ export class SettingTab extends PluginSettingTab {
 
     new Setting(set)
       .setName("启用同步")
-      .setDesc("关闭后您的笔记将不做任何同步12")
+      .setDesc("关闭后您的笔记将不做任何同步")
       .addToggle((toggle) =>
         toggle.setValue(this.plugin.settings.syncEnabled).onChange(async (value) => {
           this.plugin.settings.syncEnabled = value
@@ -134,7 +128,20 @@ export class SettingTab extends PluginSettingTab {
             this.plugin.settings.apiToken = value
             await this.plugin.saveSettings()
           })
-      )
+    )
+
+     new Setting(set)
+       .setName("vault")
+       .setDesc("vault")
+       .addText((text) =>
+         text
+           .setPlaceholder("vault")
+           .setValue(this.plugin.settings.vault)
+           .onChange(async (value) => {
+             this.plugin.settings.vault = value
+             await this.plugin.saveSettings()
+           })
+       )
 
     // const root = document.createElement("div")
     // root.className = "custom-image-auto-uploader-settings"

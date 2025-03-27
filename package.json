@@ -24,6 +24,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "dayjs": "^1.11.13",
     "diff-match-patch-es": "^1.0.1",
     "file-type": "^19.6.0",
     "react": "^19.0.0",

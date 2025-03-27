@@ -1,11 +1,15 @@
-import { Plugin, TFile } from "obsidian"
+import { Plugin, MarkdownFileInfo } from "obsidian"
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting"
-import { NoteDown, NoteUp, WebSocketClient } from "./utils"
-import { diff } from "diff-match-patch-es"
+import { WebSocketClient } from "./lib/websocket"
+import { FileModify, FileDelete, FileRename, FileContentModify, InitAllFiles, SyncAllFiles } from "./lib/fs"
+
 interface ContentHashes {
   [key: string]: string
 }
 interface ContentStore {
+  [key: string]: string
+}
+interface SerSyncFiles {
   [key: string]: string
 }
 
@@ -16,15 +20,18 @@ export default class BetterSync extends Plugin {
   contentHashes: ContentHashes = {}
   contentStore: ContentStore = {}
   remoteContentStore: ContentStore = {}
+  SerSyncFiles: SerSyncFiles = {}
+  editSyncTimeout: any
 
   async onload() {
+    const currentDate = new Date()
+    console.log(currentDate)
+
     // 初始化哈希存储和内容存储
     this.contentHashes = {}
     this.contentStore = {}
     // 模拟远程服务器存储
     this.remoteContentStore = {}
-
-
 
     await this.loadSettings()
     this.settingTab = new SettingTab(this.app, this)
@@ -33,62 +40,45 @@ export default class BetterSync extends Plugin {
     this.websocket = new WebSocketClient(this)
 
     if (this.settings.syncEnabled) {
-      this.websocket.connect()
+      this.websocket.register()
+    } else {
+      this.websocket.unRegister()
     }
 
-    console.log(this.websocket.wsIsOpen)
+    // 注册文件事件
+    this.registerEvent(this.app.vault.on("create", (abstractFile) => FileModify(abstractFile, this)))
+    this.registerEvent(this.app.vault.on("modify", (abstractFile) => FileModify(abstractFile, this)))
+    this.registerEvent(this.app.vault.on("delete", (abstractFile) => FileDelete(abstractFile, this)))
+    this.registerEvent(this.app.vault.on("rename", (abstractFile, oldfile) => FileRename(abstractFile, oldfile, this)))
 
+    // 注册编译器事件
     this.registerEvent(
-      this.app.vault.on("create", async (abstractFile) => {
-        if (!(abstractFile instanceof TFile)) {
-          console.log("Created item is not a file:", abstractFile.path)
-          return
-        }
-        const file = abstractFile as TFile
-
-        if (!file.path.endsWith(".md")) return
-        // 异步读取文件内容
-        const body: string = await this.app.vault.cachedRead(file)
-        // 发送 WebSocket 消息至指定通道
-        this.websocket.send("create", { filePath: file.path, fileBody: body })
+      this.app.workspace.on("editor-change", async (editor, mdFile) => {
+        clearTimeout(this.editSyncTimeout)
+        this.editSyncTimeout = setTimeout(() => {
+          if (mdFile.file) FileContentModify(mdFile.file, editor.getValue(), this)
+        }, 200)
       })
     )
 
-    this.registerEvent(
-      this.app.vault.on("modify", async (abstractFile) => {
-        if (!(abstractFile instanceof TFile)) {
-          console.log("Created item is not a file:", abstractFile.path)
-          return
-        }
-        const file = abstractFile as TFile
+    // 注册命令
+    this.addCommand({
+      id: "InitAllNotes",
+      name: "强制同步本地覆盖到远端",
+      callback: async () => InitAllFiles(this),
+    })
 
-        if (!file.path.endsWith(".md")) return
-        // 异步读取文件内容
-        const body: string = await this.app.vault.cachedRead(file)
-        this.websocket.send("modify", { filePath: file.path, fileBody: body }, "json")
-        console.log("modify", file)
-      })
-    )
-
-    this.registerEvent(
-      this.app.vault.on("delete", (file) => {
-        this.websocket.send("delete", file.path)
-        console.log("delete", file)
-      })
-    )
-
-    this.registerEvent(
-      this.app.vault.on("rename", (file, oldPath) => {
-        console.log("rename", file, oldPath)
-      })
-    )
+    this.addCommand({
+      id: "SyncAllFiles",
+      name: "同步全部笔记",
+      callback: async () => SyncAllFiles(this),
+    })
   }
 
-
-
-
-
-  onunload() {}
+  onunload() {
+    console.log("onunload")
+    this.websocket.unRegister()
+  }
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
@@ -98,9 +88,10 @@ export default class BetterSync extends Plugin {
     if (this.settings.api && this.settings.apiToken) {
       this.settings.wsApi = this.settings.api.replace(/^http/, "ws")
     }
-    this.websocket.close()
     if (this.settings.syncEnabled) {
-      this.websocket.reConnect()
+      this.websocket.register()
+    } else {
+      this.websocket.unRegister()
     }
 
     await this.saveData(this.settings)

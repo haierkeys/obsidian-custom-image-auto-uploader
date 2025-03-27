@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react"
 import { ICON_TYPE, Icon } from "src/icon"
 import BetterSync from "src/main"
-import { UploadSet } from "src/setting"
+
 import { $ } from "src/lang"
+import { Vault } from 'obsidian';
 
 async function getClipboardContent(plugin: BetterSync): Promise<void> {
-  const clipboardReadTipSave = async (api: string, apiToken: string, clipboardReadTip: string) => {
+  const clipboardReadTipSave = async (api: string, apiToken: string, Vault: string, clipboardReadTip: string) => {
     plugin.settings.api = api
     plugin.settings.apiToken = apiToken
+    plugin.settings.vault = Vault
     plugin.settings.clipboardReadTip = clipboardReadTip
 
     await plugin.saveData(plugin.settings)
@@ -50,9 +52,10 @@ async function getClipboardContent(plugin: BetterSync): Promise<void> {
       if (typeof parsedData === "object" && parsedData !== null) {
         const hasApi = "api" in parsedData
         const hasApiToken = "apiToken" in parsedData
+         const vault = "vault" in parsedData
 
-        if (hasApi && hasApiToken) {
-          clipboardReadTipSave(parsedData.api, parsedData.apiToken, "接口配置信息已经粘贴到设置中!")
+        if (hasApi && hasApiToken && vault) {
+          clipboardReadTipSave(parsedData.api, parsedData.apiToken, parsedData.vault, "接口配置信息已经粘贴到设置中!")
         } else {
           clipboardReadTipTipSave("未检测到配置信息!")
         }
