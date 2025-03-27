@@ -1,48 +1,44 @@
 import { Notice } from "obsidian"
 import BetterSync from "../main"
-import { dump } from "./helps"
-import { SyncFileModify, SyncFileDelete } from "./fs"
+import { dump, sleep } from "./helps"
+import { syncReceiveMethodHandlers } from "./fs"
 
 export class WebSocketClient {
   private ws: WebSocket
   private wsApi: string
-  private Plugin: BetterSync
+  private plugin: BetterSync
   public wsIsOpen: boolean = false
   public checkConnection: any
   public checkReConnectTimeout: any
   public timeConnect = 0
   private isRegister: boolean = false
   constructor(plugin: BetterSync) {
-    this.Plugin = plugin
+    this.plugin = plugin
     this.wsApi = plugin.settings.wsApi
   }
-  public sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
-  }
+
   public isConnected(): boolean {
     return this.wsIsOpen
   }
   public register() {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       this.isRegister = true
-      this.ws = new WebSocket(this.Plugin.settings.wsApi + "/api/user/sync?lang=en")
-      this.ws.onerror = (error) => {
-        //this.checkReConnect()
-      }
+      this.ws = new WebSocket(this.plugin.settings.wsApi + "/api/user/sync?lang=en")
+      this.ws.onerror = (error) => {}
       this.ws.onopen = (e: Event): void => {
         this.timeConnect = 0
         this.wsIsOpen = true
         dump("Connected to the WebSocket server")
-        this.send("Authorization", this.Plugin.settings.apiToken)
+        this.send("Authorization", this.plugin.settings.apiToken)
         this.receive()
         this.check()
       }
       this.ws.onclose = (e) => {
+        this.wsIsOpen = false
+        clearInterval(this.checkConnection)
         if (this.isRegister) {
           this.checkReConnect()
         }
-        this.wsIsOpen = false
-        clearInterval(this.checkConnection)
         dump("WebSocket connection closed1")
       }
     }
@@ -68,26 +64,38 @@ export class WebSocketClient {
     }
   }
   public check() {
-    clearInterval(this.checkConnection)
+    // 检查 WebSocket 连接是否打开
     this.checkConnection = setInterval(() => {
       if (this.ws && this.ws.readyState === WebSocket.OPEN) {
         this.wsIsOpen = true
-        clearInterval(this.checkConnection)
-        //dump("WebSocket connection is open.")
+      } else {
+        this.wsIsOpen = false
       }
-    }, 5000)
+    }, 3000)
   }
   public async send(action: string, data: any, type: string = "text") {
     // 循环检查 WebSocket 连接是否打开
     while (this.ws.readyState !== WebSocket.OPEN) {
-      dump("WebSocket 连接未打开，等待重试...")
-      await this.sleep(3000) // 每隔一秒重试一次
+      if (!this.isRegister) {
+        return
+      }
+      dump("WebSocket 连接未连通，发送等待...")
+      await sleep(5000) // 每隔一秒重试一次
+    }
+
+    while (this.plugin.isSyncAllFilesInProgress == true) {
+      if (!this.isRegister) {
+        return
+      }
+      dump("正在进行所有笔记同步任务,同步任务延后发送...")
+      await sleep(2000) // 每隔一秒重试一次
     }
     if (type == "text") {
       this.ws.send(action + "|" + data)
     } else if (type == "json") {
       this.ws.send(action + "|" + JSON.stringify(data))
     }
+    //
   }
   public receive() {
     this.ws.onmessage = (event) => {
@@ -100,15 +108,14 @@ export class WebSocketClient {
         msgAction = event.data.slice(0, index)
       }
       const data = JSON.parse(msgData)
+      dump(data)
       if (data.code == 0 || data.code > 100) {
-        new Notice("操作失效" + data.msg)
+        new Notice("API Error:" + data.msg)
       } else {
-        if (msgAction == "SyncFileModify") {
-          SyncFileModify(data.data, this.Plugin)
-        }
+        const handler = syncReceiveMethodHandlers.get(msgAction)
 
-        if (msgAction == "SyncFileDelete") {
-          SyncFileDelete(data.data, this.Plugin)
+        if (handler) {
+          handler(data.data, this.plugin)
         }
       }
     }

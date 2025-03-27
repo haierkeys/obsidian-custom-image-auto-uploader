@@ -1,4 +1,4 @@
-import { lang } from "../../lang";
+import { lang } from "../lang";
 
 export default <lang>{
     "Custom Image Auto Uploader": "커스텀 이미지 자동 업로드 플러그인",

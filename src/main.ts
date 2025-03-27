@@ -1,15 +1,13 @@
-import { Plugin, MarkdownFileInfo } from "obsidian"
-import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting"
-import { WebSocketClient } from "./lib/websocket"
-import { FileModify, FileDelete, FileRename, FileContentModify, InitAllFiles, SyncAllFiles } from "./lib/fs"
+import { Plugin } from "obsidian";
 
-interface ContentHashes {
-  [key: string]: string
-}
-interface ContentStore {
-  [key: string]: string
-}
-interface SerSyncFiles {
+import { FileModify, FileDelete, FileRename, FileContentModify, InitAllFiles, SyncFiles } from "./lib/fs";
+import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
+import { WebSocketClient } from "./lib/websocket";
+import { AddRibbonIcon } from "./lib/menu";
+import { $ } from "./lang/lang";
+
+
+interface SyncSkipFiles {
   [key: string]: string
 }
 
@@ -17,21 +15,15 @@ export default class BetterSync extends Plugin {
   settingTab: SettingTab
   settings: PluginSettings
   websocket: WebSocketClient
-  contentHashes: ContentHashes = {}
-  contentStore: ContentStore = {}
-  remoteContentStore: ContentStore = {}
-  SerSyncFiles: SerSyncFiles = {}
-  editSyncTimeout: any
+  SyncSkipFiles: SyncSkipFiles = {}
+  editorChangeTimeout: any
+  isSyncAllFilesInProgress: boolean = false
+  ribbonIcon: HTMLElement
+  ribbonIconInterval: any
+  ribbonIconStatus: boolean = false
 
   async onload() {
-    const currentDate = new Date()
-    console.log(currentDate)
-
-    // 初始化哈希存储和内容存储
-    this.contentHashes = {}
-    this.contentStore = {}
-    // 模拟远程服务器存储
-    this.remoteContentStore = {}
+    this.SyncSkipFiles = {}
 
     await this.loadSettings()
     this.settingTab = new SettingTab(this.app, this)
@@ -39,6 +31,7 @@ export default class BetterSync extends Plugin {
     this.addSettingTab(this.settingTab)
     this.websocket = new WebSocketClient(this)
 
+    this.isSyncAllFilesInProgress = false
     if (this.settings.syncEnabled) {
       this.websocket.register()
     } else {
@@ -54,8 +47,8 @@ export default class BetterSync extends Plugin {
     // 注册编译器事件
     this.registerEvent(
       this.app.workspace.on("editor-change", async (editor, mdFile) => {
-        clearTimeout(this.editSyncTimeout)
-        this.editSyncTimeout = setTimeout(() => {
+        clearTimeout(this.editorChangeTimeout)
+        this.editorChangeTimeout = setTimeout(() => {
           if (mdFile.file) FileContentModify(mdFile.file, editor.getValue(), this)
         }, 200)
       })
@@ -63,20 +56,22 @@ export default class BetterSync extends Plugin {
 
     // 注册命令
     this.addCommand({
-      id: "InitAllNotes",
-      name: "强制同步本地覆盖到远端",
+      id: "init-all-files",
+      name: $("同步全部笔记(覆盖远端)"),
       callback: async () => InitAllFiles(this),
     })
 
     this.addCommand({
-      id: "SyncAllFiles",
+      id: "sync-files",
       name: "同步全部笔记",
-      callback: async () => SyncAllFiles(this),
+      callback: async () => SyncFiles(this),
     })
+    AddRibbonIcon(this)
   }
 
   onunload() {
-    console.log("onunload")
+    this.isSyncAllFilesInProgress = false
+    clearInterval(this.ribbonIconInterval)
     this.websocket.unRegister()
   }
 
@@ -84,16 +79,16 @@ export default class BetterSync extends Plugin {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
   }
 
-  async saveSettings(isStatusCheck: boolean = true) {
+  async saveSettings() {
     if (this.settings.api && this.settings.apiToken) {
       this.settings.wsApi = this.settings.api.replace(/^http/, "ws")
     }
     if (this.settings.syncEnabled) {
       this.websocket.register()
     } else {
+      this.isSyncAllFilesInProgress = false
       this.websocket.unRegister()
     }
-
     await this.saveData(this.settings)
   }
 }

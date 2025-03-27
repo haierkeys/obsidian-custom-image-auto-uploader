@@ -1,5 +1,6 @@
-import { Notice } from "obsidian"
-import dayjs from "dayjs"
+import { Notice } from "obsidian";
+import dayjs from "dayjs";
+
 
 /**
  * timestampToDate
@@ -60,4 +61,8 @@ export const showErrorDialog = function (message: string): void {
  */
 export const dump = function (...message: any[]): void {
   console.log(...message)
+}
+
+export const sleep = function (ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }

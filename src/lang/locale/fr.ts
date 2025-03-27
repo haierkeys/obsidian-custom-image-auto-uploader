@@ -1,4 +1,4 @@
-import { lang } from "../../lang";
+import { lang } from "../lang";
 
 export default <lang>{
     "Custom Image Auto Uploader": "Custom Image Auto Uploader",

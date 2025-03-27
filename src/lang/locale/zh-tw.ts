@@ -1,4 +1,4 @@
-import { lang } from "../../lang";
+import { lang } from "../lang";
 
 export default <lang>{
     "Custom Image Auto Uploader": "自定義圖片上傳雲端保存插件",

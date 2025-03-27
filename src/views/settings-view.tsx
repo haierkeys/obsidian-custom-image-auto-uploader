@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react"
-import { ICON_TYPE, Icon } from "src/icon"
-import BetterSync from "src/main"
+import BetterSync from "src/main";
 
-import { $ } from "src/lang"
-import { Vault } from 'obsidian';
+import { $ } from "../lang/lang";
+
 
 async function getClipboardContent(plugin: BetterSync): Promise<void> {
   const clipboardReadTipSave = async (api: string, apiToken: string, Vault: string, clipboardReadTip: string) => {
@@ -52,23 +50,23 @@ async function getClipboardContent(plugin: BetterSync): Promise<void> {
       if (typeof parsedData === "object" && parsedData !== null) {
         const hasApi = "api" in parsedData
         const hasApiToken = "apiToken" in parsedData
-         const vault = "vault" in parsedData
+        const vault = "vault" in parsedData
 
         if (hasApi && hasApiToken && vault) {
-          clipboardReadTipSave(parsedData.api, parsedData.apiToken, parsedData.vault, "接口配置信息已经粘贴到设置中!")
+          clipboardReadTipSave(parsedData.api, parsedData.apiToken, parsedData.vault, $("接口配置信息已经粘贴到设置中!"))
         } else {
-          clipboardReadTipTipSave("未检测到配置信息!")
+          clipboardReadTipTipSave($("未检测到配置信息!"))
         }
       } else {
-        clipboardReadTipTipSave("未检测到配置信息!")
+        clipboardReadTipTipSave($("未检测到配置信息!"))
       }
     } catch (jsonErr) {
-      clipboardReadTipTipSave("未检测到配置信息!")
+      clipboardReadTipTipSave($("未检测到配置信息!"))
       return
     }
     return
   } catch (err) {
-    clipboardReadTipTipSave("未检测到配置信息!")
+    clipboardReadTipTipSave($("未检测到配置信息!"))
     return
   }
 }
@@ -78,40 +76,33 @@ export const SettingsView = ({ plugin }: { plugin: BetterSync }) => {
     <>
       <div className="setting-item">
         <div className="setting-item-info">
-          <div className="setting-item-name">网关服务选择</div>
-          <div className="setting-item-description">选择一个适合自己的网关服务</div>
+          <div className="setting-item-name">{$("远端服务搭建与选择")}</div>
+          <div className="setting-item-description">{$("选择一个适合自己的远端")}</div>
         </div>
       </div>
       <div>
-        <table className="custom-image-auto-uploader-settings-openapi">
+        <table className="better-sync-settings-openapi">
           <thead>
             <tr>
-              <th style={{ textAlign: "center" }}>方式</th>
-              <th style={{ textAlign: "center" }}></th>
-              <th style={{ textAlign: "center" }}>说明</th>
+              <th style={{ textAlign: "center" }}>{$("方式")}</th>
+              <th style={{ textAlign: "center" }}>{$("说明")}</th>
+              <th style={{ textAlign: "center" }}>{$("详情参考")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style={{ textAlign: "center" }}>自行搭建</td>
+              <td style={{ textAlign: "center" }}>{$("私有服务搭建")}</td>
+              <td style={{ textAlign: "center" }}>{$("速度好, 自由配置, 无隐私风险")}</td>
               <td>
-                <a href="https://github.com/haierkeys/image-api-gateway">https://github.com/haierkeys/image-api-gateway</a>
+                <a href="https://github.com/haierkeys/obsidian-better-sync-service">https://github.com/haierkeys/better-sync-service</a>
               </td>
-              <td style={{ textAlign: "center" }}>速度好, 自由配置, 无隐私风险, 支持云存储和服务端存储</td>
-            </tr>
-            <tr>
-              <td style={{ textAlign: "center" }}>多用户开放网关</td>
-              <td>
-                <a href="https://img.diybeta.com/">https://img.diybeta.com</a>
-              </td>
-              <td style={{ textAlign: "center" }}>稳定性好, 仅支持用户的云存储</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div className="clipboard-read">
         <button className="clipboard-read-button" onClick={() => getClipboardContent(plugin)}>
-          粘贴多用户开放网关的接口配置
+          {$("粘贴的远端配置")}
         </button>
         <div className="clipboard-read-description">{plugin.settings.clipboardReadTip}</div>
       </div>

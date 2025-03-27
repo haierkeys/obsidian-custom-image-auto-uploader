@@ -1,53 +1,53 @@
-.custom-image-auto-uploader-settings-tag .setting-item-name{
+.better-sync-settings-tag .setting-item-name{
   color: var(--interactive-accent);
 }
-.custom-image-auto-uploader-settings-openapi {
+.better-sync-settings-openapi {
   width: 100%;
   margin-bottom: 20px;
   border: 1px solid var(--background-modifier-border);
 }
 
-.custom-image-auto-uploader-settings-openapi th,
-.custom-image-auto-uploader-settings-openapi td {
+.better-sync-settings-openapi th,
+.better-sync-settings-openapi td {
   border: 0 !important;
 }
-.custom-image-auto-uploader-settings-openapi th {
+.better-sync-settings-openapi th {
   text-align: left;
   padding: 8px 10px;
   font-size: var(--font-ui-smaller);
 }
-.custom-image-auto-uploader-settings-openapi thead {
+.better-sync-settings-openapi thead {
   border-bottom: 1px solid var(--color-base-40) !important;
 }
-.custom-image-auto-uploader-settings-openapi thead tr th {
+.better-sync-settings-openapi thead tr th {
   background-color: var(--background-secondary);
 }
 
-.custom-image-auto-uploader-settings-openapi thead {
+.better-sync-settings-openapi thead {
   border-bottom: 1px solid var(--color-base-40) !important;
 }
-.custom-image-auto-uploader-settings-openapi tbody tr {
+.better-sync-settings-openapi tbody tr {
   background-color: var(--background-secondary);
 }
-.custom-image-auto-uploader-settings-openapi tbody tr:nth-child(odd) {
+.better-sync-settings-openapi tbody tr:nth-child(odd) {
   background-color: var(--background-secondary-alt);
 }
-.custom-image-auto-uploader-settings-openapi tbody td {
+.better-sync-settings-openapi tbody td {
   padding: 4px 8px;
   font-size: var(--font-ui-small);
 }
-.custom-image-auto-uploader-settings-openapi tfoot td {
+.better-sync-settings-openapi tfoot td {
   padding: 8px 10px;
 }
-.custom-image-auto-uploader-settings-openapi a {
+.better-sync-settings-openapi a {
   color: var(--color-blue);
   text-decoration: none;
 }
-.custom-image-auto-uploader-settings-openapi a:hover {
+.better-sync-settings-openapi a:hover {
   text-decoration: underline;
 }
 
-.custom-image-auto-uploader-settings {
+.better-sync-settings {
   padding: 0.75em 0;
   border-top: 1px solid var(--background-modifier-border);
 }
@@ -109,44 +109,44 @@ display: inline-flex;
     padding-top: 8px;
 }
 
-.custom-image-auto-uploader-settings-table {
+.better-sync-settings-table {
   width: 100%;
   margin-bottom: 20px;
   border: 0 !important;
   background-color: var(--background-secondary);
 }
-.custom-image-auto-uploader-settings-table th,
-.custom-image-auto-uploader-settings-table td {
+.better-sync-settings-table th,
+.better-sync-settings-table td {
   border: 0 !important;
 }
-.custom-image-auto-uploader-settings-table th {
+.better-sync-settings-table th {
   text-align: left;
   padding: 8px 10px;
   font-size: var(--font-ui-smaller);
 }
-.custom-image-auto-uploader-settings-table .no-columns-added {
+.better-sync-settings-table .no-columns-added {
   padding: 15px;
   text-align: center;
   background-color: var(--background-secondary);
 }
-.custom-image-auto-uploader-settings-table .no-columns-added p {
+.better-sync-settings-table .no-columns-added p {
   margin: 4px;
   font-size: 10px;
 }
-.custom-image-auto-uploader-settings-table thead {
+.better-sync-settings-table thead {
   border-bottom: 1px solid var(--color-base-40) !important;
 }
-.custom-image-auto-uploader-settings-table tbody tr {
+.better-sync-settings-table tbody tr {
   background-color: var(--background-secondary);
 }
-.custom-image-auto-uploader-settings-table tbody tr:nth-child(odd) {
+.better-sync-settings-table tbody tr:nth-child(odd) {
   background-color: var(--background-secondary-alt);
 }
-.custom-image-auto-uploader-settings-table tbody td {
+.better-sync-settings-table tbody td {
   padding: 4px 8px;
   font-size: var(--font-ui-small);
 }
-.custom-image-auto-uploader-settings-table tfoot td {
+.better-sync-settings-table tfoot td {
   padding: 8px 10px;
 }
 

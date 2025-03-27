@@ -1,14 +1,30 @@
-.custom-image-auto-uploader-settings-tag{
+.better-sync-ribbon-icon{
+    animation: rotate 2s linear infinite;
+    /* 旋转动画：2秒一圈，线性，无限循环 */
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+
+.better-sync-settings-tag{
     font-color: red;
 
 }
 
-.custom-image-auto-uploader-settings {
+.better-sync-settings {
     padding: 0.75em 0;
     border-top: 1px solid var(--background-modifier-border);
 }
 
-.custom-image-auto-uploader-settings-table {
+.better-sync-settings-table {
     width: 100%;
     margin-bottom: 20px;
     border: 0 !important;
