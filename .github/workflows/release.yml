@@ -6,7 +6,7 @@ on:
       - "*"
 
 env:
-  PLUGIN_NAME: custom-image-auto-uploader
+  PLUGIN_NAME: better-sync
 
 jobs:
   build:
