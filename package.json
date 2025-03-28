@@ -1,7 +1,7 @@
 {
-  "name": "Better Sync",
-  "version": "1.0.0",
-  "description": "A faster, more user-friendly note sync plugin supporting seamless synchronization across Mac, Windows, and mobile devices.",
+  "name": "BetterSync",
+  "version": "0.1",
+  "description": "Focused on providing users with an undisturbed, silky-smooth, multi-end real-time sync note synchronization plugin, supporting platforms such as Mac, Windows, Android, iOS, and offering multi-language support.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "dayjs": "^1.11.13",
-    "diff-match-patch-es": "^1.0.1",
     "file-type": "^19.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

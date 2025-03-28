@@ -11,7 +11,7 @@ export const AddRibbonIcon = async function (plugin: BetterSync) {
         plugin.ribbonIcon.remove()
         plugin.ribbonIconStatus = false
       }
-      plugin.ribbonIcon = plugin.addRibbonIcon("loader-circle", $("BetterSync") + ": " + $("同步全部笔记"), () => {
+      plugin.ribbonIcon = plugin.addRibbonIcon("loader-circle",  "BetterSync: " + $("同步全部笔记"), () => {
         SyncFiles(plugin)
       })
     } else {
@@ -19,7 +19,7 @@ export const AddRibbonIcon = async function (plugin: BetterSync) {
         plugin.ribbonIcon.remove()
         plugin.ribbonIconStatus = true
       }
-      plugin.ribbonIcon = plugin.addRibbonIcon("rotate-cw", $("BetterSync") + ": " + $("同步全部笔记"), () => {
+      plugin.ribbonIcon = plugin.addRibbonIcon("rotate-cw",  "BetterSync: " + $("同步全部笔记"), () => {
         SyncFiles(plugin)
       })
     }

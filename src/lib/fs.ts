@@ -1,6 +1,8 @@
-import { TFile, Vault, Notice, TAbstractFile } from "obsidian"
-import BetterSync from "../main"
-import { timestampToDate, hashContent, stringToDate, dump } from "./helps"
+import { TFile, TAbstractFile } from "obsidian";
+
+import { timestampToDate, hashContent, stringToDate, dump } from "./helps";
+import BetterSync from "../main";
+
 
 /**
  WebSocket 客户端消息接收操作相关

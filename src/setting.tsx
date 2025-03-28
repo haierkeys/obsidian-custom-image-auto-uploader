@@ -56,6 +56,8 @@ export class SettingTab extends PluginSettingTab {
 
     set.empty()
 
+    new Setting(set).setName("BetterSync").setDesc($("BetterSync")).setHeading()
+
     new Setting(set)
       .setName($("启用同步"))
       .setDesc($("关闭后您的笔记将不做任何同步"))
