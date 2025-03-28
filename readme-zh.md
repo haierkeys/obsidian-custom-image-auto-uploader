@@ -1,30 +1,14 @@
 [中文文档](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/readme-zh.md) / [English Document](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/README.md)
 
 
-<h1 align="center">自定义图片上传云端保存插件 For Obsidian</h1>
+<h1 align="center">Better Sync For Obsidian</h1>
 
 <p align="center">
-<img src="https://img.shields.io/github/release/haierkeys/obsidian-custom-image-auto-uploader" alt="version">
-<img src="https://img.shields.io/github/license/haierkeys/obsidian-custom-image-auto-uploader.svg" alt="license" >
+<img src="https://img.shields.io/github/release/haierkeys/obsidian-better-sync" alt="version">
+<img src="https://img.shields.io/github/license/haierkeys/obsidian-better-sync.svg" alt="license" >
 </p>
 
-一款速度更快,用户体验更好的笔记同步插件。
-
-![](https://github.com/user-attachments/assets/0878061b-d77c-48c5-aa61-cc5154612a7b)
-
-## 插件功能:
-- **批量下载**笔记内网络图片到本地
-- **批量上传**笔记中本地图片到远端服务 ( [ Image Api Gateway](https://github.com/haierkeys/obsidian-image-api-gateway) )
-- 拖拽,粘贴 上传图片
-- 批量将笔记内图片保存到 **远端服务器**，例如您的 Web 服务器或家庭 NAS。
-- 批量将笔记内图片保存到云存储内，例如阿里云 OSS、亚马逊 S3、Cloudflare R2。
-- 支持多端使用, 支持 Windows, MacOS, Linux, Android, iOS
-- 支持多国语言
-- 增加笔记属性或正文内图片拉伸裁剪功能 (例如 对 hugo 博客标题图 cover 进行)
-  - 等比左上填充(裁剪)
-  - 等比居中填充(裁剪)
-  - 固定尺寸拉伸
-  - 等比适应
+可私有化部署，专注为 **Obsidian** 用户提供无打扰、丝般顺滑、多端实时同步的笔记同步插件，支持 Mac、Windows、Android、iOS 等平台，并提供多语言支持。
 
 ## 价格
 
@@ -33,25 +17,12 @@
 
 ## 快速开始
 
-1. 安装插件
-  打开 OBSidian 社区插件市场, 搜索 **Custom Image Auto Uploader** 安装
-2. 打开插件配置项，将 **上传设置** > **API 网关地址** 设置为您的 **Image Api Gateway** 地址,
-   例如: `http://127.0.0.1:8000/api/upload`
-3. 设置 **API 访问令牌**。
-4. 在远端服务启动 **Image Api Gateway** 服务。
-5. 创建一个笔记,并复制一个图片检查是否上传成功。
-
-## 上传图片 API 搭建
-
-此插件需要 配置 **Image Api Gateway** 才能完成上传工作。
-**Image Api Gateway** 为免费工具, 部署使用请参考 [https://github.com/haierkeys/obsidian-image-api-gateway](https://github.com/haierkeys/obsidian-image-api-gateway)。
+1. 安装插件 (二选一)
+   - 打开 OBSidian 社区插件市场, 搜索 **BetterSync** 安装
+   - 访问 https://github.com/haierkeys/obsidian-better-sync/releases 下载安装包, 解压到 Obsidian 插件目录下 **.obsidian/plugin**
+2. 打开插件配置项，点击 **粘贴远端配置** 按钮，将远端服务配置粘贴到输入框中。
 
 
+## 同步服务私有化部署
 
-## 开发相关
-
-```bash
-pnpm install
-pnpm run dev
-pnpm run build
-```
+请可以参考 [Obsidian Better Sync Service](https://github.com/haierkeys/obsidian-better-sync-service)。

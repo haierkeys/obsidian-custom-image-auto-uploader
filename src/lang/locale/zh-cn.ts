@@ -3,7 +3,7 @@ import { lang } from "../lang";
 
 
 export default <lang>{
-  "BetterSync": "专注为用户提供无打扰、丝般顺滑、多端实时同步的笔记同步插件，支持 Mac、Windows、Android、iOS 等平台，并提供多语言支持。",
+  "BetterSync": "可私有化部署，专注为用户提供无打扰、丝般顺滑、多端实时同步的笔记同步插件，支持 Mac、Windows、Android、iOS 等平台，并提供多语言支持。",
   "同步全部笔记(覆盖远端)": "同步全部笔记(覆盖远端)",
   "同步全部笔记": "同步全部笔记",
   "远端": "远端",
