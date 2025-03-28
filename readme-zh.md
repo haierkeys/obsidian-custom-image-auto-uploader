@@ -1,4 +1,4 @@
-[中文文档](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/readme-zh.md) / [English Document](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/README.md)
+[中文文档](https://github.com/haierkeys/obsidian-better-sync/blob/master/readme-zh.md) / [English Document](https://github.com/haierkeys/obsidian-better-sync/blob/master/README.md)
 
 
 <h1 align="center">Better Sync For Obsidian</h1>
