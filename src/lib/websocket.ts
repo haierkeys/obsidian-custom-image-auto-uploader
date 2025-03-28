@@ -1,7 +1,9 @@
-import { Notice } from "obsidian"
-import BetterSync from "../main"
-import { dump, sleep } from "./helps"
-import { syncReceiveMethodHandlers } from "./fs"
+import { Notice, moment } from "obsidian";
+
+import { syncReceiveMethodHandlers, SyncFiles } from "./fs";
+import { dump, sleep } from "./helps";
+import BetterSync from "../main";
+
 
 export class WebSocketClient {
   private ws: WebSocket
@@ -11,6 +13,7 @@ export class WebSocketClient {
   public checkConnection: any
   public checkReConnectTimeout: any
   public timeConnect = 0
+
   private isRegister: boolean = false
   constructor(plugin: BetterSync) {
     this.plugin = plugin
@@ -23,13 +26,15 @@ export class WebSocketClient {
   public register() {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       this.isRegister = true
-      this.ws = new WebSocket(this.plugin.settings.wsApi + "/api/user/sync?lang=en")
-      this.ws.onerror = (error) => {}
+      this.ws = new WebSocket(this.plugin.settings.wsApi + "/api/user/sync?lang=" + moment.locale())
+      this.ws.onerror = (error) => { }
       this.ws.onopen = (e: Event): void => {
         this.timeConnect = 0
         this.wsIsOpen = true
         dump("Connected to the WebSocket server")
         this.send("Authorization", this.plugin.settings.apiToken)
+
+        this.startHandle()
         this.receive()
         this.check()
       }
@@ -53,6 +58,9 @@ export class WebSocketClient {
     }
     dump("WebSocket unRegister")
   }
+
+
+  //ddd
   public checkReConnect() {
     clearTimeout(this.checkReConnectTimeout)
     if (this.ws && this.ws.readyState === WebSocket.CLOSED) {
@@ -62,6 +70,9 @@ export class WebSocketClient {
         this.register()
       }, 5000)
     }
+  }
+  public startHandle() {
+    SyncFiles(this.plugin)
   }
   public check() {
     // 检查 WebSocket 连接是否打开
@@ -88,8 +99,9 @@ export class WebSocketClient {
         return
       }
       dump("正在进行所有笔记同步任务,同步任务延后发送...")
-      await sleep(2000) // 每隔一秒重试一次
+      await sleep(6000) // 每隔一秒重试一次
     }
+
     if (type == "text") {
       this.ws.send(action + "|" + data)
     } else if (type == "json") {

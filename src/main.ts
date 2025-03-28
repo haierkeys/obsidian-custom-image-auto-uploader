@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
 
-import { FileModify, FileDelete, FileRename, FileContentModify, InitAllFiles, SyncFiles } from "./lib/fs";
+import { FileModify, FileDelete, FileRename, FileContentModify, OverrideRemoteAllFiles, SyncFiles, SyncAllFiles } from "./lib/fs";
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
 import { WebSocketClient } from "./lib/websocket";
 import { AddRibbonIcon } from "./lib/menu";
@@ -58,18 +58,27 @@ export default class BetterSync extends Plugin {
     this.addCommand({
       id: "init-all-files",
       name: $("同步全部笔记(覆盖远端)"),
-      callback: async () => InitAllFiles(this),
+      callback: async () => OverrideRemoteAllFiles(this),
     })
 
     this.addCommand({
+      id: "init-all-files",
+      name: $("同步全部笔记"),
+      callback: async () => SyncAllFiles(this),
+    })
+
+
+
+    this.addCommand({
       id: "sync-files",
-      name: "同步全部笔记",
+      name: "同步笔记",
       callback: async () => SyncFiles(this),
     })
     AddRibbonIcon(this)
   }
 
   onunload() {
+    // 取消注册文件事件
     this.isSyncAllFilesInProgress = false
     clearInterval(this.ribbonIconInterval)
     this.websocket.unRegister()
@@ -85,8 +94,8 @@ export default class BetterSync extends Plugin {
     }
     if (this.settings.syncEnabled) {
       this.websocket.register()
+      //SyncFiles(this)
     } else {
-      this.isSyncAllFilesInProgress = false
       this.websocket.unRegister()
     }
     await this.saveData(this.settings)

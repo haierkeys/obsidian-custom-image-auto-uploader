@@ -86,7 +86,31 @@ export const FileRename = async function (file: TAbstractFile, oldfile: string, 
   dump("rename", file, oldfile)
 }
 
-export const InitAllFiles = async function (plugin: BetterSync) {
+export const OverrideRemoteAllFiles = async function (plugin: BetterSync) {
+  if (plugin.isSyncAllFilesInProgress) {
+    return
+  }
+  plugin.settings.lastSyncTime = "1970-01-01 00:00:00"
+  await plugin.saveData(plugin.settings)
+  plugin.isSyncAllFilesInProgress = true
+  const files = plugin.app.vault.getMarkdownFiles()
+  for (const file of files) {
+    const content: string = await this.app.vault.cachedRead(file)
+    const data = {
+      vault: plugin.settings.vault,
+      mtime: timestampToDate(file.stat.mtime),
+      path: file.path,
+      pathHash: hashContent(file.path),
+      content: content,
+      contentHash: hashContent(content),
+    }
+    plugin.websocket.send("FileModifyOverride", data, "json")
+  }
+  plugin.isSyncAllFilesInProgress = false
+  SyncFiles(plugin)
+}
+
+export const SyncAllFiles = async function (plugin: BetterSync) {
   if (plugin.isSyncAllFilesInProgress) {
     return
   }
