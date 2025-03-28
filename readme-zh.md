@@ -18,7 +18,7 @@
 ## 快速开始
 
 1. 安装插件 (二选一)
-   - 打开 OBSidian 社区插件市场, 搜索 **BetterSync** 安装
+   - 打开 OBSidian 社区插件市场, 搜索 **Better Sync** 安装
    - 访问 https://github.com/haierkeys/obsidian-better-sync/releases 下载安装包, 解压到 Obsidian 插件目录下 **.obsidian/plugin**
 2. 打开插件配置项，点击 **粘贴远端配置** 按钮，将远端服务配置粘贴到输入框中。
 

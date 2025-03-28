@@ -17,7 +17,7 @@ If you find this plugin useful and want to support its continued development, yo
 ## Quick Start
 
 1. Install the plugin (choose one)
-   - Open the Obsidian community plugin market, search for **BetterSync** to install
+   - Open the Obsidian community plugin market, search for **Better Sync** to install
    - Visit https://github.com/haierkeys/obsidian-better-sync/releases to download the installation package, and extract it to the Obsidian plugin directory **.obsidian/plugin**
 2. Open the plugin configuration, click the **Paste Remote Configuration** button, and paste the remote service configuration into the input box.
 

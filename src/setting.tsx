@@ -56,7 +56,7 @@ export class SettingTab extends PluginSettingTab {
 
     set.empty()
 
-    new Setting(set).setName("BetterSync").setDesc($("BetterSync")).setHeading()
+    new Setting(set).setName("Better Sync").setDesc($("BetterSync")).setHeading()
 
     new Setting(set)
       .setName($("启用同步"))
