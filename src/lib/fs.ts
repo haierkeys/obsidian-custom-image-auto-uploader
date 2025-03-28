@@ -5,7 +5,7 @@ import BetterSync from "../main";
 
 
 /**
- WebSocket 客户端消息接收操作相关
+ 消息推送操作方法 Message Push Operation Method
  */
 
 export const FileModify = async function (file: TAbstractFile, plugin: BetterSync) {
@@ -90,6 +90,10 @@ export const FileRename = async function (file: TAbstractFile, oldfile: string, 
   dump("rename", file, oldfile)
 }
 
+/**
+  调用动作操作方法  Invoke action operation method
+ */
+
 export const OverrideRemoteAllFiles = async function (plugin: BetterSync) {
   if (plugin.isSyncAllFilesInProgress) {
     return
@@ -151,10 +155,11 @@ export const SyncFiles = async function (plugin: BetterSync) {
 }
 
 /**
-  消息接收操作相关
+  消息接收操作方法  Message receiving methods
  */
 
-export const ReceiveSyncFileModify = async function (data: any, plugin: BetterSync) {
+// ReceiveFileModify 接收文件修改
+export const ReceiveFileModify = async function (data: any, plugin: BetterSync) {
   if (data.vault != plugin.settings.vault) {
     return
   }
@@ -178,7 +183,7 @@ export const ReceiveSyncFileModify = async function (data: any, plugin: BetterSy
     await plugin.app.vault.create(data.path, data.content)
   }
 }
-export const ReceiveSyncFileDelete = async function (data: any, plugin: BetterSync) {
+export const ReceiveFileDelete = async function (data: any, plugin: BetterSync) {
   if (data.vault != plugin.settings.vault) {
     return
   }
@@ -193,7 +198,7 @@ export const ReceiveSyncFileDelete = async function (data: any, plugin: BetterSy
   }
 }
 
-export const ReceiveSyncFilesEnd = async function (data: any, plugin: BetterSync) {
+export const ReceiveFilesEnd = async function (data: any, plugin: BetterSync) {
   if (data.vault != plugin.settings.vault) {
     return
   }
@@ -207,7 +212,7 @@ export const ReceiveSyncFilesEnd = async function (data: any, plugin: BetterSync
 type ReceiveSyncMethod = (data: any, plugin: BetterSync) => void
 
 export const syncReceiveMethodHandlers: Map<string, ReceiveSyncMethod> = new Map([
-  ["SyncFileModify", ReceiveSyncFileModify],
-  ["SyncFileDelete", ReceiveSyncFileDelete],
-  ["SyncFilesEnd", ReceiveSyncFilesEnd],
+  ["SyncFileModify", ReceiveFileModify],
+  ["SyncFileDelete", ReceiveFileDelete],
+  ["SyncFilesEnd", ReceiveFilesEnd],
 ])
