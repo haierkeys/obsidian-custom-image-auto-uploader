@@ -62,18 +62,11 @@ export default class BetterSync extends Plugin {
     })
 
     this.addCommand({
-      id: "init-all-files",
+      id: "sync-all-files",
       name: $("同步全部笔记"),
       callback: async () => SyncAllFiles(this),
     })
 
-
-
-    this.addCommand({
-      id: "sync-files",
-      name: "同步笔记",
-      callback: async () => SyncFiles(this),
-    })
     AddRibbonIcon(this)
   }
 
@@ -89,6 +82,7 @@ export default class BetterSync extends Plugin {
   }
 
   async saveSettings() {
+    this.isSyncAllFilesInProgress = false
     if (this.settings.api && this.settings.apiToken) {
       this.settings.wsApi = this.settings.api.replace(/^http/, "ws")
     }

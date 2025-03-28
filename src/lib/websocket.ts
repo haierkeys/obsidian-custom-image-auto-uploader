@@ -1,6 +1,6 @@
 import { Notice, moment } from "obsidian";
 
-import { syncReceiveMethodHandlers, SyncFiles } from "./fs";
+import { syncReceiveMethodHandlers, SyncAllFiles } from "./fs";
 import { dump, sleep } from "./helps";
 import BetterSync from "../main";
 
@@ -72,7 +72,7 @@ export class WebSocketClient {
     }
   }
   public startHandle() {
-    SyncFiles(this.plugin)
+    SyncAllFiles(this.plugin)
   }
   public check() {
     // 检查 WebSocket 连接是否打开

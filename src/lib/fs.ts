@@ -13,23 +13,24 @@ export const FileModify = async function (file: TAbstractFile, plugin: BetterSyn
   if (!(file instanceof TFile)) {
     return
   }
-  if (plugin.SyncSkipFiles[file.path] && plugin.SyncSkipFiles[file.path] == hashContent(await plugin.app.vault.cachedRead(file))) {
-    delete plugin.SyncSkipFiles[file.path]
+  const content: string = await this.app.vault.cachedRead(file)
+  const contentHash = hashContent(content)
+
+  if (plugin.SyncSkipFiles[file.path] && plugin.SyncSkipFiles[file.path] == contentHash) {
     return
   }
-  // 异步读取文件内容
-  const content: string = await this.app.vault.cachedRead(file)
+
   const data = {
     vault: plugin.settings.vault,
     mtime: timestampToDate(file.stat.mtime),
     path: file.path,
     pathHash: hashContent(file.path),
     content: content,
-    contentHash: hashContent(content),
+    contentHash: contentHash,
   }
   plugin.websocket.send("FileModify", data, "json")
 
-  dump(`Send FileModify`, data.path, data.contentHash, data.mtime, data.pathHash)
+  dump(`FileModify Send FileModify`, data.path, data.contentHash, data.mtime, data.pathHash)
 }
 
 export const FileContentModify = async function (file: TAbstractFile, content: string, plugin: BetterSync) {
@@ -37,10 +38,13 @@ export const FileContentModify = async function (file: TAbstractFile, content: s
   if (!(file instanceof TFile)) {
     return
   }
-  if (plugin.SyncSkipFiles[file.path] && plugin.SyncSkipFiles[file.path] == hashContent(content)) {
-    delete plugin.SyncSkipFiles[file.path]
+
+  const contentHash = hashContent(content)
+
+  if (plugin.SyncSkipFiles[file.path] && plugin.SyncSkipFiles[file.path] == contentHash) {
     return
   }
+
   // 异步读取文件内容
   const data = {
     vault: plugin.settings.vault,
@@ -48,12 +52,12 @@ export const FileContentModify = async function (file: TAbstractFile, content: s
     path: file.path,
     pathHash: hashContent(file.path),
     content: content,
-    contentHash: hashContent(content),
+    contentHash: contentHash,
   }
   plugin.websocket.send("FileModify", data, "json")
   plugin.SyncSkipFiles[file.path] = data.contentHash
 
-  dump(`Send FileModify`, data.path, data.contentHash, data.mtime, data.pathHash)
+  dump(`FileContentModify Send FileModify`, data.path, data.contentHash, data.mtime, data.pathHash)
 }
 
 export const FileDelete = async function (file: TAbstractFile, plugin: BetterSync) {
@@ -155,35 +159,34 @@ export const ReceiveSyncFileModify = async function (data: any, plugin: BetterSy
     return
   }
   dump(`ReceiveSyncFileModify:`, data.action, data.path, data.contentHash, data.mtime, data.pathHash)
-  const fileExists = await this.app.vault.adapter.exists(data.path)
-  if (data.action == "delete") {
+
+  const fileExists = await plugin.app.vault.adapter.exists(data.path)
+
+  if (fileExists) {
     const file = plugin.app.vault.getFileByPath(data.path)
-    if (file instanceof TFile) {
+    if (file && data.contentHash != hashContent(await plugin.app.vault.cachedRead(file))) {
       plugin.SyncSkipFiles[data.path] = data.contentHash
-      plugin.app.vault.delete(file)
-      //await plugin.app.vault.delete(file)s
+      await plugin.app.vault.modify(file, data.content)
     }
   } else {
-    if (fileExists) {
-      const file = plugin.app.vault.getFileByPath(data.path)
-      if (file && data.contentHash != hashContent(await plugin.app.vault.cachedRead(file))) {
-        plugin.SyncSkipFiles[data.path] = data.contentHash
-        await plugin.app.vault.modify(file, data.content)
-      }
-    } else {
-      await plugin.app.vault.create(data.path, data.content)
+    const folder = data.path.split("/").slice(0, -1).join("/")
+    if (folder != "") {
+      const dirExists = await plugin.app.vault.adapter.exists(folder)
+      if (!dirExists) await plugin.app.vault.createFolder(folder)
     }
+    plugin.SyncSkipFiles[data.path] = data.contentHash
+    await plugin.app.vault.create(data.path, data.content)
   }
 }
 export const ReceiveSyncFileDelete = async function (data: any, plugin: BetterSync) {
   if (data.vault != plugin.settings.vault) {
     return
   }
-  dump(`ReceiveSyncFileDelete:`, data.action, data.path, data.contentHash, data.mtime, data.pathHash)
+  dump(`ReceiveSyncFileDelete:`, data.action, data.path, data.mtime, data.pathHash)
   if (data.action == "delete") {
     const file = plugin.app.vault.getFileByPath(data.path)
     if (file instanceof TFile) {
-      plugin.SyncSkipFiles[data.path] = data.contentHash
+      plugin.SyncSkipFiles[data.path] = "{ReceiveSyncFileDelete}"
       plugin.app.vault.delete(file)
       //await plugin.app.vault.delete(file)s
     }
