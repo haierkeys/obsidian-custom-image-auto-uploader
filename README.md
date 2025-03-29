@@ -9,6 +9,8 @@
 
 Privately deployable, focused on providing **Obsidian** users with a non-intrusive, silky-smooth, multi-terminal real-time sync note synchronization plugin, supporting Mac, Windows, Android, iOS, and providing multi-language support.
 
+![Image](https://github.com/user-attachments/assets/8e61d99e-6f76-49b1-a03e-c952ad9e21b0)
+
 ## Pricing
 
 If you find this plugin useful and want to support its continued development, you can support me here:
