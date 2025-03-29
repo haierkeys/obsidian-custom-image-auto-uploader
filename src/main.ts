@@ -8,7 +8,7 @@ import { $ } from "./lang/lang";
 
 
 interface SyncSkipFiles {
-  [key: string]: string
+  [key: string]: string;
 }
 
 export default class BetterSync extends Plugin {
@@ -16,6 +16,7 @@ export default class BetterSync extends Plugin {
   settings: PluginSettings
   websocket: WebSocketClient
   SyncSkipFiles: SyncSkipFiles = {}
+  SyncSkipDelFiles: SyncSkipFiles = {}
   editorChangeTimeout: any
   isSyncAllFilesInProgress: boolean = false
   ribbonIcon: HTMLElement

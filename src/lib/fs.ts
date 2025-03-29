@@ -65,14 +65,15 @@ export const FileDelete = async function (file: TAbstractFile, plugin: BetterSyn
   if (!(file instanceof TFile)) {
     return
   }
+  if (plugin.SyncSkipDelFiles[file.path]) {
+    delete plugin.SyncSkipDelFiles[file.path]
+    return
+  }
   FileDeleteByPath(file.path, plugin)
 }
 
 export const FileDeleteByPath = async function (path: string, plugin: BetterSync) {
-  if (plugin.SyncSkipFiles[path]) {
-    delete plugin.SyncSkipFiles[path]
-    return
-  }
+
   const data = {
     vault: plugin.settings.vault,
     path: path,
@@ -123,10 +124,11 @@ export const SyncAllFiles = async function (plugin: BetterSync) {
   if (plugin.isSyncAllFilesInProgress) {
     return
   }
+  await SyncFiles(plugin)
   plugin.settings.lastSyncTime = "1970-01-01 00:00:00"
   await plugin.saveData(plugin.settings)
   plugin.isSyncAllFilesInProgress = true
-  const files = plugin.app.vault.getMarkdownFiles()
+  const files = await plugin.app.vault.getMarkdownFiles()
   for (const file of files) {
     const content: string = await this.app.vault.cachedRead(file)
     const data = {
@@ -137,7 +139,7 @@ export const SyncAllFiles = async function (plugin: BetterSync) {
       content: content,
       contentHash: hashContent(content),
     }
-    plugin.websocket.send("FileModify", data, "json")
+    await plugin.websocket.send("FileModify", data, "json")
   }
   plugin.isSyncAllFilesInProgress = false
   SyncFiles(plugin)
@@ -189,13 +191,14 @@ export const ReceiveFileModify = async function (data: any, plugin: BetterSync) 
 }
 export const ReceiveFileDelete = async function (data: any, plugin: BetterSync) {
   if (data.vault != plugin.settings.vault) {
+    delete plugin.SyncSkipDelFiles[data.path]
     return
   }
   dump(`ReceiveSyncFileDelete:`, data.action, data.path, data.mtime, data.pathHash)
   if (data.action == "delete") {
     const file = plugin.app.vault.getFileByPath(data.path)
     if (file instanceof TFile) {
-      plugin.SyncSkipFiles[data.path] = "{ReceiveSyncFileDelete}"
+      plugin.SyncSkipDelFiles[data.path] = "{ReceiveSyncFileDelete}"
       plugin.app.vault.delete(file)
       //await plugin.app.vault.delete(file)s
     }
