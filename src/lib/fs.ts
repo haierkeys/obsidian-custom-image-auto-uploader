@@ -29,6 +29,7 @@ export const FileModify = async function (file: TAbstractFile, plugin: BetterSyn
     contentHash: contentHash,
   }
   plugin.websocket.send("FileModify", data, "json")
+  plugin.SyncSkipFiles[file.path] = data.contentHash
 
   dump(`FileModify Send FileModify`, data.path, data.contentHash, data.mtime, data.pathHash)
 }
@@ -161,6 +162,9 @@ export const SyncFiles = async function (plugin: BetterSync) {
 // ReceiveFileModify 接收文件修改
 export const ReceiveFileModify = async function (data: any, plugin: BetterSync) {
   if (data.vault != plugin.settings.vault) {
+    return
+  }
+  if (plugin.SyncSkipFiles[data.path] && plugin.SyncSkipFiles[data.path] == data.contentHash) {
     return
   }
   dump(`ReceiveSyncFileModify:`, data.action, data.path, data.contentHash, data.mtime, data.pathHash)
