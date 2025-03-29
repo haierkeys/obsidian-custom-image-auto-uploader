@@ -10,6 +10,9 @@
 
 可私有化部署，专注为 **Obsidian** 用户提供无打扰、丝般顺滑、多端实时同步的笔记同步插件，支持 Mac、Windows、Android、iOS 等平台，并提供多语言支持。
 
+
+<video src="https://github.com/user-attachments/assets/ce9847c1-d924-421c-a495-e02b382674d9"></video>
+
 ## 价格
 
 如果觉得这个插件很有用，并且想要支持它的继续开发，你可以在这里支持我:
