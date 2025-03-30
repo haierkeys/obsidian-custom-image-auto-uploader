@@ -16,7 +16,7 @@ export interface PluginSettings {
   //API Token
   apiToken: string
   vault: string
-  lastSyncTime: string
+  lastSyncTime: number
   //  [propName: string]: any;
   clipboardReadTip: string
 }
@@ -37,7 +37,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   wsApi: "",
   // API 令牌
   apiToken: "",
-  lastSyncTime: "",
+  lastSyncTime: 0,
   vault: "defaultVault",
   // 剪贴板读取提示
   clipboardReadTip: "",

@@ -8,12 +8,12 @@ import BetterSync from "../main";
  消息推送操作方法 Message Push Operation Method
  */
 
-export const FileModify = async function (file: TAbstractFile, plugin: BetterSync) {
+export const NoteModify = async function (file: TAbstractFile, plugin: BetterSync) {
   if (!file.path.endsWith(".md")) return
   if (!(file instanceof TFile)) {
     return
   }
-  const content: string = await this.app.vault.cachedRead(file)
+  const content: string = await plugin.app.vault.cachedRead(file)
   const contentHash = hashContent(content)
 
   if (plugin.SyncSkipFiles[file.path] && plugin.SyncSkipFiles[file.path] == contentHash) {
@@ -22,46 +22,44 @@ export const FileModify = async function (file: TAbstractFile, plugin: BetterSyn
 
   const data = {
     vault: plugin.settings.vault,
-    mtime: timestampToDate(file.stat.mtime),
+    ctime: file.stat.ctime,
+    mtime: file.stat.mtime,
     path: file.path,
     pathHash: hashContent(file.path),
     content: content,
     contentHash: contentHash,
   }
-  plugin.websocket.send("FileModify", data, "json")
+  plugin.websocket.MsgSend("NoteModify", data, "json")
   plugin.SyncSkipFiles[file.path] = data.contentHash
 
-  dump(`FileModify Send FileModify`, data.path, data.contentHash, data.mtime, data.pathHash)
+  dump(`NoteModify Send NoteModify`, data.path, data.contentHash, data.mtime, data.pathHash)
+  //1
 }
 
 export const FileContentModify = async function (file: TAbstractFile, content: string, plugin: BetterSync) {
   if (!file.path.endsWith(".md")) return
+
   if (!(file instanceof TFile)) {
-    return
-  }
-
-  const contentHash = hashContent(content)
-
-  if (plugin.SyncSkipFiles[file.path] && plugin.SyncSkipFiles[file.path] == contentHash) {
     return
   }
 
   // 异步读取文件内容
   const data = {
     vault: plugin.settings.vault,
-    mtime: timestampToDate(file.stat.mtime),
+    ctime: file.stat.ctime,
+    mtime: file.stat.mtime,
     path: file.path,
     pathHash: hashContent(file.path),
     content: content,
-    contentHash: contentHash,
+    contentHash: hashContent(content),
   }
-  plugin.websocket.send("FileModify", data, "json")
+  plugin.websocket.MsgSend("NoteModify", data, "json")
   plugin.SyncSkipFiles[file.path] = data.contentHash
 
-  dump(`FileContentModify Send FileModify`, data.path, data.contentHash, data.mtime, data.pathHash)
+  dump(`FileContentModify Send NoteModify`, data.path, data.contentHash, data.mtime, data.pathHash)
 }
 
-export const FileDelete = async function (file: TAbstractFile, plugin: BetterSync) {
+export const NoteDelete = async function (file: TAbstractFile, plugin: BetterSync) {
   if (!(file instanceof TFile)) {
     return
   }
@@ -69,26 +67,25 @@ export const FileDelete = async function (file: TAbstractFile, plugin: BetterSyn
     delete plugin.SyncSkipDelFiles[file.path]
     return
   }
-  FileDeleteByPath(file.path, plugin)
+  NoteDeleteByPath(file.path, plugin)
 }
 
-export const FileDeleteByPath = async function (path: string, plugin: BetterSync) {
-
+export const NoteDeleteByPath = async function (path: string, plugin: BetterSync) {
   const data = {
     vault: plugin.settings.vault,
     path: path,
     pathHash: hashContent(path),
   }
-  plugin.websocket.send("FileDelete", data, "json")
-  dump(`Send FileDelete`, data.path, data.path, data.pathHash)
+  plugin.websocket.MsgSend("NoteDelete", data, "json")
+  dump(`Send NoteDelete`, data.path, data.path, data.pathHash)
 }
 
 export const FileRename = async function (file: TAbstractFile, oldfile: string, plugin: BetterSync) {
   if (!(file instanceof TFile)) {
     return
   }
-  FileDeleteByPath(oldfile, plugin)
-  FileModify(file, plugin)
+  NoteDeleteByPath(oldfile, plugin)
+  NoteModify(file, plugin)
   dump("rename", file, oldfile)
 }
 
@@ -100,76 +97,92 @@ export const OverrideRemoteAllFiles = async function (plugin: BetterSync) {
   if (plugin.isSyncAllFilesInProgress) {
     return
   }
-  plugin.settings.lastSyncTime = "1970-01-01 00:00:00"
-  await plugin.saveData(plugin.settings)
+
   plugin.isSyncAllFilesInProgress = true
   const files = plugin.app.vault.getMarkdownFiles()
   for (const file of files) {
-    const content: string = await this.app.vault.cachedRead(file)
+    const content: string = await plugin.app.vault.cachedRead(file)
     const data = {
       vault: plugin.settings.vault,
-      mtime: timestampToDate(file.stat.mtime),
+      ctime: file.stat.ctime,
+      mtime: file.stat.mtime,
       path: file.path,
       pathHash: hashContent(file.path),
       content: content,
       contentHash: hashContent(content),
     }
-    plugin.websocket.send("FileModifyOverride", data, "json")
+    plugin.websocket.MsgSend("NoteModifyOverride", data, "json")
   }
   plugin.isSyncAllFilesInProgress = false
-  SyncFiles(plugin)
+  plugin.settings.lastSyncTime = 0
+  await plugin.saveData(plugin.settings)
+  NoteSync(plugin)
 }
 
 export const SyncAllFiles = async function (plugin: BetterSync) {
   if (plugin.isSyncAllFilesInProgress) {
     return
   }
-  await SyncFiles(plugin)
-  plugin.settings.lastSyncTime = "1970-01-01 00:00:00"
-  await plugin.saveData(plugin.settings)
+  await NoteSync(plugin)
+
   plugin.isSyncAllFilesInProgress = true
   const files = await plugin.app.vault.getMarkdownFiles()
   for (const file of files) {
-    const content: string = await this.app.vault.cachedRead(file)
+    const content: string = await plugin.app.vault.cachedRead(file)
     const data = {
       vault: plugin.settings.vault,
-      mtime: timestampToDate(file.stat.mtime),
+      ctime: file.stat.ctime,
+      mtime: file.stat.mtime,
       path: file.path,
       pathHash: hashContent(file.path),
       content: content,
       contentHash: hashContent(content),
     }
-    await plugin.websocket.send("FileModify", data, "json")
+    await plugin.websocket.MsgSend("NoteModify", data, "json")
   }
   plugin.isSyncAllFilesInProgress = false
-  SyncFiles(plugin)
+  plugin.settings.lastSyncTime = 0
+  await plugin.saveData(plugin.settings)
+  NoteSync(plugin)
 }
 
-export const SyncFiles = async function (plugin: BetterSync) {
+export const NoteSync = async function (plugin: BetterSync) {
   if (plugin.isSyncAllFilesInProgress) {
     return
   }
   const data = {
     vault: plugin.settings.vault,
-    lastUpdateAt: stringToDate(plugin.settings.lastSyncTime),
+    lastTime: Number(plugin.settings.lastSyncTime),
   }
-  plugin.websocket.send("SyncFiles", data, "json")
+  plugin.websocket.MsgSend("NoteSync", data, "json")
   plugin.isSyncAllFilesInProgress = true
 }
 
-/**
+/**1
   消息接收操作方法  Message receiving methods
  */
 
-// ReceiveFileModify 接收文件修改
-export const ReceiveFileModify = async function (data: any, plugin: BetterSync) {
+interface ReceiveData {
+  vault: string
+  path: string
+  pathHash: string
+  action: string
+  content: string
+  contentHash: string
+  ctime: number
+  mtime: number
+  lastTime: number
+}
+
+// ReceiveNoteModify 接收文件修改
+export const ReceiveNoteModify = async function (data: any, plugin: BetterSync) {
   if (data.vault != plugin.settings.vault) {
     return
   }
   if (plugin.SyncSkipFiles[data.path] && plugin.SyncSkipFiles[data.path] == data.contentHash) {
     return
   }
-  dump(`ReceiveSyncFileModify:`, data.action, data.path, data.contentHash, data.mtime, data.pathHash)
+  dump(`ReceiveNoteSyncModify:`, data.action, data.path, data.contentHash, data.mtime, data.pathHash)
 
   const fileExists = await plugin.app.vault.adapter.exists(data.path)
 
@@ -177,7 +190,7 @@ export const ReceiveFileModify = async function (data: any, plugin: BetterSync) 
     const file = plugin.app.vault.getFileByPath(data.path)
     if (file && data.contentHash != hashContent(await plugin.app.vault.cachedRead(file))) {
       plugin.SyncSkipFiles[data.path] = data.contentHash
-      await plugin.app.vault.modify(file, data.content)
+      await plugin.app.vault.modify(file, data.content, { ctime: data.ctime, mtime: data.mtime })
     }
   } else {
     const folder = data.path.split("/").slice(0, -1).join("/")
@@ -186,32 +199,32 @@ export const ReceiveFileModify = async function (data: any, plugin: BetterSync) 
       if (!dirExists) await plugin.app.vault.createFolder(folder)
     }
     plugin.SyncSkipFiles[data.path] = data.contentHash
-    await plugin.app.vault.create(data.path, data.content)
+    await plugin.app.vault.create(data.path, data.content, { ctime: data.ctime, mtime: data.mtime })
   }
 }
-export const ReceiveFileDelete = async function (data: any, plugin: BetterSync) {
+
+export const ReceiveNoteDelete = async function (data: any, plugin: BetterSync) {
   if (data.vault != plugin.settings.vault) {
     delete plugin.SyncSkipDelFiles[data.path]
     return
   }
-  dump(`ReceiveSyncFileDelete:`, data.action, data.path, data.mtime, data.pathHash)
+  dump(`ReceiveNoteSyncDelete:`, data.action, data.path, data.mtime, data.pathHash)
   if (data.action == "delete") {
     const file = plugin.app.vault.getFileByPath(data.path)
     if (file instanceof TFile) {
-      plugin.SyncSkipDelFiles[data.path] = "{ReceiveSyncFileDelete}"
+      plugin.SyncSkipDelFiles[data.path] = "{ReceiveNoteSyncDelete}"
       plugin.app.vault.delete(file)
       //await plugin.app.vault.delete(file)s
     }
   }
 }
 
-export const ReceiveFilesEnd = async function (data: any, plugin: BetterSync) {
+export const ReceiveNoteEnd = async function (data: any, plugin: BetterSync) {
   if (data.vault != plugin.settings.vault) {
     return
   }
-
-  dump(`ReceiveSyncFilesEnd:`, data.vault, data, data.lastUpdateAt)
-  plugin.settings.lastSyncTime = data.lastUpdateAt
+  dump(`ReceiveNoteSyncEnd:`, data.vault, data, data.lastTime)
+  plugin.settings.lastSyncTime = data.lastTime
   await plugin.saveData(plugin.settings)
   plugin.isSyncAllFilesInProgress = false
 }
@@ -219,7 +232,7 @@ export const ReceiveFilesEnd = async function (data: any, plugin: BetterSync) {
 type ReceiveSyncMethod = (data: any, plugin: BetterSync) => void
 
 export const syncReceiveMethodHandlers: Map<string, ReceiveSyncMethod> = new Map([
-  ["SyncFileModify", ReceiveFileModify],
-  ["SyncFileDelete", ReceiveFileDelete],
-  ["SyncFilesEnd", ReceiveFilesEnd],
+  ["NoteSyncModify", ReceiveNoteModify],
+  ["NoteSyncDelete", ReceiveNoteDelete],
+  ["NoteSyncEnd", ReceiveNoteEnd],
 ])

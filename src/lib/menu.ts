@@ -1,6 +1,6 @@
 import BetterSync from "../main";
-import { SyncFiles } from "./fs";
 import { $ } from "../lang/lang";
+import { NoteSync } from "./fs";
 
 
 export const AddRibbonIcon = async function (plugin: BetterSync) {
@@ -12,7 +12,7 @@ export const AddRibbonIcon = async function (plugin: BetterSync) {
         plugin.ribbonIconStatus = false
       }
       plugin.ribbonIcon = plugin.addRibbonIcon("loader-circle",  "Better Sync: " + $("同步全部笔记"), () => {
-        SyncFiles(plugin)
+        NoteSync(plugin)
       })
     } else {
       if (!plugin.ribbonIconStatus && plugin.ribbonIcon) {
@@ -20,7 +20,7 @@ export const AddRibbonIcon = async function (plugin: BetterSync) {
         plugin.ribbonIconStatus = true
       }
       plugin.ribbonIcon = plugin.addRibbonIcon("rotate-cw",  "Better Sync: " + $("同步全部笔记"), () => {
-        SyncFiles(plugin)
+        NoteSync(plugin)
       })
     }
   }, 1000)

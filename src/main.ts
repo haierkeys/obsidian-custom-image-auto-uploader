@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
 
-import { FileModify, FileDelete, FileRename, FileContentModify, OverrideRemoteAllFiles, SyncFiles, SyncAllFiles } from "./lib/fs";
+import { NoteModify, NoteDelete, FileRename, FileContentModify, OverrideRemoteAllFiles, NoteSync, SyncAllFiles } from "./lib/fs";
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
 import { WebSocketClient } from "./lib/websocket";
 import { AddRibbonIcon } from "./lib/menu";
@@ -10,6 +10,9 @@ import { $ } from "./lang/lang";
 interface SyncSkipFiles {
   [key: string]: string;
 }
+interface EditorChangeTimeout {
+  [key: string]: any;
+}
 
 export default class BetterSync extends Plugin {
   settingTab: SettingTab
@@ -17,7 +20,9 @@ export default class BetterSync extends Plugin {
   websocket: WebSocketClient
   SyncSkipFiles: SyncSkipFiles = {}
   SyncSkipDelFiles: SyncSkipFiles = {}
-  editorChangeTimeout: any
+  SyncSkipModifyiles: SyncSkipFiles = {}
+
+  editorChangeTimeout: EditorChangeTimeout = {}
   isSyncAllFilesInProgress: boolean = false
   ribbonIcon: HTMLElement
   ribbonIconInterval: any
@@ -40,18 +45,31 @@ export default class BetterSync extends Plugin {
     }
 
     // 注册文件事件
-    this.registerEvent(this.app.vault.on("create", (abstractFile) => FileModify(abstractFile, this)))
-    this.registerEvent(this.app.vault.on("modify", (abstractFile) => FileModify(abstractFile, this)))
-    this.registerEvent(this.app.vault.on("delete", (abstractFile) => FileDelete(abstractFile, this)))
-    this.registerEvent(this.app.vault.on("rename", (abstractFile, oldfile) => FileRename(abstractFile, oldfile, this)))
+    this.registerEvent(this.app.vault.on("create", (file) => NoteModify(file, this)))
+    this.registerEvent(this.app.vault.on("modify", (file) => {
+      if (this.SyncSkipModifyiles[file.path]) return
+      NoteModify(file, this)
+    }))
+    this.registerEvent(this.app.vault.on("delete", (file) => NoteDelete(file, this)))
+    this.registerEvent(this.app.vault.on("rename", (file, oldfile) => FileRename(file, oldfile, this)))
 
-    // 注册编译器事件
+    // 注册编译器事件 编辑器每次修改更新两次 因为Mtime因为系统缓存原因不准确
     this.registerEvent(
       this.app.workspace.on("editor-change", async (editor, mdFile) => {
-        clearTimeout(this.editorChangeTimeout)
-        this.editorChangeTimeout = setTimeout(() => {
-          if (mdFile.file) FileContentModify(mdFile.file, editor.getValue(), this)
-        }, 200)
+        if (mdFile.file == null) return
+        const content = editor.getValue()
+        this.SyncSkipModifyiles[mdFile.file.path] = mdFile.file.path
+        clearTimeout(this.editorChangeTimeout[mdFile.file.path])
+        this.editorChangeTimeout[mdFile.file.path] = setTimeout(() => {
+          if (mdFile.file == null) return
+          FileContentModify(mdFile.file, content, this)
+
+          setTimeout(() => {
+            if (mdFile.file == null) return
+            FileContentModify(mdFile.file, content, this)
+          }, 3000)
+          delete this.SyncSkipModifyiles[mdFile.file.path]
+        }, 500)
       })
     )
 
@@ -67,6 +85,12 @@ export default class BetterSync extends Plugin {
       name: $("同步全部笔记"),
       callback: async () => SyncAllFiles(this),
     })
+
+    // this.addRibbonIcon("loader-circle", "Better Sync: " + "ssssss", async () => {
+    //   console.log(await this.app.vault.adapter.stat("未命名.md"))
+    // })
+
+
 
     AddRibbonIcon(this)
   }
@@ -89,7 +113,7 @@ export default class BetterSync extends Plugin {
     }
     if (this.settings.syncEnabled) {
       this.websocket.register()
-      //SyncFiles(this)
+      //NoteSync(this)
     } else {
       this.websocket.unRegister()
     }
