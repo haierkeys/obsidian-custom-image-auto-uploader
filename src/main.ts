@@ -38,7 +38,7 @@ export default class BetterSync extends Plugin {
     this.websocket = new WebSocketClient(this)
 
     this.isSyncAllFilesInProgress = false
-    if (this.settings.syncEnabled) {
+    if (this.settings.syncEnabled && this.settings.api && this.settings.apiToken) {
       this.websocket.register()
     } else {
       this.websocket.unRegister()
