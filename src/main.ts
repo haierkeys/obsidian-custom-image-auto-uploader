@@ -8,10 +8,10 @@ import { $ } from "./lang/lang";
 
 
 interface SyncSkipFiles {
-  [key: string]: string;
+  [key: string]: string
 }
 interface EditorChangeTimeout {
-  [key: string]: any;
+  [key: string]: any
 }
 
 export default class BetterSync extends Plugin {
@@ -46,32 +46,24 @@ export default class BetterSync extends Plugin {
 
     // 注册文件事件
     this.registerEvent(this.app.vault.on("create", (file) => NoteModify(file, this)))
-    this.registerEvent(this.app.vault.on("modify", (file) => {
-      if (this.SyncSkipModifyiles[file.path]) return
-      NoteModify(file, this)
-    }))
+    this.registerEvent(this.app.vault.on("modify", (file) => NoteModify(file, this)))
     this.registerEvent(this.app.vault.on("delete", (file) => NoteDelete(file, this)))
     this.registerEvent(this.app.vault.on("rename", (file, oldfile) => FileRename(file, oldfile, this)))
 
-    // 注册编译器事件 编辑器每次修改更新两次 因为Mtime因为系统缓存原因不准确
-    this.registerEvent(
-      this.app.workspace.on("editor-change", async (editor, mdFile) => {
-        if (mdFile.file == null) return
-        const content = editor.getValue()
-        this.SyncSkipModifyiles[mdFile.file.path] = mdFile.file.path
-        clearTimeout(this.editorChangeTimeout[mdFile.file.path])
-        this.editorChangeTimeout[mdFile.file.path] = setTimeout(() => {
-          if (mdFile.file == null) return
-          FileContentModify(mdFile.file, content, this)
-
-          setTimeout(() => {
-            if (mdFile.file == null) return
-            FileContentModify(mdFile.file, content, this)
-          }, 3000)
-          delete this.SyncSkipModifyiles[mdFile.file.path]
-        }, 500)
-      })
-    )
+    // 注册编译器事件 // 不监听编辑器内容变化 因为 存在缓存 导致mtime 不准确
+    // this.registerEvent(
+    //   this.app.workspace.on("editor-change", async (editor, mdFile) => {
+    //     if (mdFile.file == null) return
+    //     const content = editor.getValue()
+    //     this.SyncSkipModifyiles[mdFile.file.path] = mdFile.file.path
+    //     clearTimeout(this.editorChangeTimeout[mdFile.file.path])
+    //     this.editorChangeTimeout[mdFile.file.path] = setTimeout(() => {
+    //       if (mdFile.file == null) return
+    //       FileContentModify(mdFile.file, content, this)
+    //       delete this.SyncSkipModifyiles[mdFile.file.path]
+    //     }, 3000)
+    //   })
+    // )
 
     // 注册命令
     this.addCommand({
@@ -89,8 +81,6 @@ export default class BetterSync extends Plugin {
     // this.addRibbonIcon("loader-circle", "Better Sync: " + "ssssss", async () => {
     //   console.log(await this.app.vault.adapter.stat("未命名.md"))
     // })
-
-
 
     AddRibbonIcon(this)
   }

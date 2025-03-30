@@ -32,14 +32,19 @@ export const NoteModify = async function (file: TAbstractFile, plugin: BetterSyn
   plugin.websocket.MsgSend("NoteModify", data, "json")
   plugin.SyncSkipFiles[file.path] = data.contentHash
 
-  dump(`NoteModify Send NoteModify`, data.path, data.contentHash, data.mtime, data.pathHash)
-  //1
+  dump(`NoteModify Send`, data.path, data.contentHash, data.mtime, data.pathHash)
+
 }
 
 export const FileContentModify = async function (file: TAbstractFile, content: string, plugin: BetterSync) {
   if (!file.path.endsWith(".md")) return
 
   if (!(file instanceof TFile)) {
+    return
+  }
+
+  const contentHash = hashContent(content)
+  if (plugin.SyncSkipFiles[file.path] && plugin.SyncSkipFiles[file.path] == contentHash) {
     return
   }
 
@@ -53,10 +58,10 @@ export const FileContentModify = async function (file: TAbstractFile, content: s
     content: content,
     contentHash: hashContent(content),
   }
-  plugin.websocket.MsgSend("NoteModify", data, "json")
+  plugin.websocket.MsgSend("NoteContentModify", data, "json")
   plugin.SyncSkipFiles[file.path] = data.contentHash
 
-  dump(`FileContentModify Send NoteModify`, data.path, data.contentHash, data.mtime, data.pathHash)
+  dump(`FileContentModify Send`, data.path, data.contentHash, data.mtime, data.pathHash)
 }
 
 export const NoteDelete = async function (file: TAbstractFile, plugin: BetterSync) {
