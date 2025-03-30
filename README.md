@@ -36,7 +36,7 @@ If you find this plugin useful and want to support its continued development, yo
 1. Install the plugin
    Open the OBSidian community plugin market, search **Custom Image Auto Uploader** for installation
 2. Open plugin settings, set **Upload Settings** > **API Gateway Address** to your **Image Api Gateway** address,
-   e.g., `http://127.0.0.1:8000/api/upload`
+   e.g., `http://127.0.0.1:9000/api/upload`
 3. Set **API Access Token**.
 4. Start **Image Api Gateway** service on remote server.
 5. Create a note and copy an image to check if the upload is successful.
@@ -45,11 +45,3 @@ If you find this plugin useful and want to support its continued development, yo
 
 This plugin requires configuring **Image Api Gateway** to complete the upload work.
 **Image Api Gateway** is a free tool, for deployment and usage, please refer to [https://github.com/haierkeys/obsidian-image-api-gateway](https://github.com/haierkeys/obsidian-image-api-gateway).
-
-## Development
-
-```bash
-pnpm install
-pnpm run dev
-pnpm run build
-```
