@@ -140,6 +140,11 @@ export class WebSocketClient {
   }
 
   public async Send(action: string, data: any, type: string = "text") {
+    while (this.ws.readyState !== WebSocket.OPEN ) {
+      if (!this.isRegister) return
+      dump("Service Not Connected OR Not Auth，MsgSend Waiting...")
+      await sleep(5000) // 每隔一秒重试一次
+    }
     if (type == "text") {
       this.ws.send(action + "|" + data)
     } else if (type == "json") {
