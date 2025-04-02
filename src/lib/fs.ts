@@ -223,13 +223,11 @@ export const ReceiveNoteDelete = async function (data: any, plugin: BetterSync) 
     return
   }
   dump(`ReceiveNoteSyncDelete:`, data.action, data.path, data.mtime, data.pathHash)
-  if (data.action == "delete") {
-    const file = plugin.app.vault.getFileByPath(data.path)
-    if (file instanceof TFile) {
-      plugin.SyncSkipDelFiles[data.path] = "{ReceiveNoteSyncDelete}"
-      plugin.app.vault.delete(file)
-      //await plugin.app.vault.delete(file)s
-    }
+  const file = plugin.app.vault.getFileByPath(data.path)
+  if (file instanceof TFile) {
+    plugin.SyncSkipDelFiles[data.path] = "{ReceiveNoteSyncDelete}"
+    plugin.app.vault.delete(file)
+    //await plugin.app.vault.delete(file)s
   }
 }
 
