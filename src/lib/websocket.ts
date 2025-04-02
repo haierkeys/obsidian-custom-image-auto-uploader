@@ -1,4 +1,5 @@
 import { Notice, moment } from "obsidian";
+import { time } from "console";
 
 import { syncReceiveMethodHandlers, SyncAllFiles } from "./fs";
 import { dump, sleep } from "./helps";
@@ -9,10 +10,12 @@ export class WebSocketClient {
   private ws: WebSocket
   private wsApi: string
   private plugin: BetterSync
-  public wsIsOpen: boolean = false
+  public isOpen: boolean = false
+  public isAuth: boolean = false
   public checkConnection: any
   public checkReConnectTimeout: any
   public timeConnect = 0
+  public isSyncAllFilesInProgress: boolean = false
 
   private isRegister: boolean = false
   constructor(plugin: BetterSync) {
@@ -21,7 +24,7 @@ export class WebSocketClient {
   }
 
   public isConnected(): boolean {
-    return this.wsIsOpen
+    return this.isOpen
   }
 
   public register() {
@@ -31,7 +34,7 @@ export class WebSocketClient {
       this.ws.onerror = (error) => {}
       this.ws.onopen = (e: Event): void => {
         this.timeConnect = 0
-        this.wsIsOpen = true
+        this.isOpen = true
         dump("Service Connected")
         this.Send("Authorization", this.plugin.settings.apiToken)
         dump("Service Authorization")
@@ -39,7 +42,8 @@ export class WebSocketClient {
         this.OnlineStatusCheck()
       }
       this.ws.onclose = (e) => {
-        this.wsIsOpen = false
+        this.isAuth = false
+        this.isOpen = false
         clearInterval(this.checkConnection)
         if (this.isRegister) {
           this.checkReConnect()
@@ -56,12 +60,19 @@ export class WebSocketClient {
           msgAction = event.data.slice(0, index)
         }
         const data = JSON.parse(msgData)
-        dump(data)
-        if (data.code == 0 || data.code > 100) {
+        if (msgAction == "Authorization") {
+          if (data.code == 0 || data.code > 200) {
+            new Notice("Service Authorization Error: Code=" + data.code + " Msg=" + data.msg + data.details)
+            return
+          } else {
+            this.isAuth = true
+            dump("Service Authorization Success")
+          }
+        }
+        if (data.code == 0 || data.code > 200) {
           new Notice("Service Error: Code=" + data.code + " Msg=" + data.msg + data.details)
         } else {
           const handler = syncReceiveMethodHandlers.get(msgAction)
-
           if (handler) {
             handler(data.data, this.plugin)
           }
@@ -72,7 +83,8 @@ export class WebSocketClient {
   public unRegister() {
     clearInterval(this.checkConnection)
     clearTimeout(this.checkReConnectTimeout)
-    this.wsIsOpen = false
+    this.isOpen = false
+    this.isAuth = false
     this.isRegister = false
     if (this.ws) {
       this.ws.close(1000, "unRegister")
@@ -102,22 +114,22 @@ export class WebSocketClient {
     // 检查 WebSocket 连接是否打开
     this.checkConnection = setInterval(() => {
       if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-        this.wsIsOpen = true
+        this.isOpen = true
       } else {
-        this.wsIsOpen = false
+        this.isOpen = false
       }
     }, 3000)
   }
 
-  public async MsgSend(action: string, data: any, type: string = "text") {
+  public async MsgSend(action: string, data: any, type: string = "text", isSync: boolean = false) {
     // 循环检查 WebSocket 连接是否打开
-    while (this.ws.readyState !== WebSocket.OPEN) {
+    while (this.ws.readyState !== WebSocket.OPEN || this.isAuth != true) {
       if (!this.isRegister) return
-      dump("Service Not Connected，MsgSend Waiting...")
+      dump("Service Not Connected OR Not Auth，MsgSend Waiting...")
       await sleep(5000) // 每隔一秒重试一次
     }
     // 检查是否有同步任务正在进行中
-    while (this.plugin.isSyncAllFilesInProgress == true) {
+    while (isSync == false && this.isSyncAllFilesInProgress == true) {
       if (!this.isRegister) {
         return
       }

@@ -6,7 +6,7 @@ import { NoteSync } from "./fs";
 export const AddRibbonIcon = async function (plugin: BetterSync) {
   clearInterval(plugin.ribbonIconInterval)
   plugin.ribbonIconInterval = setInterval(() => {
-    if (plugin.websocket.wsIsOpen != true) {
+    if (plugin.websocket.isOpen != true) {
       if (plugin.ribbonIconStatus && plugin.ribbonIcon) {
         plugin.ribbonIcon.remove()
         plugin.ribbonIconStatus = false

@@ -23,7 +23,7 @@ export default class BetterSync extends Plugin {
   SyncSkipModifyiles: SyncSkipFiles = {}
 
   editorChangeTimeout: EditorChangeTimeout = {}
-  isSyncAllFilesInProgress: boolean = false
+
   ribbonIcon: HTMLElement
   ribbonIconInterval: any
   ribbonIconStatus: boolean = false
@@ -37,7 +37,7 @@ export default class BetterSync extends Plugin {
     this.addSettingTab(this.settingTab)
     this.websocket = new WebSocketClient(this)
 
-    this.isSyncAllFilesInProgress = false
+    this.websocket.isSyncAllFilesInProgress = false
     if (this.settings.syncEnabled && this.settings.api && this.settings.apiToken) {
       this.websocket.register()
     } else {
@@ -87,7 +87,7 @@ export default class BetterSync extends Plugin {
 
   onunload() {
     // 取消注册文件事件
-    this.isSyncAllFilesInProgress = false
+    this.websocket.isSyncAllFilesInProgress = false
     clearInterval(this.ribbonIconInterval)
     this.websocket.unRegister()
   }
@@ -97,13 +97,13 @@ export default class BetterSync extends Plugin {
   }
 
   async saveSettings() {
-    this.isSyncAllFilesInProgress = false
+    this.websocket.isSyncAllFilesInProgress = false
     if (this.settings.api && this.settings.apiToken) {
       this.settings.wsApi = this.settings.api.replace(/^http/, "ws")
     }
     if (this.settings.syncEnabled) {
       this.websocket.register()
-      //NoteSync(this)
+      NoteSync(this)
     } else {
       this.websocket.unRegister()
     }

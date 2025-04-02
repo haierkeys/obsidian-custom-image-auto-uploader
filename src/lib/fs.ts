@@ -99,11 +99,11 @@ export const FileRename = async function (file: TAbstractFile, oldfile: string, 
  */
 
 export const OverrideRemoteAllFiles = async function (plugin: BetterSync) {
-  if (plugin.isSyncAllFilesInProgress) {
+  if (plugin.websocket.isSyncAllFilesInProgress) {
     return
   }
 
-  plugin.isSyncAllFilesInProgress = true
+  plugin.websocket.isSyncAllFilesInProgress = true
   const files = plugin.app.vault.getMarkdownFiles()
   for (const file of files) {
     const content: string = await plugin.app.vault.cachedRead(file)
@@ -118,19 +118,19 @@ export const OverrideRemoteAllFiles = async function (plugin: BetterSync) {
     }
     plugin.websocket.MsgSend("NoteModifyOverride", data, "json")
   }
-  plugin.isSyncAllFilesInProgress = false
+  plugin.websocket.isSyncAllFilesInProgress = false
   plugin.settings.lastSyncTime = 0
   await plugin.saveData(plugin.settings)
   NoteSync(plugin)
 }
 
 export const SyncAllFiles = async function (plugin: BetterSync) {
-  if (plugin.isSyncAllFilesInProgress) {
+  if (plugin.websocket.isSyncAllFilesInProgress) {
     return
   }
   await NoteSync(plugin)
 
-  plugin.isSyncAllFilesInProgress = true
+  plugin.websocket.isSyncAllFilesInProgress = true
   const files = await plugin.app.vault.getMarkdownFiles()
   for (const file of files) {
     const content: string = await plugin.app.vault.cachedRead(file)
@@ -143,16 +143,16 @@ export const SyncAllFiles = async function (plugin: BetterSync) {
       content: content,
       contentHash: hashContent(content),
     }
-    await plugin.websocket.MsgSend("NoteModify", data, "json")
+    await plugin.websocket.MsgSend("NoteModify", data, "json",true)
   }
-  plugin.isSyncAllFilesInProgress = false
+  plugin.websocket.isSyncAllFilesInProgress = false
   plugin.settings.lastSyncTime = 0
   await plugin.saveData(plugin.settings)
   NoteSync(plugin)
 }
 
 export const NoteSync = async function (plugin: BetterSync) {
-  if (plugin.isSyncAllFilesInProgress) {
+  if (plugin.websocket.isSyncAllFilesInProgress) {
     return
   }
   const data = {
@@ -160,10 +160,10 @@ export const NoteSync = async function (plugin: BetterSync) {
     lastTime: Number(plugin.settings.lastSyncTime),
   }
   plugin.websocket.MsgSend("NoteSync", data, "json")
-  plugin.isSyncAllFilesInProgress = true
+  plugin.websocket.isSyncAllFilesInProgress = true
 }
 
-/**1
+/**
   消息接收操作方法  Message receiving methods
  */
 
@@ -231,7 +231,7 @@ export const ReceiveNoteEnd = async function (data: any, plugin: BetterSync) {
   dump(`ReceiveNoteSyncEnd:`, data.vault, data, data.lastTime)
   plugin.settings.lastSyncTime = data.lastTime
   await plugin.saveData(plugin.settings)
-  plugin.isSyncAllFilesInProgress = false
+  plugin.websocket.isSyncAllFilesInProgress = false
 }
 
 type ReceiveSyncMethod = (data: any, plugin: BetterSync) => void
