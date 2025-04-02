@@ -151,7 +151,7 @@ export const SyncAllFiles = async function (plugin: BetterSync) {
   plugin.websocket.isSyncAllFilesInProgress = false
   plugin.settings.lastSyncTime = 0
   await plugin.saveData(plugin.settings)
-  console.log("SyncAllFiles")
+  //console.log("SyncAllFiles")
   await NoteSync(plugin)
 }
 
