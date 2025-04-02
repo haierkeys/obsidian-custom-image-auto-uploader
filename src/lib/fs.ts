@@ -148,13 +148,19 @@ export const SyncAllFiles = async function (plugin: BetterSync) {
   plugin.websocket.isSyncAllFilesInProgress = false
   plugin.settings.lastSyncTime = 0
   await plugin.saveData(plugin.settings)
-  NoteSync(plugin)
+  console.log("SyncAllFiles")
+  await NoteSync(plugin)
 }
 
 export const NoteSync = async function (plugin: BetterSync) {
-  if (plugin.websocket.isSyncAllFilesInProgress) {
-    return
+  while ( this.isSyncAllFilesInProgress == true) {
+    if (!this.isRegister) {
+      return
+    }
+    dump("NoteSync, Waiting...")
+    await sleep(2000) // 每隔一秒重试一次
   }
+
   const data = {
     vault: plugin.settings.vault,
     lastTime: Number(plugin.settings.lastSyncTime),

@@ -101,9 +101,9 @@ export default class BetterSync extends Plugin {
     if (this.settings.api && this.settings.apiToken) {
       this.settings.wsApi = this.settings.api.replace(/^http/, "ws")
     }
+    this.websocket.unRegister()
     if (this.settings.syncEnabled) {
       this.websocket.register()
-      NoteSync(this)
     } else {
       this.websocket.unRegister()
     }

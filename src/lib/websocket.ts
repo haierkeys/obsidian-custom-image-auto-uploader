@@ -38,7 +38,6 @@ export class WebSocketClient {
         dump("Service Connected")
         this.Send("Authorization", this.plugin.settings.apiToken)
         dump("Service Authorization")
-        this.StartHandle()
         this.OnlineStatusCheck()
       }
       this.ws.onclose = (e) => {
@@ -67,6 +66,7 @@ export class WebSocketClient {
           } else {
             this.isAuth = true
             dump("Service Authorization Success")
+            this.StartHandle()
           }
         }
         if (data.code == 0 || data.code > 200) {
@@ -123,13 +123,14 @@ export class WebSocketClient {
 
   public async MsgSend(action: string, data: any, type: string = "text", isSync: boolean = false) {
     // 循环检查 WebSocket 连接是否打开
-    while (this.ws.readyState !== WebSocket.OPEN || this.isAuth != true) {
+    while (this.isAuth != true) {
       if (!this.isRegister) return
-      dump("Service Not Connected OR Not Auth，MsgSend Waiting...")
+      dump("Service Not Auth，MsgSend Waiting...")
       await sleep(5000) // 每隔一秒重试一次
     }
     // 检查是否有同步任务正在进行中
     while (isSync == false && this.isSyncAllFilesInProgress == true) {
+      dump(action)
       if (!this.isRegister) {
         return
       }
@@ -142,7 +143,7 @@ export class WebSocketClient {
   public async Send(action: string, data: any, type: string = "text") {
     while (this.ws.readyState !== WebSocket.OPEN ) {
       if (!this.isRegister) return
-      dump("Service Not Connected OR Not Auth，MsgSend Waiting...")
+      dump("Service Not Connected， MsgSend Waiting...")
       await sleep(5000) // 每隔一秒重试一次
     }
     if (type == "text") {
