@@ -33,7 +33,6 @@ export const NoteModify = async function (file: TAbstractFile, plugin: BetterSyn
   plugin.SyncSkipFiles[file.path] = data.contentHash
 
   dump(`NoteModify Send`, data.path, data.contentHash, data.mtime, data.pathHash)
-
 }
 
 export const FileContentModify = async function (file: TAbstractFile, content: string, plugin: BetterSync) {
@@ -146,7 +145,7 @@ export const SyncAllFiles = async function (plugin: BetterSync) {
       content: content,
       contentHash: hashContent(content),
     }
-    await plugin.websocket.MsgSend("NoteModify", data, "json",true)
+    await plugin.websocket.MsgSend("NoteModify", data, "json", true)
   }
   plugin.websocket.isSyncAllFilesInProgress = false
   plugin.settings.lastSyncTime = 0
@@ -156,7 +155,7 @@ export const SyncAllFiles = async function (plugin: BetterSync) {
 }
 
 export const NoteSync = async function (plugin: BetterSync) {
-  while ( this.isSyncAllFilesInProgress == true) {
+  while (this.isSyncAllFilesInProgress == true) {
     if (!this.isRegister) {
       return
     }
@@ -190,9 +189,6 @@ interface ReceiveData {
 
 // ReceiveNoteModify 接收文件修改
 export const ReceiveNoteModify = async function (data: any, plugin: BetterSync) {
-  if (data.vault != plugin.settings.vault) {
-    return
-  }
   if (plugin.SyncSkipFiles[data.path] && plugin.SyncSkipFiles[data.path] == data.contentHash) {
     return
   }
@@ -218,10 +214,6 @@ export const ReceiveNoteModify = async function (data: any, plugin: BetterSync) 
 }
 
 export const ReceiveNoteDelete = async function (data: any, plugin: BetterSync) {
-  if (data.vault != plugin.settings.vault) {
-    delete plugin.SyncSkipDelFiles[data.path]
-    return
-  }
   dump(`ReceiveNoteSyncDelete:`, data.action, data.path, data.mtime, data.pathHash)
   const file = plugin.app.vault.getFileByPath(data.path)
   if (file instanceof TFile) {
@@ -232,9 +224,6 @@ export const ReceiveNoteDelete = async function (data: any, plugin: BetterSync) 
 }
 
 export const ReceiveNoteEnd = async function (data: any, plugin: BetterSync) {
-  if (data.vault != plugin.settings.vault) {
-    return
-  }
   dump(`ReceiveNoteSyncEnd:`, data.vault, data, data.lastTime)
   plugin.settings.lastSyncTime = data.lastTime
   await plugin.saveData(plugin.settings)
