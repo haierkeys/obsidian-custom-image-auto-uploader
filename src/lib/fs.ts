@@ -65,6 +65,7 @@ export const FileContentModify = async function (file: TAbstractFile, content: s
 }
 
 export const NoteDelete = async function (file: TAbstractFile, plugin: BetterSync) {
+  if (!file.path.endsWith(".md")) return
   if (!(file instanceof TFile)) {
     return
   }
@@ -76,6 +77,7 @@ export const NoteDelete = async function (file: TAbstractFile, plugin: BetterSyn
 }
 
 export const NoteDeleteByPath = async function (path: string, plugin: BetterSync) {
+  if (!path.endsWith(".md")) return
   const data = {
     vault: plugin.settings.vault,
     path: path,
@@ -86,6 +88,7 @@ export const NoteDeleteByPath = async function (path: string, plugin: BetterSync
 }
 
 export const FileRename = async function (file: TAbstractFile, oldfile: string, plugin: BetterSync) {
+  if (!file.path.endsWith(".md")) return
   if (!(file instanceof TFile)) {
     return
   }
