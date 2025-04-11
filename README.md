@@ -1,7 +1,7 @@
 [中文文档](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/readme-zh.md) / [English Document](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/README.md)
 
 
-<h1 align="center">Custom Image Upload Cloud Storage Plugin For Obsidian</h1>
+<h1 align="center">Obsidian Custom Image Auto Uploader</h1>
 
 <p align="center">
 <img src="https://img.shields.io/github/release/haierkeys/obsidian-custom-image-auto-uploader" alt="version">
