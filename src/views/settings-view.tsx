@@ -1,34 +1,36 @@
 import BetterSync from "src/main";
+import { useState } from "react";
 
 import { $ } from "../lang/lang";
 
 
 async function getClipboardContent(plugin: BetterSync): Promise<void> {
-  const clipboardReadTipSave = async (api: string, apiToken: string, Vault: string, clipboardReadTip: string) => {
+  const clipboardReadTipSave = async (api: string, apiToken: string, Vault: string, tip: string) => {
+    if (plugin.settings.api != api || plugin.settings.apiToken != apiToken) {
+      plugin.wsSettingChange = true
+    }
     plugin.settings.api = api
     plugin.settings.apiToken = apiToken
     plugin.settings.vault = Vault
-    plugin.settings.clipboardReadTip = clipboardReadTip
+    plugin.clipboardReadTip = tip
 
-    await plugin.saveData(plugin.settings)
+    await plugin.saveSettings()
     plugin.settingTab.display()
 
     setTimeout(() => {
-      plugin.settings.clipboardReadTip = ""
-      plugin.saveData(plugin.settings)
+      plugin.clipboardReadTip = ""
     }, 2000)
   }
 
   //
-  const clipboardReadTipTipSave = async (clipboardReadTip: string) => {
-    plugin.settings.clipboardReadTip = clipboardReadTip
+  const clipboardReadTipTipSave = async (tip: string) => {
+    plugin.clipboardReadTip = tip
 
     await plugin.saveData(plugin.settings)
     plugin.settingTab.display()
 
     setTimeout(() => {
-      plugin.settings.clipboardReadTip = ""
-      plugin.saveData(plugin.settings)
+      plugin.clipboardReadTip = ""
     }, 2000)
   }
 
@@ -43,27 +45,21 @@ async function getClipboardContent(plugin: BetterSync): Promise<void> {
 
     // 检查是否为 JSON 格式
     let parsedData: any
-    try {
-      parsedData = JSON.parse(text)
 
-      // 检查是否为对象且包含 api 和 apiToken
-      if (typeof parsedData === "object" && parsedData !== null) {
-        const hasApi = "api" in parsedData
-        const hasApiToken = "apiToken" in parsedData
-        const vault = "vault" in parsedData
+    parsedData = JSON.parse(text)
 
-        if (hasApi && hasApiToken && vault) {
-          clipboardReadTipSave(parsedData.api, parsedData.apiToken, parsedData.vault, $("接口配置信息已经粘贴到设置中!"))
-        } else {
-          clipboardReadTipTipSave($("未检测到配置信息!"))
-        }
-      } else {
-        clipboardReadTipTipSave($("未检测到配置信息!"))
+    // 检查是否为对象且包含 api 和 apiToken
+    if (typeof parsedData === "object" && parsedData !== null) {
+      const hasApi = "api" in parsedData
+      const hasApiToken = "apiToken" in parsedData
+      const vault = "vault" in parsedData
+
+      if (hasApi && hasApiToken && vault) {
+        clipboardReadTipSave(parsedData.api, parsedData.apiToken, parsedData.vault, $("接口配置信息已经粘贴到设置中!"))
+        return
       }
-    } catch (jsonErr) {
-      clipboardReadTipTipSave($("未检测到配置信息!"))
-      return
     }
+    clipboardReadTipTipSave($("未检测到配置信息!"))
     return
   } catch (err) {
     clipboardReadTipTipSave($("未检测到配置信息!"))
@@ -104,7 +100,7 @@ export const SettingsView = ({ plugin }: { plugin: BetterSync }) => {
         <button className="clipboard-read-button" onClick={() => getClipboardContent(plugin)}>
           {$("粘贴的远端配置")}
         </button>
-        <div className="clipboard-read-description">{plugin.settings.clipboardReadTip}</div>
+        <div className="clipboard-read-description">{plugin.clipboardReadTip}</div>
       </div>
     </>
   )

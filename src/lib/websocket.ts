@@ -2,7 +2,7 @@ import { Notice, moment } from "obsidian";
 import { time } from "console";
 
 import { syncReceiveMethodHandlers, SyncAllFiles } from "./fs";
-import { dump, sleep } from "./helps";
+import { dump, sleep, isWsUrl } from "./helps";
 import BetterSync from "../main";
 
 
@@ -28,7 +28,7 @@ export class WebSocketClient {
   }
 
   public register() {
-    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+    if ((!this.ws || this.ws.readyState !== WebSocket.OPEN ) && isWsUrl(this.plugin.settings.wsApi)) {
       this.isRegister = true
       this.ws = new WebSocket(this.plugin.settings.wsApi + "/api/user/sync?lang=" + moment.locale())
       this.ws.onerror = (error) => {}
@@ -44,7 +44,12 @@ export class WebSocketClient {
         this.isAuth = false
         this.isOpen = false
         clearInterval(this.checkConnection)
-        if (this.isRegister) {
+        if (e.reason == "AuthorizationFaild") {
+          new Notice("Remote Service Connection Closed: " + e.reason)
+        }else if (e.reason == "ClientClose") {
+          new Notice("Remote Service Connection Closed: " + e.reason)
+        }
+        if (this.isRegister && (e.reason != "AuthorizationFaild" && e.reason != "ClientClose")) {
           this.checkReConnect()
         }
         dump("Service Close")

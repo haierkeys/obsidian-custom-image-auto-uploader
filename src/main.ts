@@ -4,6 +4,7 @@ import { NoteModify, NoteDelete, FileRename, FileContentModify, OverrideRemoteAl
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
 import { WebSocketClient } from "./lib/websocket";
 import { AddRibbonIcon } from "./lib/menu";
+import { isWsUrl } from "./lib/helps";
 import { $ } from "./lang/lang";
 
 
@@ -16,11 +17,13 @@ interface EditorChangeTimeout {
 
 export default class BetterSync extends Plugin {
   settingTab: SettingTab
+  wsSettingChange: boolean
   settings: PluginSettings
   websocket: WebSocketClient
   SyncSkipFiles: SyncSkipFiles = {}
   SyncSkipDelFiles: SyncSkipFiles = {}
   SyncSkipModifyiles: SyncSkipFiles = {}
+  clipboardReadTip :string = ""
 
   editorChangeTimeout: EditorChangeTimeout = {}
 
@@ -103,7 +106,12 @@ export default class BetterSync extends Plugin {
     }
     this.websocket.unRegister()
     if (this.settings.syncEnabled) {
-      this.websocket.register()
+      if (this.wsSettingChange) {
+        this.websocket.unRegister()
+        this.websocket.register()
+        this.wsSettingChange = false
+      }
+
     } else {
       this.websocket.unRegister()
     }

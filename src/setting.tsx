@@ -49,6 +49,7 @@ export class SettingTab extends PluginSettingTab {
   constructor(app: App, plugin: BetterSync) {
     super(app, plugin)
     this.plugin = plugin
+    this.plugin.clipboardReadTip = ""
   }
 
   display(): void {
@@ -56,16 +57,19 @@ export class SettingTab extends PluginSettingTab {
 
     set.empty()
 
-   // new Setting(set).setName("Better Sync").setDesc($("BetterSync")).setHeading()
+    // new Setting(set).setName("Better Sync").setDesc($("BetterSync")).setHeading()
 
     new Setting(set)
       .setName($("启用同步"))
       .setDesc($("关闭后您的笔记将不做任何同步"))
       .addToggle((toggle) =>
         toggle.setValue(this.plugin.settings.syncEnabled).onChange(async (value) => {
-          this.plugin.settings.syncEnabled = value
-          this.display()
-          await this.plugin.saveSettings()
+          if (value != this.plugin.settings.syncEnabled) {
+            this.plugin.wsSettingChange = true
+            this.plugin.settings.syncEnabled = value
+            this.display()
+            await this.plugin.saveSettings()
+          }
         })
       )
 
@@ -89,8 +93,11 @@ export class SettingTab extends PluginSettingTab {
           .setPlaceholder($("输入您的 Image API Gateway 地址"))
           .setValue(this.plugin.settings.api)
           .onChange(async (value) => {
-            this.plugin.settings.api = value
-            await this.plugin.saveSettings()
+            if (value != this.plugin.settings.api) {
+              this.plugin.wsSettingChange = true
+              this.plugin.settings.api = value
+              await this.plugin.saveSettings()
+            }
           })
       )
 
@@ -102,8 +109,11 @@ export class SettingTab extends PluginSettingTab {
           .setPlaceholder($("输入您的 API 访问令牌"))
           .setValue(this.plugin.settings.apiToken)
           .onChange(async (value) => {
-            this.plugin.settings.apiToken = value
-            await this.plugin.saveSettings()
+            if (value != this.plugin.settings.apiToken) {
+              this.plugin.wsSettingChange = true
+              this.plugin.settings.apiToken = value
+              await this.plugin.saveSettings()
+            }
           })
       )
 
