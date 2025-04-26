@@ -87,7 +87,7 @@ export class SettingTab extends PluginSettingTab {
 
     const api = new Setting(set)
       .setName($("远端服务地址"))
-      .setDesc($("选择一个 Obsidian-Better-Sync-Service 服务地址"))
+      .setDesc($("选择一个 Better-Sync-Service 服务地址"))
       .addText((text) =>
         text
           .setPlaceholder($("输入您的 Image API Gateway 地址"))

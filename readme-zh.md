@@ -27,4 +27,4 @@
 
 ## 同步服务私有化部署
 
-请可以参考 [Obsidian Better Sync Service](https://github.com/haierkeys/obsidian-better-sync-service)。
+请可以参考 [Better Sync Service](https://github.com/haierkeys/Better-Sync-Service)。

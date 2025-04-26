@@ -25,4 +25,4 @@ If you find this plugin useful and want to support its continued development, yo
 
 ## Sync Service Private Deployment
 
-Please refer to [Obsidian Better Sync Service](https://github.com/haierkeys/obsidian-better-sync-service).
+Please refer to [Better Sync Service](https://github.com/haierkeys/Better-Sync-Service).

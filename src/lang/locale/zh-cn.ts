@@ -20,7 +20,7 @@ export default <lang>{
   "启用同步": "启用同步",
   "关闭后您的笔记将不做任何同步": "关闭后您的笔记将不做任何同步",
   "远端服务地址": "远端服务地址",
-  "选择一个 Obsidian-Better-Sync-Service 服务地址": "选择一个 Obsidian-Better-Sync-Service 服务地址",
+  "选择一个 Better-Sync-Service 服务地址": "选择一个 Better-Sync-Service 服务地址",
   "输入您的 Image API Gateway 地址": "输入您的 Image API Gateway 地址",
   "远端服务令牌": "远端服务令牌",
   "用于远端服务的访问授权令牌": "用于远端服务的访问授权令牌",

@@ -1,6 +1,7 @@
 // 丹麦语
 import { lang } from "../lang";
 
+
 export default <lang>{
   "BetterSync": "Fokus på at give brugerne en uforstyrret, silkeblød oplevelse med en plugin til synkronisering af noter i realtid på tværs af flere enheder, der understøtter platforme som Mac, Windows, Android, iOS og tilbyder flersproget support.",
   "同步全部笔记(覆盖远端)": "Synkroniser alle noter (overskriv fjern)",
@@ -19,7 +20,7 @@ export default <lang>{
   "启用同步": "Aktiver synkronisering",
   "关闭后您的笔记将不做任何同步": "Når det er lukket, vil dine noter ikke blive synkroniseret",
   "远端服务地址": "Fjernbetjeningsadresse",
-  "选择一个 Obsidian-Better-Sync-Service 服务地址": "Vælg en Obsidian-Better-Sync-Service adresse",
+  "选择一个 Better-Sync-Service 服务地址": "Vælg en Better-Sync-Service adresse",
   "输入您的 Image API Gateway 地址": "Indtast din Image API Gateway-adresse",
   "远端服务令牌": "Fjerntjenestetoken",
   "用于远端服务的访问授权令牌": "Adgangsgodkendelsestoken til fjernservice",

@@ -1,6 +1,7 @@
 // 意大利语
 import { lang } from "../lang";
 
+
 export default <lang>{
   "BetterSync": "Concentrati a fornire agli utenti un plugin di sincronizzazione delle note senza interruzioni, fluido come la seta e sincronizzato in tempo reale su più dispositivi, supportando piattaforme come Mac, Windows, Android, iOS e offrendo supporto multilingue.",
   "同步全部笔记(覆盖远端)": "Sincronizza tutte le note (sovrascrivi remoto)",
@@ -19,7 +20,7 @@ export default <lang>{
   "启用同步": "Abilita sincronizzazione",
   "关闭后您的笔记将不做任何同步": "Dopo la chiusura, le tue note non verranno sincronizzate",
   "远端服务地址": "Indirizzo del servizio remoto",
-  "选择一个 Obsidian-Better-Sync-Service 服务地址": "Scegli un indirizzo del servizio Obsidian-Better-Sync-Service",
+  "选择一个 Better-Sync-Service 服务地址": "Scegli un indirizzo del servizio Better-Sync-Service",
   "输入您的 Image API Gateway 地址": "Inserisci l'indirizzo del tuo gateway API per le immagini",
   "远端服务令牌": "Token di servizio remoto",
   "用于远端服务的访问授权令牌": "Token di autorizzazione all'accesso per servizi remoti",

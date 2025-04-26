@@ -90,7 +90,7 @@ export const SettingsView = ({ plugin }: { plugin: BetterSync }) => {
               <td style={{ textAlign: "center" }}>{$("私有服务搭建")}</td>
               <td style={{ textAlign: "center" }}>{$("速度好, 自由配置, 无隐私风险")}</td>
               <td>
-                <a href="https://github.com/haierkeys/obsidian-better-sync-service">https://github.com/haierkeys/better-sync-service</a>
+                <a href="https://github.com/haierkeys/obsidian-better-sync-service">https://github.com/haierkeys/obsidian-better-sync-service</a>
               </td>
             </tr>
           </tbody>

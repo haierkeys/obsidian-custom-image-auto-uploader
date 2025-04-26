@@ -1,6 +1,7 @@
 // 荷兰语
 import { lang } from "../lang";
 
+
 export default <lang>{
   "BetterSync": "Gefocust op het bieden van een ongestoorde, zijdezachte, multi-platform real-time synchronisatie voor notities, ondersteund op Mac, Windows, Android, iOS en andere platforms, en biedt meertalige ondersteuning.",
   "同步全部笔记(覆盖远端)": "Synchroniseer alle notities (overschrijf op afstand)",
@@ -19,7 +20,7 @@ export default <lang>{
   "启用同步": "Synchronisatie inschakelen",
   "关闭后您的笔记将不做任何同步": "Nadat u deze hebt gesloten, worden uw notities niet meer gesynchroniseerd.",
   "远端服务地址": "Externe serviceadres",
-  "选择一个 Obsidian-Better-Sync-Service 服务地址": "Kies een Obsidian-Better-Sync-Service serveradres",
+  "选择一个 Better-Sync-Service 服务地址": "Kies een Better-Sync-Service serveradres",
   "输入您的 Image API Gateway 地址": "Voer uw Image API Gateway-adres in",
   "远端服务令牌": "Externe servicetoken",
   "用于远端服务的访问授权令牌": "Toegangstoken voor autorisatie voor externe diensten",

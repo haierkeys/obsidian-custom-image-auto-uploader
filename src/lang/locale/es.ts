@@ -20,7 +20,7 @@ export default <lang>{
   "启用同步": "Habilitar sincronización",
   "关闭后您的笔记将不做任何同步": "Después de cerrar, sus notas no se sincronizarán.",
   "远端服务地址": "Dirección del servicio remoto",
-  "选择一个 Obsidian-Better-Sync-Service 服务地址": "Elige una dirección de servicio de Obsidian-Better-Sync-Service",
+  "选择一个 Better-Sync-Service 服务地址": "Elige una dirección de servicio de Better-Sync-Service",
   "输入您的 Image API Gateway 地址": "Ingrese la dirección de su Image API Gateway",
   "远端服务令牌": "Token de servicio remoto",
   "用于远端服务的访问授权令牌": "Token de autorización de acceso para servicios remotos",
