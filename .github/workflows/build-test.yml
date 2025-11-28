@@ -1,0 +1,45 @@
+name: Test Build Plugin
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+env:
+  PLUGIN_NAME: custom-image-auto-uploader-modified
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".node-version"
+          cache: "pnpm"
+
+      - name: Build
+        run: |
+          pnpm install
+          pnpm run build
+
+          mkdir ${{ env.PLUGIN_NAME }}
+          cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
+
+      - name: Upload Test Artifact ✅
+        uses: actions/upload-artifact@v4
+        with:
+          name: obsidian-plugin-test-build
+          path: |
+            main.js
+            manifest.json
+            styles.css
