@@ -4,7 +4,7 @@ import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, a
 import { DownTask, UploadTask } from "./interface"
 import { $ } from "./lang"
 
-const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]]*)\]\]/g
+const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]|]*)\|?([^\]]*)\]\]/g
 
 export default class CustomImageAutoUploader extends Plugin {
   settingTab: SettingTab
@@ -150,7 +150,7 @@ export default class CustomImageAutoUploader extends Plugin {
         continue
       }
 
-      let imageAlt = match[3] ? match[3] : match[1] ? match[1] : ""
+      let imageAlt = match[3] ? match[3] : match[1] ? match[1] : match[5] ? match[5] : ""
       imageAlt = imageAlt.replaceAll('"', "")
       downloadTasks.push({
         matchText: match[0],
@@ -221,7 +221,7 @@ export default class CustomImageAutoUploader extends Plugin {
       let readfile = await getAttachmentUploadPath(file, this)
       if (!readfile) continue
 
-      const imageAlt = match[3] ? match[3] : match[1] ? match[1] : file
+      const imageAlt = match[3] ? match[3] : match[1] ? match[1] : match[5] ? match[5] : file
       uploadTasks.push({
         matchText: match[0],
         imageAlt,
