@@ -1,10 +1,15 @@
-import { Menu, Plugin } from "obsidian"
-import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting"
-import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString, showTaskNotice, showErrorNotice, getAttachmentUploadPath, setMenu } from "./utils"
-import { DownTask, UploadTask } from "./interface"
-import { $ } from "./lang"
+import { Menu, Plugin } from "obsidian";
 
+import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString, showTaskNotice, showErrorNotice, getAttachmentUploadPath, setMenu } from "./utils";
+import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
+import { DownTask, UploadTask } from "./interface";
+import { $ } from "./lang";
+
+
+//const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]]*)\]\]/g
+// @lqllife 增加支持 ![[image.png|alt]]
 const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]|]*)\|?([^\]]*)\]\]/g
+
 
 export default class CustomImageAutoUploader extends Plugin {
   settingTab: SettingTab
