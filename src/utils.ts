@@ -1,9 +1,11 @@
-import { requestUrl, TFile, Vault, Notice, Menu, MenuItem, setIcon, CachedMetadata } from "obsidian"
-import { fileTypeFromBuffer, FileTypeResult } from "file-type"
-import CustomImageAutoUploader from "./main"
-import { $ } from "./lang"
-import { UploadSet } from "./setting"
-import { Metadata } from "./interface"
+import { requestUrl, TFile, Vault, Notice, Menu, MenuItem, setIcon, CachedMetadata } from "obsidian";
+import { fileTypeFromBuffer, FileTypeResult } from "file-type";
+
+import CustomImageAutoUploader from "./main";
+import { Metadata } from "./interface";
+import { UploadSet } from "./setting";
+import { $ } from "./lang";
+
 
 export const IMAGE_MIME_TYPES: Record<string, string[]> = {
   "image/bmp": ["bmp"],
@@ -294,7 +296,7 @@ export async function imageUpload(file: TFile, postData: UploadSet | undefined, 
 
       URL.revokeObjectURL(url)
     } catch (error) {
-      return { err: true, msg: $("图片压缩失败:")+error.message }
+      return { err: true, msg: $("图片压缩失败:") + error.message }
     }
   }
 
@@ -320,7 +322,8 @@ export async function imageUpload(file: TFile, postData: UploadSet | undefined, 
   let result = await response.json()
 
   if (result && !result.status) {
-    return { err: true, msg: "API Error:" + result.message + result.details.join(""), apiError: result.details.join("") }
+    const detailsMsg = result.details && Array.isArray(result.details) ? result.details.join("") : ""
+    return { err: true, msg: "API Error:" + result.message + detailsMsg, apiError: detailsMsg }
   } else {
     if (plugin.settings.isDeleteSource && file instanceof TFile) {
       plugin.app.fileManager.trashFile(file)
