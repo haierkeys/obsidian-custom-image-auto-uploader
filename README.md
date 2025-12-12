@@ -14,7 +14,7 @@ You can batch download images from notes on both computer and mobile devices, ba
 
 ## Plugin Features:
 - **Batch download** online images in notes to local
-- **Batch upload** local images in notes to remote services ([Image Api Gateway](https://github.com/haierkeys/obsidian-image-api-gateway))
+- **Batch upload** local images in notes to remote services ([Custom Image Gateway](https://github.com/haierkeys/custom-image-gateway))
 - Drag and drop, paste images to upload
 - Batch save images in notes to **remote server**, such as your web server or home NAS, and save them in WebDAV server.
 - Batch save images in notes to cloud storage, such as Alibaba Cloud OSS, Amazon S3, Cloudflare R2.
@@ -35,13 +35,13 @@ If you find this plugin useful and want to support its continued development, yo
 
 1. Install the plugin
    Open the OBSidian community plugin market, search **Custom Image Auto Uploader** for installation
-2. Open plugin settings, set **Upload Settings** > **API Gateway Address** to your **Image Api Gateway** address,
+2. Open plugin settings, set **Upload Settings** > **API Gateway Address** to your **Custom Image Gateway** address,
    e.g., `http://127.0.0.1:9000/api/upload`
 3. Set **API Access Token**.
-4. Start **Image Api Gateway** service on remote server.
+4. Start **Custom Image Gateway** service on remote server.
 5. Create a note and copy an image to check if the upload is successful.
 
 ## Upload Image API Setup
 
-This plugin requires configuring **Image Api Gateway** to complete the upload work.
-**Image Api Gateway** is a free tool, for deployment and usage, please refer to [https://github.com/haierkeys/obsidian-image-api-gateway](https://github.com/haierkeys/obsidian-image-api-gateway).
+This plugin requires configuring **Custom Image Gateway** to complete the upload work.
+**Custom Image Gateway** is a free tool, for deployment and usage, please refer to [https://github.com/haierkeys/custom-image-gateway](https://github.com/haierkeys/custom-image-gateway).

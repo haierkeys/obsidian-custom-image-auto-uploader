@@ -1,5 +1,6 @@
 import { lang } from "../../lang";
 
+
 export default <lang>{
   //main
   "下载全部图片": "Muat turun semua gambar",
@@ -28,11 +29,11 @@ export default <lang>{
   "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Alamat gambar dalam senarai pengecualian tidak akan dimuat turun, satu domain setiap baris, menyokong * wildcard",
   "上传": "Muat naik",
   "API 网关地址": "Alamat API",
-  "Image API Gateway 地址": "Alamat Gateway API Gambar",
+  "Custom Image Gateway 地址": "Alamat Gateway API Gambar",
   "API 访问令牌": "Token Akses API",
   "用于访问API的令牌": "Token untuk akses API",
   "输入您的 API 访问令牌": "Masukkan token akses API anda",
-  "输入您的 Image API Gateway 地址": "Penyediaan perkhidmatan API",
+  "输入您的 Custom Image Gateway 地址": "Penyediaan perkhidmatan API",
   "项目地址": "Alamat Projek",
   "是否上传后删除原图片": "Padam gambar asal selepas muat naik?",
   "在图片上传后是否删除本地原图片": "Padam gambar asal tempatan selepas muat naik?",

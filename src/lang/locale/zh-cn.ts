@@ -1,6 +1,7 @@
 // 简体中文
 import { lang } from "../../lang";
 
+
 export default <lang>{
   "Custom Image Auto Uploader": "自定义图片上传云端保存插件",
   "已开启": "已开启",
@@ -34,11 +35,11 @@ export default <lang>{
   "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符",
   "上传": "上传",
   "API 网关地址": "API 网关地址",
-  "Image API Gateway 地址": "Image API Gateway 地址",
+  "Custom Image Gateway 地址": "Custom Image Gateway 地址",
   "API 访问令牌": "API 访问令牌",
   "用于访问API的令牌": "用于访问API的令牌",
   "输入您的 API 访问令牌": "输入您的 API 访问令牌",
-  "输入您的 Image API Gateway 地址": "输入您的 Image API Gateway 地址",
+  "输入您的 Custom Image Gateway 地址": "输入您的 Custom Image Gateway 地址",
   "接口配置信息已经粘贴到设置中!": "接口配置信息已经粘贴到设置中!",
   "网关服务选择": "网关服务选择",
   "选择一个适合自己的网关服务": "选择一个适合自己的网关服务",
@@ -49,7 +50,7 @@ export default <lang>{
   "多用户开放网关": "多用户开放网关",
   "稳定性好, 仅支持用户的云存储": "稳定性好, 仅支持用户的云存储",
   "粘贴多用户开放网关的接口配置": "粘贴多用户开放网关的接口配置",
-  "未检测到配置信息!" : "未检测到配置信息!",
+  "未检测到配置信息!": "未检测到配置信息!",
 
   "项目地址": "项目地址",
   "是否上传后删除原图片": "是否上传后删除原图片",

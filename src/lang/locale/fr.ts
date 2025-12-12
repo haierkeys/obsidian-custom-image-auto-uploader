@@ -1,5 +1,6 @@
 import { lang } from "../../lang";
 
+
 export default <lang>{
     "Custom Image Auto Uploader": "Custom Image Auto Uploader",
     "已开启": "Activé",
@@ -33,11 +34,11 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Les adresses des images dans la liste d'exclusion ne seront pas téléchargées. Un domaine par ligne, supporte le caractère générique *",
     "上传": "Téléverser",
     "API 网关地址": "Adresse de l'API",
-    "Image API Gateway 地址": "Adresse du portail API d'image",
+    "Custom Image Gateway 地址": "Adresse du portail API d'image",
     "API 访问令牌": "Jeton d'accès API",
     "用于访问API的令牌": "Jeton pour accéder à l'API",
     "输入您的 API 访问令牌": "Entrez votre jeton d'accès API",
-    "输入您的 Image API Gateway 地址": "Configuration du service API",
+    "输入您的 Custom Image Gateway 地址": "Configuration du service API",
     "项目地址": "Adresse du projet",
     "是否上传后删除原图片": "Supprimer l'image originale après le téléversement ?",
     "在图片上传后是否删除本地原图片": "Supprimer l'image originale locale après le téléversement ?",

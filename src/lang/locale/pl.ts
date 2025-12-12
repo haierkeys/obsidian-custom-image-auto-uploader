@@ -1,5 +1,6 @@
 import { lang } from "../../lang";
 
+
 export default <lang>{
     //main
     "下载全部图片": "Pobierz wszystkie obrazy",
@@ -28,11 +29,11 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Adresy obrazów na liście wykluczeń nie będą pobierane, jedna domena na linię, obsługiwany jest symbol * jako wieloznacznik",
     "上传": "Wyślij",
     "API 网关地址": "Adres API",
-    "Image API Gateway 地址": "Adres bramy API obrazu",
+    "Custom Image Gateway 地址": "Adres bramy API obrazu",
     "API 访问令牌": "Token dostępu API",
     "用于访问API的令牌": "Token do dostępu do API",
     "输入您的 API 访问令牌": "Wpisz swój token dostępu do API",
-    "输入您的 Image API Gateway 地址": "Konfiguracja usługi API",
+    "输入您的 Custom Image Gateway 地址": "Konfiguracja usługi API",
     "项目地址": "Adres projektu",
     "是否上传后删除原图片": "Usunąć oryginalny obraz po wysłaniu?",
     "在图片上传后是否删除本地原图片": "Usunąć oryginalny obraz lokalny po wysłaniu?",

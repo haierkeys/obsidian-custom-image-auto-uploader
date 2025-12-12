@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react"
-import { ICON_TYPE, Icon } from "src/icon"
-import CustomImageAutoUploader from "src/main"
-import { UploadSet, ImageSvrProcessMode } from "src/setting"
-import { $ } from "src/lang"
+import { UploadSet, ImageSvrProcessMode } from "src/setting";
+import CustomImageAutoUploader from "src/main";
+import { useState, useEffect } from "react";
+import { ICON_TYPE, Icon } from "src/icon";
+import { $ } from "src/lang";
+
 
 async function getClipboardContent(plugin: CustomImageAutoUploader): Promise<void> {
   const clipboardReadTipSave = async (api: string, apiToken: string, clipboardReadTip: string) => {
@@ -92,7 +93,7 @@ export const SettingsView = ({ plugin }: { plugin: CustomImageAutoUploader }) =>
             <tr>
               <td style={{ textAlign: "center" }}>{$("自行搭建")}</td>
               <td>
-                <a href="https://github.com/haierkeys/image-api-gateway">https://github.com/haierkeys/image-api-gateway</a>
+                <a href="https://github.com/haierkeys/custom-image-gateway">https://github.com/haierkeys/custom-image-gateway</a>
               </td>
               <td style={{ textAlign: "center" }}>{$("速度好, 自由配置, 无隐私风险, 支持云存储和服务端存储")}</td>
             </tr>

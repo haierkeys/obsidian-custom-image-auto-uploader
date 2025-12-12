@@ -1,5 +1,6 @@
 import { lang } from "../../lang";
 
+
 export default <lang>{
     "Custom Image Auto Uploader": "自定義圖片上傳雲端保存插件",
     "已开启": "已開啟",
@@ -33,11 +34,11 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "在排除名單內的圖片地址不會被下載,一行一個域名,支持 * 通配符",
     "上传": "上傳",
     "API 网关地址": "API 网关地址",
-    "Image API Gateway 地址": "Image API Gateway 地址",
+    "Custom Image Gateway 地址": "Custom Image Gateway 地址",
     "API 访问令牌": "API 訪問令牌",
     "用于访问API的令牌": "用於訪問API的令牌",
     "输入您的 API 访问令牌": "輸入您的 API 訪問令牌",
-    "输入您的 Image API Gateway 地址": "輸入您的 Image API Gateway 地址",
+    "输入您的 Custom Image Gateway 地址": "輸入您的 Custom Image Gateway 地址",
 
     "接口配置信息已经粘贴到设置中!": "接口配置信息已經粘貼到設置中!",
     "网关服务选择": "网关服務選擇",
@@ -49,7 +50,7 @@ export default <lang>{
     "多用户开放网关": "多用户开放网关",
     "稳定性好, 仅支持用户的云存储": "稳定性好, 僅支持用戶的雲存儲",
     "粘贴多用户开放网关的接口配置": "粘貼多用户开放网关的接口配置",
-    "未检测到配置信息!" : "未檢測到配置信息!",
+    "未检测到配置信息!": "未檢測到配置信息!",
 
 
     "项目地址": "項目地址",

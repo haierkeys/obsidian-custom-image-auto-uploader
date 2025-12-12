@@ -1,5 +1,6 @@
 import { lang } from "../../lang";
 
+
 export default <lang>{
     //main
     "下载全部图片": "Alle afbeeldingen downloaden",
@@ -28,11 +29,11 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Afbeeldingsadressen in de uitsluitingslijst worden niet gedownload, één domein per regel, ondersteunt het gebruik van het * wildcard teken",
     "上传": "Uploaden",
     "API 网关地址": "API-adres",
-    "Image API Gateway 地址": "Image API Gateway adres",
+    "Custom Image Gateway 地址": "Custom Image Gateway adres",
     "API 访问令牌": "API-toegangstoken",
     "用于访问API的令牌": "Token voor toegang tot de API",
     "输入您的 API 访问令牌": "Voer uw API-toegangstoken in",
-    "输入您的 Image API Gateway 地址": "Instellen van de API-service",
+    "输入您的 Custom Image Gateway 地址": "Instellen van de API-service",
     "项目地址": "Projectadres",
     "是否上传后删除原图片": "Verwijder de originele afbeelding na uploaden?",
     "在图片上传后是否删除本地原图片": "Verwijder de lokale originele afbeelding na uploaden?",

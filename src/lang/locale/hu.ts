@@ -1,5 +1,6 @@
 import { lang } from "../../lang";
 
+
 export default <lang>{
   //main
   "下载全部图片": "Töltsd le az összes képet",
@@ -28,11 +29,11 @@ export default <lang>{
   "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "A kizárt listán lévő képek nem lesznek letöltve. Soronként egy domain, * karaktertámogatás",
   "上传": "Feltöltés",
   "API 网关地址": "API cím",
-  "Image API Gateway 地址": "Kép API átjáró címe",
+  "Custom Image Gateway 地址": "Kép API átjáró címe",
   "API 访问令牌": "API hozzáférési token",
   "用于访问API的令牌": "Token az API-hoz való hozzáféréshez",
   "输入您的 API 访问令牌": "Írja be az API hozzáférési tokenjét",
-  "输入您的 Image API Gateway 地址": "API szolgáltatás beállítása",
+  "输入您的 Custom Image Gateway 地址": "API szolgáltatás beállítása",
   "项目地址": "Projekt cím",
   "是否上传后删除原图片": "Törölje az eredeti képet feltöltés után?",
   "在图片上传后是否删除本地原图片": "Törölje a helyi eredeti képet feltöltés után?",

@@ -1,5 +1,6 @@
 import { lang } from "../../lang";
 
+
 export default <lang>{
   "Custom Image Auto Uploader": "Custom Image Auto Uploader",
   "已开启": "Enabled",
@@ -35,11 +36,11 @@ export default <lang>{
   "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Image addresses in the exclusion list will not be downloaded, one domain per line, supports * wildcard",
   "上传": "Upload",
   "API 网关地址": "API gateway address",
-  "Image API Gateway 地址": "Image API Gateway address",
+  "Custom Image Gateway 地址": "Custom Image Gateway address",
   "API 访问令牌": "API access token",
   "用于访问API的令牌": "Token used to access the API",
   "输入您的 API 访问令牌": "Enter your API access token",
-  "输入您的 Image API Gateway 地址": "Enter your Image API Gateway address",
+  "输入您的 Custom Image Gateway 地址": "Enter your Custom Image Gateway address",
 
   "接口配置信息已经粘贴到设置中!": "Interface configuration information has been pasted into the settings!",
   "网关服务选择": "Gateway service selection",

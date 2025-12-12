@@ -1,10 +1,12 @@
-import * as React from "react"
-import { App, PluginSettingTab, Notice, Setting, Platform } from "obsidian"
-import CustomImageAutoUploader from "./main"
-import { $ } from "./lang"
-import { KofiImage } from "./res"
-import { createRoot } from "react-dom/client"
-import { SettingsView, CompressionView } from "./views/settings-view"
+import { App, PluginSettingTab, Notice, Setting, Platform } from "obsidian";
+import { createRoot } from "react-dom/client";
+import * as React from "react";
+
+import { SettingsView, CompressionView } from "./views/settings-view";
+import CustomImageAutoUploader from "./main";
+import { KofiImage } from "./res";
+import { $ } from "./lang";
+
 
 export const ImageSvrProcessMode = {
   // 不处理
@@ -81,7 +83,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   api: "http://127.0.0.1:36677/upload",
   // API 令牌
   apiToken: "",
-  clipboardReadTip:"",
+  clipboardReadTip: "",
   // 排除的域名列表
   excludeDomains: "",
   // 本地图片上传后是否删除
@@ -178,10 +180,10 @@ export class SettingTab extends PluginSettingTab {
 
     const api = new Setting(set)
       .setName($("API 网关地址"))
-      .setDesc($("Image API Gateway 地址"))
+      .setDesc($("Custom Image Gateway 地址"))
       .addText((text) =>
         text
-          .setPlaceholder($("输入您的 Image API Gateway 地址"))
+          .setPlaceholder($("输入您的 Custom Image Gateway 地址"))
           .setValue(this.plugin.settings.api)
           .onChange(async (value) => {
             this.plugin.settings.api = value

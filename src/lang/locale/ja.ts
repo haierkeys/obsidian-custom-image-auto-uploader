@@ -1,5 +1,6 @@
 import { lang } from "../../lang";
 
+
 export default <lang>{
     "Custom Image Auto Uploader": "カスタム画像自動アップロードプラグイン",
     "已开启": "有効",
@@ -34,11 +35,11 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "除外リストにある画像リンクはダウンロードされません。1行につき1つのドメイン、* ワイルドカードをサポートします",
     "上传": "アップロード",
     "API 网关地址": "APIゲートウェイアドレス",
-    "Image API Gateway 地址": "Image API Gateway アドレス",
+    "Custom Image Gateway 地址": "Custom Image Gateway アドレス",
     "API 访问令牌": "APIアクセストークン",
     "用于访问API的令牌": "APIへのアクセスに使用するトークン",
     "输入您的 API 访问令牌": "APIアクセス用のトークンを入力してください",
-    "输入您的 Image API Gateway 地址": "Image API Gateway のアドレスを入力してください",
+    "输入您的 Custom Image Gateway 地址": "Custom Image Gateway のアドレスを入力してください",
 
     "接口配置信息已经粘贴到设置中!": "インターフェース設定情報が設定に貼り付けられました！",
     "网关服务选择": "ゲートウェイサービスの選択",

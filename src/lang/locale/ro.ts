@@ -1,5 +1,6 @@
 import { lang } from "../../lang";
 
+
 export default <lang>{
     //main
     "下载全部图片": "Descarcă toate imaginile",
@@ -28,11 +29,11 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "Adresele imaginilor din lista de excludere nu vor fi descărcate, un domeniu pe rând, suportă caracterul wildcard *",
     "上传": "Încarcă",
     "API 网关地址": "Adresă API",
-    "Image API Gateway 地址": "Adresă Image API Gateway",
+    "Custom Image Gateway 地址": "Adresă Custom Image Gateway",
     "API 访问令牌": "Token de acces API",
     "用于访问API的令牌": "Token pentru acces la API",
     "输入您的 API 访问令牌": "Introduceți tokenul dumneavoastră de acces API",
-    "输入您的 Image API Gateway 地址": "Configurarea serviciului API",
+    "输入您的 Custom Image Gateway 地址": "Configurarea serviciului API",
     "项目地址": "Adresă proiect",
     "是否上传后删除原图片": "Se șterge imaginea originală după încărcare?",
     "在图片上传后是否删除本地原图片": "Se șterge imaginea originală locală după încărcare?",

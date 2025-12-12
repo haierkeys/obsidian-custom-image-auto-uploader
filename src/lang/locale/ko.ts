@@ -1,5 +1,6 @@
 import { lang } from "../../lang";
 
+
 export default <lang>{
     "Custom Image Auto Uploader": "커스텀 이미지 자동 업로드 플러그인",
     "已开启": "활성화",
@@ -34,11 +35,11 @@ export default <lang>{
     "在排除名单内的图片地址不会被下载,一行一个域名,支持 * 通配符": "배제 목록에 있는 이미지 주소는 다운로드되지 않습니다. 한 줄에 하나의 도메인, * 와일드카드 지원",
     "上传": "업로드",
     "API 网关地址": "API 게이트웨이 주소",
-    "Image API Gateway 地址": "이미지 API 게이트웨이 주소",
+    "Custom Image Gateway 地址": "이미지 API 게이트웨이 주소",
     "API 访问令牌": "API 접근 토큰",
     "用于访问API的令牌": "API 접근을 위한 토큰",
     "输入您的 API 访问令牌": "API 접근 토큰을 입력하세요",
-    "输入您的 Image API Gateway 地址": "이미지 API 게이트웨이 주소를 입력하세요",
+    "输入您的 Custom Image Gateway 地址": "이미지 API 게이트웨이 주소를 입력하세요",
 
     "接口配置信息已经粘贴到设置中!": "인터페이스 설정 정보가 설정에 복사되었습니다!",
     "网关服务选择": "게이트웨이 서비스 선택",
