@@ -1,6 +1,6 @@
 import { Menu, Plugin } from "obsidian";
 
-import { imageDown, imageUpload, statusCheck, replaceInText, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString, showTaskNotice, showErrorNotice, getAttachmentUploadPath, setMenu } from "./utils";
+import { imageDown, imageUpload, statusCheck, replaceInText, replaceInTextForUpload, replaceInTextForDownload, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString, showTaskNotice, showErrorNotice, getAttachmentUploadPath, setMenu } from "./utils";
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
 import { DownTask, UploadTask } from "./interface";
 import { $ } from "./lang";
@@ -8,7 +8,10 @@ import { $ } from "./lang";
 
 //const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]]*)\]\]/g
 // @lqllife 增加支持 ![[image.png|alt]]
-const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]|]*)\|?([^\]]*)\]\]/g
+// Wiki link format: ![[image.png|alt]]
+const wikilinkImageRegex = /!\[\[([^\]|]*)\|?([^\]]*)\]\]/g
+// Markdown format: ![alt](url)
+const markdownImageRegex = /!\[([^\]]*)\]\((.*?)\s*("(?:.*[^"])")?\s*\)/g
 
 
 export default class CustomImageAutoUploader extends Plugin {
@@ -149,13 +152,16 @@ export default class CustomImageAutoUploader extends Plugin {
     // 第一次循环：收集任务并统计数量
     const downloadTasks: DownTask[] = []
 
-    const matches = fileContent.matchAll(mdImageRegex)
+    // Download only supports Markdown format now: ![alt](url)
+    const matches = fileContent.matchAll(markdownImageRegex)
     for (const match of matches) {
+      // match[2] is the URL
       if (!/^http/.test(match[2]) || hasExcludeDomain(match[2], this.settings.excludeDomains)) {
         continue
       }
 
-      let imageAlt = match[3] ? match[3] : match[1] ? match[1] : match[5] ? match[5] : ""
+      // match[1]: alt, match[2]: url, match[3]: title
+      let imageAlt = match[3] ? match[3] : match[1] ? match[1] : ""
       imageAlt = imageAlt.replaceAll('"', "")
       downloadTasks.push({
         matchText: match[0],
@@ -183,7 +189,7 @@ export default class CustomImageAutoUploader extends Plugin {
         isModify = true
         this.downloadStatus.current++
         statusCheck(this)
-        fileContent = replaceInText(fileContent, task.matchText, task.imageAlt, result.path, task.imageUrl)
+        fileContent = replaceInTextForDownload(fileContent, task.matchText, task.imageAlt, result.path)
       }
     }
 
@@ -216,17 +222,20 @@ export default class CustomImageAutoUploader extends Plugin {
     }
 
     const uploadTasks: UploadTask[] = []
-    const matches = fileContent.matchAll(mdImageRegex)
+    // Upload only supports Wikilink format now: ![[image.png]]
+    const matches = fileContent.matchAll(wikilinkImageRegex)
     for (const match of matches) {
-      if (/^http/.test(match[2]) || /^http/.test(match[4])) {
+      // match[1] is the file path/name
+      if (/^http/.test(match[1])) {
         continue
       }
 
-      const file = match[2] ? match[2] : match[4]
+      const file = match[1]
       let readfile = await getAttachmentUploadPath(file, this)
       if (!readfile) continue
 
-      const imageAlt = match[3] ? match[3] : match[1] ? match[1] : match[5] ? match[5] : file
+      // match[2] is the alt
+      const imageAlt = match[2] ? match[2] : file
       uploadTasks.push({
         matchText: match[0],
         imageAlt,
@@ -254,7 +263,7 @@ export default class CustomImageAutoUploader extends Plugin {
         statusCheck(this)
 
         const searchStr = this.settings.uploadImageRandomSearch ? `?${generateRandomString(10)}` : ""
-        fileContent = replaceInText(fileContent, task.matchText, task.imageAlt, result.imageUrl + searchStr)
+        fileContent = replaceInTextForUpload(fileContent, task.matchText, task.imageAlt, result.imageUrl + searchStr)
         autoAddExcludeDomain(result.imageUrl, this)
       }
     }
@@ -411,7 +420,7 @@ export default class CustomImageAutoUploader extends Plugin {
     }
   }
 
-  onunload() {}
+  onunload() { }
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())

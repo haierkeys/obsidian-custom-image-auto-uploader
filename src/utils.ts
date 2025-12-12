@@ -121,24 +121,41 @@ export async function getAttachmentUploadPath(image: string, plugin: CustomImage
 }
 
 /**
- * 替换文本中的内容
+ * 替换文本中的内容 (WikiLink format for Uploads)
  * @param content - 原始内容
  * @param search - 要替换的内容
- * @param desc - 描述
- * @param path - 路径
- * @param url - URL（可选）
- * @returns 替换后的内容
+ * @param desc - 描述 (alt text)
+ * @param path - 路径 (URL or file path)
+ * @returns 替换后的内容: ![desc](path)
+ */
+export function replaceInTextForUpload(content: string, search: string, desc: string, path: string): string {
+  const newLink = `![${desc}](${path})`
+  return content.split(search).join(newLink)
+}
+
+/**
+ * 替换文本中的内容 (WikiLink format for Downloads)
+ * @param content - 原始内容
+ * @param search - 要替换的内容
+ * @param desc - 描述 (alt text)
+ * @param path - 路径 (local path)
+ * @returns 替换后的内容: ![[path|desc]]
+ */
+export function replaceInTextForDownload(content: string, search: string, desc: string, path: string): string {
+  const newLink = desc ? `![[${path}|${desc}]]` : `![[${path}]]`
+  return content.split(search).join(newLink)
+}
+
+/**
+ * 替换文本中的内容 (Deprecated)
+ * @deprecated Use replaceInTextForUpload or replaceInTextForDownload instead
  */
 export function replaceInText(content: string, search: string, desc: string, path: string, url?: string): string {
-  let newLink = ""
-
   if (url) {
-    newLink = `![${desc}](${path})`
+    return replaceInTextForUpload(content, search, desc, path)
   } else {
-    newLink = `![${desc}](${path})`
+    return replaceInTextForDownload(content, search, desc, path)
   }
-
-  return content.split(search).join(newLink)
 }
 
 /**
