@@ -135,7 +135,8 @@ export default class CustomImageAutoUploader extends Plugin {
     let filePropertyContent = ""
     let filePropertyContentEndLine = 0
     let fileContent = ""
-    const propertyMatch = fileFullContent.match(/^---\n((?:.|\n)*)---\n/gm)
+    const propertyMatch = fileFullContent.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?/g)
+
     if (propertyMatch) {
       fileContent = fileFullContent.substring(propertyMatch[0].length)
       filePropertyContent = propertyMatch[0]
@@ -213,13 +214,21 @@ export default class CustomImageAutoUploader extends Plugin {
 
     let filePropertyContent = ""
     let fileContent = ""
-    const propertyMatch = fileFullContent.match(/^---\n((?:.|\n)*)---\n/gm)
+
+    // 统一换行为 \n
+
+    // 仅匹配文件开头的 front matter（独立一行的 --- 开始和结束）
+    const propertyMatch = fileFullContent.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?/g)
+
+
     if (propertyMatch) {
       fileContent = fileFullContent.substring(propertyMatch[0].length)
       filePropertyContent = propertyMatch[0]
     } else {
       fileContent = fileFullContent
     }
+
+
 
     const uploadTasks: UploadTask[] = []
     // Upload only supports Wikilink format now: ![[image.png]]
