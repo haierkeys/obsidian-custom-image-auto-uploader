@@ -2,7 +2,7 @@ import { UploadSet, ImageSvrProcessMode } from "src/setting";
 import CustomImageAutoUploader from "src/main";
 import { useState, useEffect } from "react";
 import { ICON_TYPE, Icon } from "src/icon";
-import { $ } from "src/lang";
+import { $ } from "src/lang/lang";
 
 
 async function getClipboardContent(plugin: CustomImageAutoUploader): Promise<void> {

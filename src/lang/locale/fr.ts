@@ -1,7 +1,7 @@
-import { lang } from "../../lang";
+import { LangMap } from "../lang";
 
 
-export default <lang>{
+export default <LangMap>{
     "Custom Image Auto Uploader": "Custom Image Auto Uploader",
     "已开启": "Activé",
     "已关闭": "Désactivé",

@@ -1,42 +1,42 @@
-import { moment } from "obsidian";
-
-import ar from "src/lang/locale/ar";
-import be from "src/lang/locale/be";
-import ca from "src/lang/locale/ca";
-import da from "src/lang/locale/da";
-import de from "src/lang/locale/de";
-import en from "src/lang/locale/en";
-import enGB from "src/lang/locale/en-gb";
-import es from "src/lang/locale/es";
+import zhTW from "src/lang/locale/zh-tw";
+import zhCN from "src/lang/locale/zh-cn";
+import ptBR from "src/lang/locale/pt-br";
+import vi from "src/lang/locale/vi";
+import uk from "src/lang/locale/uk";
+import tr from "src/lang/locale/tr";
+import th from "src/lang/locale/th";
+import sq from "src/lang/locale/sq";
+import ru from "src/lang/locale/ru";
+import ro from "src/lang/locale/ro";
+import pt from "src/lang/locale/pt";
+import pl from "src/lang/locale/pl";
+import nl from "src/lang/locale/nl";
+import ne from "src/lang/locale/ne";
+import nb from "src/lang/locale/nb";
+import ms from "src/lang/locale/ms";
+import ko from "src/lang/locale/ko";
+import ja from "src/lang/locale/ja";
+import it from "src/lang/locale/it";
+import id from "src/lang/locale/id";
+import hu from "src/lang/locale/hu";
+import he from "src/lang/locale/he";
 //import fa from "src/lang/locale/fa";
 import fr from "src/lang/locale/fr";
-import he from "src/lang/locale/he";
-import hu from "src/lang/locale/hu";
-import id from "src/lang/locale/id";
-import it from "src/lang/locale/it";
-import ja from "src/lang/locale/ja";
-import ko from "src/lang/locale/ko";
-import ms from "src/lang/locale/ms";
-import ne from "src/lang/locale/ne";
-import nl from "src/lang/locale/nl";
-import nb from "src/lang/locale/nb";
-import pl from "src/lang/locale/pl";
-import pt from "src/lang/locale/pt";
-import ptBR from "src/lang/locale/pt-br";
-import ro from "src/lang/locale/ro";
-import ru from "src/lang/locale/ru";
-import sq from "src/lang/locale/sq";
-import th from "src/lang/locale/th";
-import tr from "src/lang/locale/tr";
-import uk from "src/lang/locale/uk";
-import vi from "src/lang/locale/vi";
-import zhCN from "src/lang/locale/zh-cn";
-import zhTW from "src/lang/locale/zh-tw";
+import es from "src/lang/locale/es";
+import en from "src/lang/locale/en";
+import de from "src/lang/locale/de";
+import da from "src/lang/locale/da";
+import ca from "src/lang/locale/ca";
+import be from "src/lang/locale/be";
+import ar from "src/lang/locale/ar";
+import { moment } from "obsidian";
 
 
-export interface lang {
-    [propName: string]: any;
-}
+/**
+ * Locale object type.
+ * 假设每个 locale 文件都是键 => 字符串（常见情形），使用更严格的类型。
+ */
+export type LangMap = Record<string, string>;
 
 export const localeMap: { [k: string]: Partial<typeof en> } = {
     ar,
@@ -45,7 +45,6 @@ export const localeMap: { [k: string]: Partial<typeof en> } = {
     da,
     de,
     en,
-    "en-gb": enGB,
     es,
     // fa,
     fr,
@@ -73,18 +72,64 @@ export const localeMap: { [k: string]: Partial<typeof en> } = {
     "zh-tw": zhTW,
 };
 
-const locale = localeMap[moment.locale()];
+const locale = localeMap[moment.locale()] as Partial<LangMap> | undefined;
 
-// https://stackoverflow.com/a/41015840/
-function interpolate(str: string, params: Record<string, unknown>): string {
-    const names: string[] = Object.keys(params);
-    const vals: unknown[] = Object.values(params);
-    return new Function(...names, `return \`${str}\`;`)(...vals);
+
+function getValueFromPath(root: Record<string, unknown>, path: string): unknown {
+    const normalized = path
+        .replace(/\[(?:'([^']*)'|"([^"]*)"|([^'\]"[\]]+))\]/g, (_m, g1, g2, g3) => {
+            const key = g1 ?? g2 ?? g3;
+            return "." + key;
+        })
+        .replace(/^\./, "");
+
+    if (normalized === "") return undefined;
+
+    const parts = normalized.split(".");
+    let cur: unknown = root;
+    for (const part of parts) {
+        if (cur == null) return undefined;
+        if (part === "") return undefined;
+        if (typeof cur === "object") {
+            cur = (cur as Record<string, unknown>)[part];
+        } else {
+            return undefined;
+        }
+    }
+    return cur;
 }
 
-export function $(str: keyof typeof en, params?: Record<string, unknown>): string {
 
-    const result = (locale && locale[str]) || en[str];
+function interpolate(str: string, params: Record<string, unknown>): string {
+    if (!str || typeof str !== "string") return String(str ?? "");
+    return str.replace(/\$\{([^}]+)\}/g, (_match, expression) => {
+        const path = expression.trim();
+        if (!/^[A-Za-z0-9_.[\]'"\s-]+$/.test(path)) {
+            return "";
+        }
+        const val = getValueFromPath(params, path);
+        if (val === undefined || val === null) return "";
+        if (typeof val === "string") return val;
+        if (typeof val === "number" || typeof val === "boolean" || typeof val === "bigint") {
+            return String(val);
+        }
+        try {
+            return JSON.stringify(val);
+        } catch {
+            return "";
+        }
+    });
+}
+
+
+export function $(
+    str: Extract<keyof typeof en, string>,
+    params?: Record<string, unknown>
+): string {
+    // str 的类型现在必为 string，安全用于索引
+    const key = str;
+    const fallback = en[key];
+    const result = (locale && (locale[key] as string)) ?? fallback ?? key;
 
     if (params) {
         return interpolate(result, params);

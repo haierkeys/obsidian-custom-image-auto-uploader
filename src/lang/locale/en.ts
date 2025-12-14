@@ -1,7 +1,7 @@
-import { lang } from "../../lang";
+import { LangMap } from "../lang";
 
 
-export default <lang>{
+export default <LangMap>{
   "Custom Image Auto Uploader": "Custom Image Auto Uploader",
   "已开启": "Enabled",
   "已关闭": "Disabled",
@@ -96,4 +96,8 @@ export default <lang>{
   "压缩后的最大宽度,单位像素,默认1200": "The maximum width of the compressed image, in pixels, default 1200",
   "上传速度优化 - 最大高度": "Upload speed optimization - Maximum height",
   "压缩后的最大高度,单位像素,默认1200": "The maximum height of the compressed image, in pixels, default 1200",
+  "下载当前笔记图片": "Download Current Note Images",
+  "上传当前笔记图片": "Upload Current Note Images",
+  "下载全库图片": "Download Whole Vault Images",
+  "上传全库图片": "Upload Whole Vault Images",
 };

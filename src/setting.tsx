@@ -5,7 +5,7 @@ import * as React from "react";
 import { SettingsView, CompressionView } from "./views/settings-view";
 import CustomImageAutoUploader from "./main";
 import { KofiImage } from "./res";
-import { $ } from "./lang";
+import { $ } from "./lang/lang";
 
 
 export const ImageSvrProcessMode = {

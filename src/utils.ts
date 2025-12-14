@@ -4,7 +4,7 @@ import { fileTypeFromBuffer, FileTypeResult } from "file-type";
 import CustomImageAutoUploader from "./main";
 import { Metadata } from "./interface";
 import { UploadSet } from "./setting";
-import { $ } from "./lang";
+import { $ } from "./lang/lang";
 
 
 export const IMAGE_MIME_TYPES: Record<string, string[]> = {
@@ -496,15 +496,14 @@ export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto:
         })
     })
   }
-
+  menu.addSeparator()
   menu.addItem((item: MenuItem) => {
     item
       .setIcon("image-down")
-      .setTitle($("下载全部图片"))
+      .setTitle($("下载当前笔记图片"))
       .onClick(async () => {
         plugin.resetStatus("download", true)
         await plugin.ContentDownImage()
-
         await plugin.MetadataDownImage()
         showTaskNotice(plugin, "download")
         statusCheck(plugin)
@@ -513,11 +512,36 @@ export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto:
   menu.addItem((item: MenuItem) => {
     item
       .setIcon("image-up")
-      .setTitle($("上传全部图片"))
+      .setTitle($("上传当前笔记图片"))
       .onClick(async () => {
         plugin.resetStatus("upload", true)
         await plugin.ContentUploadImage()
         await plugin.MetadataUploadImage()
+        showTaskNotice(plugin, "upload")
+        statusCheck(plugin)
+      })
+  })
+
+  menu.addSeparator()
+
+  menu.addItem((item: MenuItem) => {
+    item
+      .setIcon("folder-down")
+      .setTitle($("下载全库图片"))
+      .onClick(async () => {
+        plugin.resetStatus("download", true)
+        await plugin.VaultDownImage()
+        showTaskNotice(plugin, "download")
+        statusCheck(plugin)
+      })
+  })
+  menu.addItem((item: MenuItem) => {
+    item
+      .setIcon("folder-up")
+      .setTitle($("上传全库图片"))
+      .onClick(async () => {
+        plugin.resetStatus("upload", true)
+        await plugin.VaultUploadImage()
         showTaskNotice(plugin, "upload")
         statusCheck(plugin)
       })

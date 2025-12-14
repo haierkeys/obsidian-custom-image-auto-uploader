@@ -1,8 +1,8 @@
 // 简体中文
-import { lang } from "../../lang";
+import { LangMap } from "../lang";
 
 
-export default <lang>{
+export default <LangMap>{
   "Custom Image Auto Uploader": "自定义图片上传云端保存插件",
   "已开启": "已开启",
   "已关闭": "已关闭",
@@ -92,6 +92,10 @@ export default <lang>{
   "上传速度优化 - 最大高度": "上传速度优化 - 最大高度",
   "压缩后的最大高度,单位像素,默认1200": "压缩后的最大高度,单位像素,默认1200",
 
+  "下载当前笔记图片": "下载当前笔记图片",
+  "上传当前笔记图片": "上传当前笔记图片",
+  "下载全库图片": "下载全库图片",
+  "上传全库图片": "上传全库图片",
 };
 
 

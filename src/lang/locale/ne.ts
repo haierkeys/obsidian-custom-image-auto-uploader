@@ -1,7 +1,7 @@
-import { lang } from "../../lang";
+import { LangMap } from "../lang";
 
 
-export default <lang>{
+export default <LangMap>{
     //main
     "下载全部图片": "सबै तस्बिरहरू डाउनलोड गर्नुहोस्",
     "上传全部图片": "सबै तस्बिरहरू अपलोड गर्नुहोस्",

@@ -1,9 +1,9 @@
-import { Menu, Plugin } from "obsidian";
+import { Menu, Plugin, TFile } from "obsidian";
 
 import { imageDown, imageUpload, statusCheck, replaceInText, replaceInTextForUpload, replaceInTextForDownload, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString, showTaskNotice, showErrorNotice, getAttachmentUploadPath, setMenu } from "./utils";
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
 import { DownTask, UploadTask } from "./interface";
-import { $ } from "./lang";
+import { $ } from "./lang/lang";
 
 
 //const mdImageRegex = /!\[([^\]]*)\][\(|\[](.*?)\s*("(?:.*[^"])")?\s*[\)|\]]|!\[\[([^\]]*)\]\]/g
@@ -66,8 +66,8 @@ export default class CustomImageAutoUploader extends Plugin {
 
     // 注册命令
     this.addCommand({
-      id: "down-all-images",
-      name: $("下载全部图片"),
+      id: "down-current-images",
+      name: $("下载当前笔记图片"),
       callback: async () => {
         this.resetStatus("download", true)
         await this.ContentDownImage()
@@ -76,12 +76,30 @@ export default class CustomImageAutoUploader extends Plugin {
       },
     })
     this.addCommand({
-      id: "upload-all-images",
-      name: $("上传全部图片"),
+      id: "upload-current-images",
+      name: $("上传当前笔记图片"),
       callback: async () => {
         this.resetStatus("upload", true)
         await this.ContentUploadImage()
         await this.MetadataUploadImage()
+        showTaskNotice(this, "upload")
+      },
+    })
+    this.addCommand({
+      id: "down-vault-images",
+      name: $("下载全库图片"),
+      callback: async () => {
+        this.resetStatus("download", true)
+        await this.VaultDownImage()
+        showTaskNotice(this, "download")
+      },
+    })
+    this.addCommand({
+      id: "upload-vault-images",
+      name: $("上传全库图片"),
+      callback: async () => {
+        this.resetStatus("upload", true)
+        await this.VaultUploadImage()
         showTaskNotice(this, "upload")
       },
     })
@@ -430,6 +448,154 @@ export default class CustomImageAutoUploader extends Plugin {
   }
 
   onunload() { }
+
+  async VaultDownImage() {
+    const files = this.app.vault.getMarkdownFiles()
+    this.downloadStatus.total = 0
+    this.downloadStatus.current = 0
+
+    // First pass: collect tasks from all files
+    const tasks: { file: TFile; downloadTasks: DownTask[] }[] = []
+
+    for (const file of files) {
+      const content = await this.app.vault.read(file)
+      const fileTasks: DownTask[] = []
+      const matches = content.matchAll(markdownImageRegex)
+
+      for (const match of matches) {
+        if (!/^http/.test(match[2]) || hasExcludeDomain(match[2], this.settings.excludeDomains)) {
+          continue
+        }
+        let imageAlt = match[3] ? match[3] : match[1] ? match[1] : ""
+        imageAlt = imageAlt.replaceAll('"', "")
+        fileTasks.push({
+          matchText: match[0],
+          imageAlt,
+          imageUrl: match[2],
+        })
+        this.downloadStatus.total++
+        statusCheck(this)
+      }
+      if (fileTasks.length > 0) {
+        tasks.push({ file, downloadTasks: fileTasks })
+      }
+    }
+
+    // Process tasks file by file to avoid opening too many requests at once,
+    // or we can process all tasks in parallel if we want speed (but might hit rate limits).
+    // Let's do parallel tasks but per file to be safe?
+    // Actually, existing implementation does parallel for one file.
+    // Let's iterate files sequentially, but tasks within file in parallel.
+
+    for (const item of tasks) {
+      let fileContent = await this.app.vault.read(item.file)
+      let isModify = false
+
+      const downloadResults = await Promise.all(
+        item.downloadTasks.map(async (task) => {
+          const result = await imageDown(task.imageUrl, this)
+          return { task, result }
+        })
+      )
+
+      for (const { task, result } of downloadResults) {
+        if (result.err) {
+          showErrorNotice(result.msg)
+        } else if (result.path) {
+          isModify = true
+          this.downloadStatus.current++
+          statusCheck(this)
+          fileContent = replaceInTextForDownload(fileContent, task.matchText, task.imageAlt, result.path)
+        }
+      }
+
+      if (isModify) {
+        await this.app.vault.modify(item.file, fileContent)
+      }
+    }
+  }
+
+  async VaultUploadImage() {
+    const files = this.app.vault.getMarkdownFiles()
+    this.uploadStatus.total = 0
+    this.uploadStatus.current = 0
+
+    // First pass: collect tasks
+    const tasks: { file: TFile; uploadTasks: UploadTask[] }[] = []
+
+    for (const file of files) {
+      const content = await this.app.vault.read(file)
+      const fileTasks: UploadTask[] = []
+      const matches = content.matchAll(wikilinkImageRegex)
+
+      for (const match of matches) {
+        if (/^http/.test(match[1])) {
+          continue
+        }
+        const linkFile = match[1]
+        // We need to resolve the link relative to the file or just by name.
+        // existing logic uses metadataCache.getFirstLinkpathDest(image, image) which might need sourcePath if strictly resolving.
+        // But existing logic passes 'image' as sourcePath effectively?
+        // In main.ts: getAttachmentUploadPath(file, this) -> which uses getFirstLinkpathDest(image, image).
+        // This seems to assume uniqueness or simple resolution.
+        // We should use file.path as sourcePath for better resolution if possible,
+        // but to be consistent with existing ContentUploadImage which calls helper, let's Stick to helper if possible?
+        // Wait, existing ContentUploadImage calls `getAttachmentUploadPath(file, this)`.
+        // Let's look at `getAttachmentUploadPath` in utils.ts.
+        // It calls `plugin.app.metadataCache.getFirstLinkpathDest(image, image)`.
+        // The second arg is sourcePath. Passing 'image' as sourcePath is a bit weird but that's what it does.
+        // Let's respect existing behavior for now or improve it?
+        // Existing works for current file.
+        // Let's use `file.path` as sourcePath for better correctness if we can, but `getAttachmentUploadPath` signature doesn't take sourcePath.
+        // Let's just use the existing function for consistency.
+
+        let readfile = await getAttachmentUploadPath(linkFile, this)
+        if (!readfile) continue
+
+        const imageAlt = match[2] ? match[2] : linkFile
+        fileTasks.push({
+          matchText: match[0],
+          imageAlt,
+          imageFile: readfile,
+        })
+        this.uploadStatus.total++
+        statusCheck(this)
+      }
+
+      if (fileTasks.length > 0) {
+        tasks.push({ file, uploadTasks: fileTasks })
+      }
+    }
+
+    for (const item of tasks) {
+      let fileContent = await this.app.vault.read(item.file)
+      let isModify = false
+
+      const uploadResults = await Promise.all(
+        item.uploadTasks.map(async (task) => {
+          const result = await imageUpload(task.imageFile, this.settings.contentSet, this)
+          return { task, result }
+        })
+      )
+
+      for (const { task, result } of uploadResults) {
+        if (result.err) {
+          showErrorNotice(result.msg)
+        } else if (result.imageUrl) {
+          isModify = true
+          this.uploadStatus.current++
+          statusCheck(this)
+          const searchStr = this.settings.uploadImageRandomSearch ? `?${generateRandomString(10)}` : ""
+          fileContent = replaceInTextForUpload(fileContent, task.matchText, task.imageAlt, result.imageUrl + searchStr)
+          autoAddExcludeDomain(result.imageUrl, this)
+        }
+      }
+
+      if (isModify) {
+        await this.app.vault.modify(item.file, fileContent)
+      }
+    }
+  }
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())

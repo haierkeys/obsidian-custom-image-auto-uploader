@@ -1,7 +1,7 @@
-import { lang } from "../../lang";
+import { LangMap } from "../lang";
 
 
-export default <lang>{
+export default <LangMap>{
     "Custom Image Auto Uploader": "커스텀 이미지 자동 업로드 플러그인",
     "已开启": "활성화",
     "已关闭": "비활성화",
