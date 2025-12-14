@@ -1,4 +1,4 @@
-[中文文档](readme-zh.md) / [English Document](README.md)
+[中文文档](https://github.com/haierkeys/obsidian-custom-image-auto-uploader/blob/master/readme-zh.md) / [English Document](README.md)
 
 <h1 align="center">Obsidian Custom Image Auto Uploader</h1>
 
