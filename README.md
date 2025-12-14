@@ -26,10 +26,12 @@ You can batch download images from notes on PC and Mobile, batch upload and save
 ## ✨ Core Features
 
 * **⬇️ Batch Download**: One-click download of network images in notes to local storage.
+* **⬇️ Batch Download for Multiple Notes**: One-click download of images in all notes of the entire repository.
 * **☁️ Batch Upload**: Upload local images to remote services, supporting multiple storage backends:
     * **Self-hosted Service**: Use with [Custom Image Gateway](https://github.com/haierkeys/custom-image-gateway).
     * **Cloud Storage**: Aliyun OSS, Amazon S3, Cloudflare R2, MinIO, etc.
     * **Universal Protocols**: WebDAV, Remote Server, Home NAS.
+* **☁️ Batch Upload for Multiple Notes**: One-click upload of images in all notes of the entire repository.
 * **✂️ Image Processing**: Support real-time image processing in note properties or content (e.g., blog cover images):
     * Proportional Fill Top-Left (Cover)
     * Proportional Fill Center (Contain)
@@ -43,7 +45,7 @@ You can batch download images from notes on PC and Mobile, batch upload and save
 
 We are continuously improving, here are the future development plans:
 
-- [ ] **Batch Upload/Download for Multiple Notes**: One-click download/upload of images in all notes of the entire repository.
+
 - [ ] **Clean Unlinked Images**: One-click cleanup of local images in the repository that are not linked to any notes.
 
 ## 🚀 Quick Start
