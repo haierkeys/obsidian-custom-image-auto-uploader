@@ -1,10 +1,10 @@
 import { requestUrl, TFile, Vault, Notice, Menu, MenuItem, setIcon, CachedMetadata } from "obsidian";
 import { fileTypeFromBuffer, FileTypeResult } from "file-type";
 
-import CustomImageAutoUploader from "./main";
+import CustomImageAutoUploader from "../main";
+import { UploadSet } from "../setting";
 import { Metadata } from "./interface";
-import { UploadSet } from "./setting";
-import { $ } from "./lang/lang";
+import { $ } from "../lang/lang";
 
 
 export const IMAGE_MIME_TYPES: Record<string, string[]> = {
@@ -483,10 +483,14 @@ export function statusCheck(plugin: CustomImageAutoUploader): void {
 
 export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto: boolean = false) {
   if (isShowAuto) {
+
+    //ddddd
+
+    menu.addSeparator()
     menu.addItem((item: MenuItem) => {
       item
         .setIcon("arrow-down-up")
-        .setTitle($("一键上传下载"))
+        .setTitle($("一键上下传照片"))
         .onClick(async () => {
           plugin.resetStatus("all", true)
           await plugin.ContentImageAutoHandle(true)
@@ -496,10 +500,9 @@ export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto:
         })
     })
   }
-  menu.addSeparator()
   menu.addItem((item: MenuItem) => {
     item
-      .setIcon("image-down")
+      .setIcon("download")
       .setTitle($("下载当前笔记图片"))
       .onClick(async () => {
         plugin.resetStatus("download", true)
@@ -511,7 +514,7 @@ export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto:
   })
   menu.addItem((item: MenuItem) => {
     item
-      .setIcon("image-up")
+      .setIcon("upload")
       .setTitle($("上传当前笔记图片"))
       .onClick(async () => {
         plugin.resetStatus("upload", true)
@@ -522,11 +525,13 @@ export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto:
       })
   })
 
+
+
   menu.addSeparator()
 
   menu.addItem((item: MenuItem) => {
     item
-      .setIcon("folder-down")
+      .setIcon("download-cloud")
       .setTitle($("下载全库图片"))
       .onClick(async () => {
         plugin.resetStatus("download", true)
@@ -537,13 +542,22 @@ export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto:
   })
   menu.addItem((item: MenuItem) => {
     item
-      .setIcon("folder-up")
+      .setIcon("upload-cloud")
       .setTitle($("上传全库图片"))
       .onClick(async () => {
         plugin.resetStatus("upload", true)
         await plugin.VaultUploadImage()
         showTaskNotice(plugin, "upload")
         statusCheck(plugin)
+      })
+  })
+
+  menu.addItem((item: MenuItem) => {
+    item
+      .setIcon("trash")
+      .setTitle($("删除未引用图片（全库）"))
+      .onClick(async () => {
+        await plugin.VaultDeleteUnreferencedImages()
       })
   })
 }

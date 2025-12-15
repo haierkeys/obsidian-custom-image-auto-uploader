@@ -62,5 +62,10 @@ export default <LangMap>{
 
     "图片上传地址增加随机查询": "Legg til en tilfeldig forespørsel til bilde-opplastingsadressen for å unngå CDN-cache",
     "在图片地址末尾增加随机查询,用于规避CDN缓存": "Legg til en tilfeldig forespørsel til bilde-opplastingsadressen for å unngå CDN-cache",
-    "一键上传下载": "Last opp og last ned i ett klikk",
+    "一键上下传照片": "Ett-klikks opplasting/nedlasting av bilder",
+    "删除未引用图片（全库）": "Slett alle ikke-refererte bilder i hvelvet",
+    "下载当前笔记图片": "Last ned bilder fra gjeldende notat",
+    "上传当前笔记图片": "Last opp bilder fra gjeldende notat",
+    "下载全库图片": "Last ned alle bilder i hvelvet",
+    "上传全库图片": "Last opp alle bilder i hvelvet",
 };

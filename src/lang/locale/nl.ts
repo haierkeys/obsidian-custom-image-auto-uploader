@@ -62,5 +62,10 @@ export default <LangMap>{
 
     "图片上传地址增加随机查询": "Voeg een willekeurige query toe aan de afbeelding-uploadadres om CDN-cache te voorkomen",
     "在图片地址末尾增加随机查询,用于规避CDN缓存": "Voeg een willekeurige query toe aan de afbeelding-uploadadres om CDN-cache te voorkomen",
-    "一键上传下载": "Upload en download in één klik",
+    "一键上下传照片": "Eén klik foto uploaden/downloaden",
+    "删除未引用图片（全库）": "Verwijder alle niet-gerefereerde afbeeldingen in de kluis",
+    "下载当前笔记图片": "Download afbeeldingen van huidige notitie",
+    "上传当前笔记图片": "Upload afbeeldingen van huidige notitie",
+    "下载全库图片": "Download alle afbeeldingen uit de kluis",
+    "上传全库图片": "Upload alle afbeeldingen uit de kluis",
 };

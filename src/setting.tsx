@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { SettingsView, CompressionView } from "./views/settings-view";
 import CustomImageAutoUploader from "./main";
-import { KofiImage } from "./res";
+import { KofiImage } from "./lib/res";
 import { $ } from "./lang/lang";
 
 

@@ -62,5 +62,10 @@ export default <LangMap>{
 
     "图片上传地址增加随机查询": "Adăugați o întrebare aleatorie la adresa de încărcare a imaginii pentru a evita cache-ul CDN",
     "在图片地址末尾增加随机查询,用于规避CDN缓存": "Adăugați o întrebare aleatorie la adresa de încărcare a imaginii pentru a evita cache-ul CDN",
-    "一键上传下载": "Încărcare și descărcare într-un clic",
+    "一键上下传照片": "Încărcare/descărcare fotografii cu un singur clic",
+    "删除未引用图片（全库）": "Ștergeți toate imaginile nereferențiate din seif",
+    "下载当前笔记图片": "Descărcați imaginile din nota curentă",
+    "上传当前笔记图片": "Încărcați imaginile din nota curentă",
+    "下载全库图片": "Descărcați toate imaginile din seif",
+    "上传全库图片": "Încărcați toate imaginile din seif",
 };

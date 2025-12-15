@@ -62,5 +62,10 @@ export default <LangMap>{
 
     "图片上传地址增加随机查询": "Shto një pyetje të rastëv në adresën e ngarkimit të imazhit për të evitë keshën e CDN",
     "在图片地址末尾增加随机查询,用于规避CDN缓存": "Shto një pyetje të rastëv në adresën e ngarkimit të imazhit për të evitë keshën e CDN",
-    "一键上传下载": "Ngarko dhe shkarko në një klik",
+    "一键上下传照片": "Ngarko/shkarko foto me një klikim",
+    "删除未引用图片（全库）": "Fshi të gjitha imazhet e pareferencuara në kasafortë",
+    "下载当前笔记图片": "Shkarko Imazhet e Shënimit Aktual",
+    "上传当前笔记图片": "Ngarko Imazhet e Shënimit Aktual",
+    "下载全库图片": "Shkarko Të Gjitha Imazhet e Kasafortës",
+    "上传全库图片": "Ngarko Të Gjitha Imazhet e Kasafortës",
 };

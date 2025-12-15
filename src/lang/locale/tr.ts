@@ -63,5 +63,10 @@ export default <LangMap>{
 
     "图片上传地址增加随机查询": "Resim yükleme adresine rastgele sorgu ekleyerek CDN önbelleğini önleme",
     "在图片地址末尾增加随机查询,用于规避CDN缓存": "Resim yükleme adresine rastgele sorgu ekleyerek CDN önbelleğini önleme",
-    "一键上传下载": "Tüm resimleri yükle ve indir",
+    "一键上下传照片": "Tek tıkla fotoğraf yükle/indir",
+    "删除未引用图片（全库）": "Kasadaki referans verilmeyen tüm resimleri sil",
+    "下载当前笔记图片": "Geçerli Not Resimlerini İndir",
+    "上传当前笔记图片": "Geçerli Not Resimlerini Yükle",
+    "下载全库图片": "Tüm Kasa Resimlerini İndir",
+    "上传全库图片": "Tüm Kasa Resimlerini Yükle",
 };

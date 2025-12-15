@@ -1,7 +1,7 @@
 import { UploadSet, ImageSvrProcessMode } from "src/setting";
 import CustomImageAutoUploader from "src/main";
+import { ICON_TYPE, Icon } from "src/lib/icon";
 import { useState, useEffect } from "react";
-import { ICON_TYPE, Icon } from "src/icon";
 import { $ } from "src/lang/lang";
 
 

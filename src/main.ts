@@ -1,8 +1,8 @@
-import { Menu, Plugin, TFile } from "obsidian";
+import { Menu, Plugin, TFile, Notice } from "obsidian";
 
-import { imageDown, imageUpload, statusCheck, replaceInText, replaceInTextForUpload, replaceInTextForDownload, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString, showTaskNotice, showErrorNotice, getAttachmentUploadPath, setMenu } from "./utils";
+import { imageDown, imageUpload, statusCheck, replaceInText, replaceInTextForUpload, replaceInTextForDownload, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString, showTaskNotice, showErrorNotice, getAttachmentUploadPath, setMenu } from "./lib/utils";
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
-import { DownTask, UploadTask } from "./interface";
+import { DownTask, UploadTask } from "./lib/interface";
 import { $ } from "./lang/lang";
 
 
@@ -103,6 +103,13 @@ export default class CustomImageAutoUploader extends Plugin {
         showTaskNotice(this, "upload")
       },
     })
+    this.addCommand({
+      id: "delete-unreferenced-images",
+      name: $("删除未引用图片（全库）"),
+      callback: async () => {
+        await this.VaultDeleteUnreferencedImages();
+      },
+    })
 
     // 注册菜单
     this.registerEvent(
@@ -116,7 +123,7 @@ export default class CustomImageAutoUploader extends Plugin {
       })
     )
 
-    this.addRibbonIcon("image", "Custom Image Auto Uploader / " + $("Custom Image Auto Uploader"), (event) => {
+    this.addRibbonIcon("image", "Custom Image Auto Uploader", (event) => {
       const menu = new Menu()
       setMenu(menu, this, true)
       menu.showAtMouseEvent(event)
@@ -481,12 +488,6 @@ export default class CustomImageAutoUploader extends Plugin {
       }
     }
 
-    // Process tasks file by file to avoid opening too many requests at once,
-    // or we can process all tasks in parallel if we want speed (but might hit rate limits).
-    // Let's do parallel tasks but per file to be safe?
-    // Actually, existing implementation does parallel for one file.
-    // Let's iterate files sequentially, but tasks within file in parallel.
-
     for (const item of tasks) {
       let fileContent = await this.app.vault.read(item.file)
       let isModify = false
@@ -533,22 +534,6 @@ export default class CustomImageAutoUploader extends Plugin {
           continue
         }
         const linkFile = match[1]
-        // We need to resolve the link relative to the file or just by name.
-        // existing logic uses metadataCache.getFirstLinkpathDest(image, image) which might need sourcePath if strictly resolving.
-        // But existing logic passes 'image' as sourcePath effectively?
-        // In main.ts: getAttachmentUploadPath(file, this) -> which uses getFirstLinkpathDest(image, image).
-        // This seems to assume uniqueness or simple resolution.
-        // We should use file.path as sourcePath for better resolution if possible,
-        // but to be consistent with existing ContentUploadImage which calls helper, let's Stick to helper if possible?
-        // Wait, existing ContentUploadImage calls `getAttachmentUploadPath(file, this)`.
-        // Let's look at `getAttachmentUploadPath` in utils.ts.
-        // It calls `plugin.app.metadataCache.getFirstLinkpathDest(image, image)`.
-        // The second arg is sourcePath. Passing 'image' as sourcePath is a bit weird but that's what it does.
-        // Let's respect existing behavior for now or improve it?
-        // Existing works for current file.
-        // Let's use `file.path` as sourcePath for better correctness if we can, but `getAttachmentUploadPath` signature doesn't take sourcePath.
-        // Let's just use the existing function for consistency.
-
         let readfile = await getAttachmentUploadPath(linkFile, this)
         if (!readfile) continue
 
@@ -595,6 +580,74 @@ export default class CustomImageAutoUploader extends Plugin {
         await this.app.vault.modify(item.file, fileContent)
       }
     }
+  }
+
+  async VaultDeleteUnreferencedImages() {
+    // 1. 获取所有通过 Markdown 链接引用的图片
+    const resolvedLinks = this.app.metadataCache.resolvedLinks;
+    const referencedFiles = new Set<string>();
+
+    // 遍历所有文档的链接
+    for (const sourcePath in resolvedLinks) {
+      const links = resolvedLinks[sourcePath];
+      for (const targetPath in links) {
+        referencedFiles.add(targetPath);
+      }
+    }
+
+    // 2. 获取所有通过 Frontmatter 引用的图片
+    const markdownFiles = this.app.vault.getMarkdownFiles();
+    for (const file of markdownFiles) {
+      const cache = this.app.metadataCache.getFileCache(file);
+      if (cache) {
+        const metadata = metadataCacheHandle(cache, this);
+        for (const item of metadata) {
+          // item.value 是 string[]
+          for (const val of item.value) {
+            if (!/^http/.test(val)) {
+              // 尝试解析文件路径
+              const targetFile = this.app.metadataCache.getFirstLinkpathDest(val, file.path);
+              if (targetFile) {
+                referencedFiles.add(targetFile.path);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // 3. 扫描所有图片文件
+    const allFiles = this.app.vault.getFiles();
+    const imageFiles = allFiles.filter(file => {
+      // 简单的图片扩展名检查，可以复用 IMAGE_EXTENSIONS 但需要从 utils 导入或在此处定义
+      // 这里使用 file-type 库检查的扩展名列表的一个子集或常见图片格式
+      const ext = file.extension.toLowerCase();
+      return ["png", "jpg", "jpeg", "gif", "bmp", "svg", "webp", "avif"].includes(ext);
+    });
+
+    let deletedCount = 0;
+    const unreferencedFiles: TFile[] = [];
+
+    for (const file of imageFiles) {
+      if (!referencedFiles.has(file.path)) {
+        unreferencedFiles.push(file);
+      }
+    }
+
+    if (unreferencedFiles.length === 0) {
+      new Notice($("未发现未引用图片"));
+      return;
+    }
+
+    // 这里可以增加一个确认弹窗，但根据 requirement "一键删除"，直接删除（移入回收站）
+    // 为了安全，还是建议先 Notice 告知
+
+    for (const file of unreferencedFiles) {
+      await this.app.fileManager.trashFile(file);
+      deletedCount++;
+    }
+
+    new Notice($("已删除 ${count} 张未引用图片", { count: deletedCount }));
   }
 
   async loadSettings() {

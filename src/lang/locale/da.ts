@@ -62,5 +62,10 @@ export default <LangMap>{
 
     "图片上传地址增加随机查询": "Tilføj en tilfældig forespørgsel til billede-upload-adressen for at undgå CDN-cachelagring",
     "在图片地址末尾增加随机查询,用于规避CDN缓存": "Tilføj en tilfældig forespørgsel til billede-upload-adressen for at undgå CDN-cachelagring",
-    "一键上传下载": "Upload og download i et klik",
+    "一键上下传照片": "Et-klik upload/download billeder",
+    "删除未引用图片（全库）": "Slet ikke-refererede billeder (hele boksen)",
+    "下载当前笔记图片": "Download billeder fra aktuel note",
+    "上传当前笔记图片": "Upload billeder fra aktuel note",
+    "下载全库图片": "Download alle billeder i boksen",
+    "上传全库图片": "Upload alle billeder i boksen",
 };

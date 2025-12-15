@@ -86,7 +86,7 @@ export default <LangMap>{
 
   "图片上传地址增加随机查询": "Add random query to image upload URL",
   "在图片地址末尾增加随机查询,用于规避CDN缓存": "Add a random query at the end of the image URL to avoid CDN caching",
-  "一键上传下载": "One-click upload and download",
+  "一键上下传照片": "One-click upload/download photos",
 
   "上传速度优化": "Upload speed optimization",
   "在图片上传前是否进行压缩": "Whether to compress the image before uploading",
@@ -100,4 +100,6 @@ export default <LangMap>{
   "上传当前笔记图片": "Upload Current Note Images",
   "下载全库图片": "Download Whole Vault Images",
   "上传全库图片": "Upload Whole Vault Images",
+  "删除未引用图片（全库）": "Delete all unreferenced images in the vault",
+  "已删除 ${count} 张未引用图片": "Deleted ${count} unreferenced images",
 };

@@ -63,5 +63,10 @@ export default <LangMap>{
 
   "图片上传地址增加随机查询": "Egy véletlenszerű lekérdezést ad hozzá a kép feltöltési címéhez, hogy elkerülje a CDN gyorsítótárazását",
   "在图片地址末尾增加随机查询,用于规避CDN缓存": "Egy véletlenszerű lekérdezést ad hozzá a kép feltöltési címéhez, hogy elkerülje a CDN gyorsítótárazását",
-  "一键上传下载": "Feltöltés és letöltés egy kattintással",
+  "一键上下传照片": "Fényképek feltöltése/letöltése egy kattintással",
+  "删除未引用图片（全库）": "Összes nem hivatkozott kép törlése a tárolóból",
+  "下载当前笔记图片": "Jelenlegi jegyzet képeinek letöltése",
+  "上传当前笔记图片": "Jelenlegi jegyzet képeinek feltöltése",
+  "下载全库图片": "Teljes tároló képeinek letöltése",
+  "上传全库图片": "Teljes tároló képeinek feltöltése",
 };

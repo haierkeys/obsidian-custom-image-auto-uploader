@@ -62,5 +62,10 @@ export default <LangMap>{
 
   "图片上传地址增加随机查询": "Tambahkan permintaan acak ke alamat unggah gambar untuk menghindari cache CDN",
   "在图片地址末尾增加随机查询,用于规避CDN缓存": "Tambahkan permintaan acak ke alamat unggah gambar untuk menghindari cache CDN",
-  "一键上传下载": "Unggah dan unduh dalam satu klik",
+  "一键上下传照片": "Muat naik/muat turun foto dengan satu klik",
+  "删除未引用图片（全库）": "Padam semua imej yang tidak dirujuk dalam peti besi",
+  "下载当前笔记图片": "Muat Turun Imej Nota Semasa",
+  "上传当前笔记图片": "Muat Naik Imej Nota Semasa",
+  "下载全库图片": "Muat Turun Semua Imej Vault",
+  "上传全库图片": "Muat Naik Semua Imej Vault",
 };

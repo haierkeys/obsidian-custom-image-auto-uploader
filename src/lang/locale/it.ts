@@ -63,5 +63,10 @@ export default <LangMap>{
 
     "图片上传地址增加随机查询": "Aggiungi una query casuale all'indirizzo di caricamento delle immagini per evitare il caching CDN",
     "在图片地址末尾增加随机查询,用于规避CDN缓存": "Aggiungi una query casuale all'indirizzo di caricamento delle immagini per evitare il caching CDN",
-    "一键上传下载": "Carica e scarica in un clic",
+    "一键上下传照片": "Upload/download foto con un clic",
+    "删除未引用图片（全库）": "Elimina tutte le immagini non referenziate nel vault",
+    "下载当前笔记图片": "Scarica immagini della nota corrente",
+    "上传当前笔记图片": "Carica immagini della nota corrente",
+    "下载全库图片": "Scarica tutte le immagini del vault",
+    "上传全库图片": "Carica tutte le immagini del vault",
 };

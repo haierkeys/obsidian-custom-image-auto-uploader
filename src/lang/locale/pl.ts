@@ -62,5 +62,10 @@ export default <LangMap>{
 
     "图片上传地址增加随机查询": "Dodaj losową zapytanie do adresu przesyłania obrazu, aby uniknąć buforowania CDN",
     "在图片地址末尾增加随机查询,用于规避CDN缓存": "Dodaj losową zapytanie do adresu przesyłania obrazu, aby uniknąć buforowania CDN",
-    "一键上传下载": "Przesyłanie i pobieranie w jednym kliknięciu",
+    "一键上下传照片": "Przesyłanie/pobieranie zdjęć jednym kliknięciem",
+    "删除未引用图片（全库）": "Usuń wszystkie nieużywane obrazy w skarbcu",
+    "下载当前笔记图片": "Pobierz obrazy z bieżącej notatki",
+    "上传当前笔记图片": "Prześlij obrazy z bieżącej notatki",
+    "下载全库图片": "Pobierz wszystkie obrazy ze skarbca",
+    "上传全库图片": "Prześlij wszystkie obrazy do skarbca",
 };

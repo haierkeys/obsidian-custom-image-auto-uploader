@@ -62,5 +62,10 @@ export default <LangMap>{
 
     "图片上传地址增加随机查询": "Adicionar uma consulta aleatória ao endereço de upload de imagem para evitar o cache CDN",
     "在图片地址末尾增加随机查询,用于规避CDN缓存": "Adicionar uma consulta aleatória ao endereço de upload de imagem para evitar o cache CDN",
-    "一键上传下载": "Upload e download em um clique",
+    "一键上下传照片": "Upload/download de fotos com um clique",
+    "删除未引用图片（全库）": "Excluir todas as imagens não referenciadas no cofre",
+    "下载当前笔记图片": "Baixar imagens da nota atual",
+    "上传当前笔记图片": "Carregar imagens da nota atual",
+    "下载全库图片": "Baixar todas as imagens do cofre",
+    "上传全库图片": "Carregar todas as imagens do cofre",
 };

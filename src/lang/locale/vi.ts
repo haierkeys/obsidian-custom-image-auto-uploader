@@ -64,5 +64,10 @@ export default <LangMap>{
     "图片上传地址增加随机查询": "Thêm tải lên hình ảnh thuộc tính",
     "在图片地址末尾增加随机查询,用于规避CDN缓存": "Thêm tải lên hình ảnh thuộc tính",
 
-    "一键上传下载": "Tải lên và tải xuống một lần",
+    "一键上下传照片": "Tải lên/tải xuống ảnh chỉ bằng một cú nhấp chuột",
+    "删除未引用图片（全库）": "Xóa tất cả hình ảnh không được tham chiếu trong kho",
+    "下载当前笔记图片": "Tải xuống hình ảnh ghi chú hiện tại",
+    "上传当前笔记图片": "Tải lên hình ảnh ghi chú hiện tại",
+    "下载全库图片": "Tải xuống toàn bộ hình ảnh kho lưu trữ",
+    "上传全库图片": "Tải lên toàn bộ hình ảnh kho lưu trữ",
 };
