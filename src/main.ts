@@ -114,12 +114,12 @@ export default class CustomImageAutoUploader extends Plugin {
     // 注册菜单
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu: Menu) => {
-        setMenu(menu, this)
+        setMenu(menu, this, true, true)
       })
     )
     this.registerEvent(
       this.app.workspace.on("editor-menu", (menu: Menu) => {
-        setMenu(menu, this)
+        setMenu(menu, this, true, true)
       })
     )
 
