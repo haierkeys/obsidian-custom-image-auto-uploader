@@ -481,7 +481,7 @@ export function statusCheck(plugin: CustomImageAutoUploader): void {
   plugin.statusBar[2].setText(title)
 }
 
-export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto: boolean = false) {
+export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto: boolean = false, isNoteMenu: boolean = false) {
   if (isShowAuto) {
 
     //ddddd
@@ -525,39 +525,40 @@ export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto:
       })
   })
 
+  if (!isNoteMenu) {
 
+    menu.addSeparator()
 
-  menu.addSeparator()
+    menu.addItem((item: MenuItem) => {
+      item
+        .setIcon("download-cloud")
+        .setTitle($("下载全库图片"))
+        .onClick(async () => {
+          plugin.resetStatus("download", true)
+          await plugin.VaultDownImage()
+          showTaskNotice(plugin, "download")
+          statusCheck(plugin)
+        })
+    })
+    menu.addItem((item: MenuItem) => {
+      item
+        .setIcon("upload-cloud")
+        .setTitle($("上传全库图片"))
+        .onClick(async () => {
+          plugin.resetStatus("upload", true)
+          await plugin.VaultUploadImage()
+          showTaskNotice(plugin, "upload")
+          statusCheck(plugin)
+        })
+    })
 
-  menu.addItem((item: MenuItem) => {
-    item
-      .setIcon("download-cloud")
-      .setTitle($("下载全库图片"))
-      .onClick(async () => {
-        plugin.resetStatus("download", true)
-        await plugin.VaultDownImage()
-        showTaskNotice(plugin, "download")
-        statusCheck(plugin)
-      })
-  })
-  menu.addItem((item: MenuItem) => {
-    item
-      .setIcon("upload-cloud")
-      .setTitle($("上传全库图片"))
-      .onClick(async () => {
-        plugin.resetStatus("upload", true)
-        await plugin.VaultUploadImage()
-        showTaskNotice(plugin, "upload")
-        statusCheck(plugin)
-      })
-  })
-
-  menu.addItem((item: MenuItem) => {
-    item
-      .setIcon("trash")
-      .setTitle($("删除未引用图片（全库）"))
-      .onClick(async () => {
-        await plugin.VaultDeleteUnreferencedImages()
-      })
-  })
+    menu.addItem((item: MenuItem) => {
+      item
+        .setIcon("trash")
+        .setTitle($("删除未引用图片（全库）"))
+        .onClick(async () => {
+          await plugin.VaultDeleteUnreferencedImages()
+        })
+    })
+  }
 }
