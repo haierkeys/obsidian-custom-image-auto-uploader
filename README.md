@@ -40,13 +40,16 @@ You can batch download images from notes on PC and Mobile, batch upload and save
 * **📱 All Platforms Supported**: Windows, MacOS, Linux, Android, iOS.
 * **🖱️ Easy Operation**: Drag & drop, paste auto-upload.
 * **🌍 Multi-language Support**: Built-in multi-language support.
+* **🗑️ Clean Unlinked Images**: One-click cleanup of local images in the repository that are not linked to any notes.
 
 ## 🗺️ Roadmap
 
 We are continuously improving, here are the future development plans:
 
 
-- [ ] **Clean Unlinked Images**: One-click cleanup of local images in the repository that are not linked to any notes.
+- [x] **Clean Unlinked Images**: One-click cleanup of local images in the repository that are not linked to any notes.
+
+> **If you have suggestions for improvement or new ideas, feel free to share them by submitting an issue - we will carefully evaluate and adopt suitable suggestions.**
 
 ## 🚀 Quick Start
 
