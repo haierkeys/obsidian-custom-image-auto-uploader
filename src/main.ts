@@ -117,11 +117,11 @@ export default class CustomImageAutoUploader extends Plugin {
         setMenu(menu, this)
       })
     )
-    this.registerEvent(
-      this.app.workspace.on("editor-menu", (menu: Menu) => {
-        setMenu(menu, this)
-      })
-    )
+    // this.registerEvent(
+    //   this.app.workspace.on("editor-menu", (menu: Menu) => {
+    //     setMenu(menu, this)
+    //   })
+    // )
 
     this.addRibbonIcon("image", "Custom Image Auto Uploader", (event) => {
       const menu = new Menu()
