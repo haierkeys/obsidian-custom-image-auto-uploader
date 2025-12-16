@@ -482,6 +482,9 @@ export function statusCheck(plugin: CustomImageAutoUploader): void {
 }
 
 export function setMenu(menu: Menu, plugin: CustomImageAutoUploader, isShowAuto: boolean = false, isNoteMenu: boolean = false) {
+  if ((menu as any)._hasImageUploaderMenu) return
+  (menu as any)._hasImageUploaderMenu = true
+
   if (isShowAuto) {
 
     //ddddd

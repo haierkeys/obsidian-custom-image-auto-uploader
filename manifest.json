@@ -1,7 +1,7 @@
 {
   "id": "custom-image-auto-uploader",
   "name": "Custom Image Auto Uploader",
-  "version": "2.9.4",
+  "version": "2.9.5",
   "minAppVersion": "1.6.5",
   "description": "You can batch download images from your notes on desktop, iOS, and Android platforms, and batch upload and save them to a remote server, home NAS, or cloud storage (such as Alibaba Cloud OSS, Amazon S3, Cloudflare R2, MinIO). Additionally, you can stretch, crop, and resize the images.",
   "author": "HaierKeys",
