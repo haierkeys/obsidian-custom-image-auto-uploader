@@ -1,4 +1,4 @@
-import { Menu, Plugin, TFile, Notice } from "obsidian";
+import { Menu, Plugin, TFile, Notice, debounce } from "obsidian";
 
 import { imageDown, imageUpload, statusCheck, replaceInText, replaceInTextForUpload, replaceInTextForDownload, hasExcludeDomain, autoAddExcludeDomain, metadataCacheHandle, generateRandomString, showTaskNotice, showErrorNotice, getAttachmentUploadPath, setMenu } from "./lib/utils";
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
@@ -53,16 +53,19 @@ export default class CustomImageAutoUploader extends Plugin {
     this.addSettingTab(this.settingTab);
 
     // 注册编译器事件
-    this.registerEvent(
-      this.app.workspace.on("editor-change", async () => {
+    const debouncedProcess = debounce(
+      async () => {
         if (!this.fromPluginSet) {
           this.resetStatus("all", true)
           await this.ContentImageAutoHandle()
           await this.MetadataImageAutoHandle()
           showTaskNotice(this, "all")
         }
-      })
+      },
+      1000,
+      true
     )
+    this.registerEvent(this.app.workspace.on("editor-change", debouncedProcess))
 
     // 注册命令
     this.addCommand({
@@ -180,7 +183,11 @@ export default class CustomImageAutoUploader extends Plugin {
 
     // Download only supports Markdown format now: ![alt](url)
     const matches = fileContent.matchAll(markdownImageRegex)
+    const uniqueTask = new Set<string>()
     for (const match of matches) {
+      if (uniqueTask.has(match[0])) continue
+      uniqueTask.add(match[0])
+
       // match[2] is the URL
       if (!/^http/.test(match[2]) || hasExcludeDomain(match[2], this.settings.excludeDomains)) {
         continue
@@ -258,7 +265,11 @@ export default class CustomImageAutoUploader extends Plugin {
     const uploadTasks: UploadTask[] = []
     // Upload only supports Wikilink format now: ![[image.png]]
     const matches = fileContent.matchAll(wikilinkImageRegex)
+    const uniqueTask = new Set<string>()
     for (const match of matches) {
+      if (uniqueTask.has(match[0])) continue
+      uniqueTask.add(match[0])
+
       // match[1] is the file path/name
       if (/^http/.test(match[1])) {
         continue
@@ -457,128 +468,143 @@ export default class CustomImageAutoUploader extends Plugin {
   onunload() { }
 
   async VaultDownImage() {
-    const files = this.app.vault.getMarkdownFiles()
-    this.downloadStatus.total = 0
-    this.downloadStatus.current = 0
+    this.fromPluginSet = true
+    try {
+      const files = this.app.vault.getMarkdownFiles()
+      this.downloadStatus.total = 0
+      this.downloadStatus.current = 0
 
-    // First pass: collect tasks from all files
-    const tasks: { file: TFile; downloadTasks: DownTask[] }[] = []
+      // First pass: collect tasks from all files
+      const tasks: { file: TFile; downloadTasks: DownTask[] }[] = []
 
-    for (const file of files) {
-      const content = await this.app.vault.read(file)
-      const fileTasks: DownTask[] = []
-      const matches = content.matchAll(markdownImageRegex)
+      for (const file of files) {
+        const content = await this.app.vault.read(file)
+        const fileTasks: DownTask[] = []
+        const matches = content.matchAll(markdownImageRegex)
 
-      for (const match of matches) {
-        if (!/^http/.test(match[2]) || hasExcludeDomain(match[2], this.settings.excludeDomains)) {
-          continue
-        }
-        let imageAlt = match[3] ? match[3] : match[1] ? match[1] : ""
-        imageAlt = imageAlt.replaceAll('"', "")
-        fileTasks.push({
-          matchText: match[0],
-          imageAlt,
-          imageUrl: match[2],
-        })
-        this.downloadStatus.total++
-        statusCheck(this)
-      }
-      if (fileTasks.length > 0) {
-        tasks.push({ file, downloadTasks: fileTasks })
-      }
-    }
-
-    for (const item of tasks) {
-      let fileContent = await this.app.vault.read(item.file)
-      let isModify = false
-
-      const downloadResults = await Promise.all(
-        item.downloadTasks.map(async (task) => {
-          const result = await imageDown(task.imageUrl, this)
-          return { task, result }
-        })
-      )
-
-      for (const { task, result } of downloadResults) {
-        if (result.err) {
-          showErrorNotice(result.msg)
-        } else if (result.path) {
-          isModify = true
-          this.downloadStatus.current++
+        for (const match of matches) {
+          if (!/^http/.test(match[2]) || hasExcludeDomain(match[2], this.settings.excludeDomains)) {
+            continue
+          }
+          let imageAlt = match[3] ? match[3] : match[1] ? match[1] : ""
+          imageAlt = imageAlt.replaceAll('"', "")
+          fileTasks.push({
+            matchText: match[0],
+            imageAlt,
+            imageUrl: match[2],
+          })
+          this.downloadStatus.total++
           statusCheck(this)
-          fileContent = replaceInTextForDownload(fileContent, task.matchText, task.imageAlt, result.path)
+        }
+        if (fileTasks.length > 0) {
+          tasks.push({ file, downloadTasks: fileTasks })
         }
       }
 
-      if (isModify) {
-        await this.app.vault.modify(item.file, fileContent)
+      for (const item of tasks) {
+        let fileContent = await this.app.vault.read(item.file)
+        let isModify = false
+
+        const downloadResults = await Promise.all(
+          item.downloadTasks.map(async (task) => {
+            const result = await imageDown(task.imageUrl, this)
+            return { task, result }
+          })
+        )
+
+        for (const { task, result } of downloadResults) {
+          if (result.err) {
+            showErrorNotice(result.msg)
+          } else if (result.path) {
+            isModify = true
+            this.downloadStatus.current++
+            statusCheck(this)
+            fileContent = replaceInTextForDownload(fileContent, task.matchText, task.imageAlt, result.path)
+          }
+        }
+
+        if (isModify) {
+          await this.app.vault.modify(item.file, fileContent)
+        }
       }
+    } finally {
+      setTimeout(() => {
+        this.fromPluginSet = false
+      }, 1500)
     }
   }
 
   async VaultUploadImage() {
-    const files = this.app.vault.getMarkdownFiles()
-    this.uploadStatus.total = 0
-    this.uploadStatus.current = 0
+    this.fromPluginSet = true
+    try {
+      const files = this.app.vault.getMarkdownFiles()
+      this.uploadStatus.total = 0
+      this.uploadStatus.current = 0
 
-    // First pass: collect tasks
-    const tasks: { file: TFile; uploadTasks: UploadTask[] }[] = []
+      // First pass: collect tasks
+      const tasks: { file: TFile; uploadTasks: UploadTask[] }[] = []
 
-    for (const file of files) {
-      const content = await this.app.vault.read(file)
-      const fileTasks: UploadTask[] = []
-      const matches = content.matchAll(wikilinkImageRegex)
+      for (const file of files) {
+        const content = await this.app.vault.read(file)
+        const fileTasks: UploadTask[] = []
+        const matches = content.matchAll(wikilinkImageRegex)
 
-      for (const match of matches) {
-        if (/^http/.test(match[1])) {
-          continue
-        }
-        const linkFile = match[1]
-        let readfile = await getAttachmentUploadPath(linkFile, this)
-        if (!readfile) continue
+        for (const match of matches) {
+          if (/^http/.test(match[1])) {
+            continue
+          }
+          const linkFile = match[1]
+          let readfile = await getAttachmentUploadPath(linkFile, this)
+          if (!readfile) continue
 
-        const imageAlt = match[2] ? match[2] : linkFile
-        fileTasks.push({
-          matchText: match[0],
-          imageAlt,
-          imageFile: readfile,
-        })
-        this.uploadStatus.total++
-        statusCheck(this)
-      }
-
-      if (fileTasks.length > 0) {
-        tasks.push({ file, uploadTasks: fileTasks })
-      }
-    }
-
-    for (const item of tasks) {
-      let fileContent = await this.app.vault.read(item.file)
-      let isModify = false
-
-      const uploadResults = await Promise.all(
-        item.uploadTasks.map(async (task) => {
-          const result = await imageUpload(task.imageFile, this.settings.contentSet, this)
-          return { task, result }
-        })
-      )
-
-      for (const { task, result } of uploadResults) {
-        if (result.err) {
-          showErrorNotice(result.msg)
-        } else if (result.imageUrl) {
-          isModify = true
-          this.uploadStatus.current++
+          const imageAlt = match[2] ? match[2] : linkFile
+          fileTasks.push({
+            matchText: match[0],
+            imageAlt,
+            imageFile: readfile,
+          })
+          this.uploadStatus.total++
           statusCheck(this)
-          const searchStr = this.settings.uploadImageRandomSearch ? `?${generateRandomString(10)}` : ""
-          fileContent = replaceInTextForUpload(fileContent, task.matchText, task.imageAlt, result.imageUrl + searchStr)
-          autoAddExcludeDomain(result.imageUrl, this)
+        }
+
+        if (fileTasks.length > 0) {
+          tasks.push({ file, uploadTasks: fileTasks })
         }
       }
 
-      if (isModify) {
-        await this.app.vault.modify(item.file, fileContent)
+
+      for (const item of tasks) {
+        let fileContent = await this.app.vault.read(item.file)
+        let isModify = false
+
+        const uploadResults = await Promise.all(
+          item.uploadTasks.map(async (task) => {
+            const result = await imageUpload(task.imageFile, this.settings.contentSet, this)
+            return { task, result }
+          })
+        )
+
+        for (const { task, result } of uploadResults) {
+          if (result.err) {
+            showErrorNotice(result.msg)
+          } else if (result.imageUrl) {
+            isModify = true
+            this.uploadStatus.current++
+            statusCheck(this)
+            const searchStr = this.settings.uploadImageRandomSearch ? `?${generateRandomString(10)}` : ""
+            fileContent = replaceInTextForUpload(fileContent, task.matchText, task.imageAlt, result.imageUrl + searchStr)
+            autoAddExcludeDomain(result.imageUrl, this)
+          }
+        }
+
+        if (isModify) {
+          await this.app.vault.modify(item.file, fileContent)
+        }
       }
+    } finally {
+      setTimeout(() => {
+        this.fromPluginSet = false
+      }, 1500)
     }
   }
 
